@@ -45,8 +45,6 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
-Tutorials/Roll a Ball/Library/metadata/
-*.info
-*.cache
-*.backup
+Tutorials/Roll a Ball/Library/
+Tutorials/Roll a Ball/obj/
 Tutorials/Roll a Ball/Temp/
