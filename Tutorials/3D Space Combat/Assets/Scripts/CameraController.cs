@@ -11,10 +11,14 @@ public class CameraController : MonoBehaviour
 
     void LateUpdate()
     {
-        Vector3 wantedPosition = player.position - (player.rotation * Vector3.forward) * offset;
+        // Set the position behind the player by a given offset
+        Vector3 wantedPosition = player.position - player.forward * offset;
 
+        // Remove z-axis rotation
+        Quaternion rotationXY = Quaternion.Euler(player.rotation.eulerAngles.x, player.rotation.eulerAngles.y, 0f);
+
+        // Set the position and rotation
         transform.position = Vector3.Lerp(transform.position, wantedPosition, moveSpeed);
-        //transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(player.position - transform.position), rotationSpeed);
-        transform.rotation = Quaternion.Slerp(transform.rotation, player.rotation, rotationSpeed);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotationXY, rotationSpeed);
     }
 }
