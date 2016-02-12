@@ -52,8 +52,6 @@ public class PlayerController : MonoBehaviour
         }
 
         //rb.AddForce(transform.right * strafeSpeed * inputHorizontal);
-        //rb.velocity = (rb.rotation * Vector3.forward) * moveSpeed * inputVertical;
-        //rb.velocity += (rb.rotation * Vector3.right) * strafeSpeed * inputHorizontal;
         #endregion
 
         #region Rotation Logic
