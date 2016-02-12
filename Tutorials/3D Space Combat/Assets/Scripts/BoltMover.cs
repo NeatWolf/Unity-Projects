@@ -8,10 +8,10 @@ public class BoltMover : MonoBehaviour {
 
     private Rigidbody rb;
 
-	void Start ()
+	void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.velocity = transform.forward * speed;
-        Destroy(gameObject, timeoutToDestroy);
+        Destroy(gameObject, timeoutToDestroy); // Remove this once the boundary has been created
 	}
 }

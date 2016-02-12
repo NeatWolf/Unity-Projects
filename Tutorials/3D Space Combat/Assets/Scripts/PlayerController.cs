@@ -3,15 +3,17 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
+    public float idleSpeed;
     public float moveSpeed;
     public float strafeSpeed;
+    public float warpSpeed;
     public float lookSpeed;
     public int verticalLookLimit;
     public float tilt;
     public float drag;
+    public ParticleSystem warpParticleSystem;
 
     private Rigidbody rb;
-    private Quaternion targetRotation;
 
     void Start()
     {
@@ -24,8 +26,31 @@ public class PlayerController : MonoBehaviour
         float inputVertical = Input.GetAxis("Vertical");
         //float inputHorizontal = Input.GetAxis("Horizontal");
 
-        #region Velocity Logic
-        rb.AddForce(transform.forward * moveSpeed * inputVertical);
+        #region Velocity Logic\
+        // Add base force
+        rb.AddForce(transform.forward * idleSpeed);
+
+        // Add forward or backward force
+        if(inputVertical > 0)
+        {
+            rb.AddForce(transform.forward * moveSpeed * inputVertical);
+
+            // Add warp speed force
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                rb.AddForce(transform.forward * warpSpeed);
+                warpParticleSystem.Play();
+            }
+            else
+            {
+                warpParticleSystem.Stop();
+            }
+        }
+        else
+        {
+            rb.AddForce(transform.forward * idleSpeed * inputVertical);
+        }
+
         //rb.AddForce(transform.right * strafeSpeed * inputHorizontal);
         //rb.velocity = (rb.rotation * Vector3.forward) * moveSpeed * inputVertical;
         //rb.velocity += (rb.rotation * Vector3.right) * strafeSpeed * inputHorizontal;
