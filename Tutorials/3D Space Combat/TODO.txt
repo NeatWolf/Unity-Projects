@@ -1,0 +1,2 @@
+Start particle effect animation where bolt hits the asteroid.
+After certain number of hits the asteroid model scale shrinks, then more hits then gone

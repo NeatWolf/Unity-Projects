@@ -1,7 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3D Space Combat.CSharp.Plugins", "3D Space Combat.CSharp.Plugins.csproj", "{0C2FAA24-27BA-21E1-0529-EEFBF408101D}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3D Space Combat.CSharp", "3D Space Combat.CSharp.csproj", "{58571586-FB85-281B-0681-758220CEF17C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3D Space Combat.CSharp.Editor", "3D Space Combat.CSharp.Editor.csproj", "{147CD416-D76D-F1A7-1E43-92D9A08585D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +13,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0C2FAA24-27BA-21E1-0529-EEFBF408101D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C2FAA24-27BA-21E1-0529-EEFBF408101D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C2FAA24-27BA-21E1-0529-EEFBF408101D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C2FAA24-27BA-21E1-0529-EEFBF408101D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{58571586-FB85-281B-0681-758220CEF17C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{58571586-FB85-281B-0681-758220CEF17C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58571586-FB85-281B-0681-758220CEF17C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58571586-FB85-281B-0681-758220CEF17C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{147CD416-D76D-F1A7-1E43-92D9A08585D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{147CD416-D76D-F1A7-1E43-92D9A08585D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{147CD416-D76D-F1A7-1E43-92D9A08585D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{147CD416-D76D-F1A7-1E43-92D9A08585D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
