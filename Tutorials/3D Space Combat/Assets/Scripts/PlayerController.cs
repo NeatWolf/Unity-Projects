@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
         float inputVertical = Input.GetAxis("Vertical");
         //float inputHorizontal = Input.GetAxis("Horizontal");
 
-        #region Velocity Logic\
+        #region Velocity Logic
         // Add base force
         rb.AddForce(transform.forward * idleSpeed);
 
