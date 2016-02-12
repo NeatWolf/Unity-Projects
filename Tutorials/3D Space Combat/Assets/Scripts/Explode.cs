@@ -32,7 +32,9 @@ public class Explode : MonoBehaviour {
     {
         if(health <= 0)
         {
-            Instantiate(destroyExplosion, transform.position, transform.rotation);
+            GameObject explosion = Instantiate(destroyExplosion, transform.position, transform.rotation) as GameObject;
+            Detonator explosionDetonator = explosion.GetComponent<Detonator>();
+            explosionDetonator.size = transform.localScale.x * 2;
             Destroy(gameObject);
         }
     }
