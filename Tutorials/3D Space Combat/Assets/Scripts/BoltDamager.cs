@@ -4,12 +4,18 @@ using System.Collections;
 public class BoltDamager : MonoBehaviour {
 
     public float damage;
+    public string targetTag;
 
-	void Start() { }
+    private Collider thisCollider;
+
+    void Start()
+    {
+        thisCollider = GetComponent<Collider>();
+    }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other != thisCollider && other.CompareTag(targetTag))
         {
             other.transform.SendMessage("Damage", damage);
             other.transform.SendMessage("ImpactExplosion", transform.position);

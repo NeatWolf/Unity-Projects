@@ -10,7 +10,6 @@ public class PlayerController : MonoBehaviour
     public float lookSpeed;
     public int verticalLookLimit;
     public float tilt;
-    public float drag;
     public ParticleSystem warpParticleSystem;
 
     private Rigidbody rb;
@@ -18,7 +17,6 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.drag = drag;
     }
 
     void FixedUpdate()

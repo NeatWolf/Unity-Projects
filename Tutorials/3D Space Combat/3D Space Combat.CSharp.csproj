@@ -60,6 +60,12 @@
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
+    <Reference Include="RAIN">
+      <HintPath>Assets\3rd Party\RAIN\RAIN.dll</HintPath>
+    </Reference>
+    <Reference Include="RAINMetaform">
+      <HintPath>Assets\3rd Party\RAIN\RAINMetaform.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\3rd Party\Detonator Explosion Framework\Sample Supporting Emitters\DetonatorSprayHelper.cs" />
@@ -118,11 +124,11 @@
     <Compile Include="Assets\3rd Party\Standard Assets\Effects\ImageEffects\Scripts\VignetteAndChromaticAberration.cs" />
     <Compile Include="Assets\3rd Party\Standard Assets\Effects\ImageEffects\Scripts\Vortex.cs" />
     <Compile Include="Assets\Scripts\AISimple.cs" />
+    <Compile Include="Assets\Scripts\AIWeaponController.cs" />
     <Compile Include="Assets\Scripts\BoltDamager.cs" />
     <Compile Include="Assets\Scripts\BoltMover.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\Explode.cs" />
-    <Compile Include="Assets\Scripts\GUICrosshair.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\PrimaryWeapon.cs" />
@@ -132,6 +138,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\3rd Party\Detonator Explosion Framework\Resources\Detonator\Textures\HeatDistort.shader" />
+    <None Include="Assets\3rd Party\RAIN\Editor\ScriptTemplates\BehaviorTreeTemplate.xml" />
+    <None Include="Assets\3rd Party\RAIN\Editor\Shaders\AspectRingShader.shader" />
+    <None Include="Assets\3rd Party\RAIN\Editor\Shaders\AspectSphereShader.shader" />
+    <None Include="Assets\3rd Party\RAIN\Editor\Shaders\NavMeshColliderShader.shader" />
+    <None Include="Assets\3rd Party\RAIN\Editor\Shaders\NavMeshContourShader.shader" />
+    <None Include="Assets\3rd Party\RAIN\Editor\Shaders\VisualSensorLineShader.shader" />
+    <None Include="Assets\3rd Party\RAIN\Editor\Shaders\VisualSensorRingShader.shader" />
+    <None Include="Assets\3rd Party\RAIN\Editor\Shaders\WaypointShader.shader" />
+    <None Include="Assets\3rd Party\RAIN\ReleaseNotes.txt" />
     <None Include="Assets\3rd Party\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
     <None Include="Assets\3rd Party\Standard Assets\Effects\ImageEffects\Shaders\BlendModesOverlay.shader" />
     <None Include="Assets\3rd Party\Standard Assets\Effects\ImageEffects\Shaders\BlurEffectConeTaps.shader" />
