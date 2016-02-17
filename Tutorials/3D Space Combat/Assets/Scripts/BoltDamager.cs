@@ -17,6 +17,7 @@ public class BoltDamager : MonoBehaviour {
     {
         if (other != thisCollider && other.CompareTag(targetTag))
         {
+            print("Bolt hit player");
             other.transform.SendMessage("Damage", damage);
             other.transform.SendMessage("ImpactExplosion", transform.position);
             Destroy(gameObject);
