@@ -18,7 +18,7 @@ public class CameraController : MonoBehaviour
         Quaternion rotationXY = Quaternion.Euler(player.rotation.eulerAngles.x, player.rotation.eulerAngles.y, 0f);
 
         // Set the position and rotation
-        transform.position = Vector3.Lerp(transform.position, wantedPosition, moveSpeed);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rotationXY, rotationSpeed);
+        transform.position = Vector3.Lerp(transform.position, wantedPosition, moveSpeed * Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotationXY, rotationSpeed * Time.deltaTime);
     }
 }

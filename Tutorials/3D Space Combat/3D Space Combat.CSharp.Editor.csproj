@@ -90,14 +90,14 @@
     <Reference Include="RAIN">
       <HintPath>Assets\3rd Party\RAIN\RAIN.dll</HintPath>
     </Reference>
+    <Reference Include="RAINMetaform">
+      <HintPath>Assets\3rd Party\RAIN\RAINMetaform.dll</HintPath>
+    </Reference>
     <Reference Include="RAINEditor">
       <HintPath>Assets\3rd Party\RAIN\Editor\RAINEditor.dll</HintPath>
     </Reference>
     <Reference Include="RAINMetaformEditor">
       <HintPath>Assets\3rd Party\RAIN\Editor\RAINMetaformEditor.dll</HintPath>
-    </Reference>
-    <Reference Include="RAINMetaform">
-      <HintPath>Assets\3rd Party\RAIN\RAINMetaform.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -212,6 +212,7 @@
     <None Include="Assets\3rd Party\Standard Assets\Effects\ToonShading\Shaders\ToonBasicOutline.shader" />
     <None Include="Assets\3rd Party\Standard Assets\Effects\ToonShading\Shaders\ToonLit.shader" />
     <None Include="Assets\3rd Party\Standard Assets\Effects\ToonShading\Shaders\ToonLitOutline.shader" />
+    <None Include="Assets\Shaders\PlanetGlow.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

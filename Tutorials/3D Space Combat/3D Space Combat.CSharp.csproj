@@ -85,6 +85,7 @@
     <Compile Include="Assets\3rd Party\Detonator Explosion Framework\System\DetonatorSpray.cs" />
     <Compile Include="Assets\3rd Party\Detonator Explosion Framework\TestScene\DetonatorTest.cs" />
     <Compile Include="Assets\3rd Party\Detonator Explosion Framework\TestScene\TouchToMouse.cs" />
+    <Compile Include="Assets\3rd Party\Planet Earth Free\SpinFree.cs" />
     <Compile Include="Assets\3rd Party\Standard Assets\Effects\ImageEffects\Scripts\Antialiasing.cs" />
     <Compile Include="Assets\3rd Party\Standard Assets\Effects\ImageEffects\Scripts\Bloom.cs" />
     <Compile Include="Assets\3rd Party\Standard Assets\Effects\ImageEffects\Scripts\BloomAndFlares.cs" />
@@ -224,6 +225,7 @@
     <None Include="Assets\3rd Party\Standard Assets\Effects\ToonShading\Shaders\ToonBasicOutline.shader" />
     <None Include="Assets\3rd Party\Standard Assets\Effects\ToonShading\Shaders\ToonLit.shader" />
     <None Include="Assets\3rd Party\Standard Assets\Effects\ToonShading\Shaders\ToonLitOutline.shader" />
+    <None Include="Assets\Shaders\PlanetGlow.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
