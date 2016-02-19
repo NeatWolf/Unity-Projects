@@ -3,8 +3,9 @@ using System.Collections;
 
 public class RotateToCursor : MonoBehaviour {
 
-    public float distance;
+    public float defaultDistance;
 
+    private float distance;
     private Ray ray;
     private RaycastHit hit;
 
@@ -15,6 +16,10 @@ public class RotateToCursor : MonoBehaviour {
         if(Physics.Raycast(ray, out hit))
         {
             distance = hit.distance;
+        }
+        else
+        {
+            distance = defaultDistance;
         }
 
         // Get the direction the mouse is pointing

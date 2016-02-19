@@ -59,6 +59,7 @@ public class PlayerController : MonoBehaviour
         // Get the direction the mouse is pointing
         Ray ray = Camera.main.ScreenPointToRay(mousePosition);
         Quaternion rayDirection = Quaternion.LookRotation(ray.direction);
+        //rb.AddTorque(ray.direction.x * lookSpeed, ray.direction.y * lookSpeed, 0f);
 
         // Clamp the direction on the x-axis (up/down) to prevent spiraling camera
         Vector3 directionEuler = rayDirection.eulerAngles;
@@ -74,13 +75,14 @@ public class PlayerController : MonoBehaviour
         float distanceFromCenterY = Mathf.Abs((Screen.height / 2) - mousePosition.y);
 
         //print(string.Format("distance from center = ({0}, {1})", distanceFromCenterX, distanceFromCenterY));
-        if(inputHorizontal == 0 && distanceFromCenterX < 32 && distanceFromCenterY < 32)
+        if (inputHorizontal == 0 && distanceFromCenterX < 32 && distanceFromCenterY < 32)
         {
             modifiedDirection = Quaternion.Euler(modifiedDirection.eulerAngles.x, modifiedDirection.eulerAngles.y, 0f);
         }
 
         // Apply the rotation
         rb.rotation = Quaternion.Slerp(rb.rotation, modifiedDirection, lookSpeed);
+        //rb.AddTorque(modifiedDirection.eulerAngles * lookSpeed);
         #endregion
     }
 }
