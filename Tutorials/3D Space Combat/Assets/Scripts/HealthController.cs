@@ -1,13 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class HealthController : MonoBehaviour {
 
     public GameObject destroyExplosion;
     public GameObject impactExplosion;
-    public float health;
+    public float maxHealth;
+    public Image healthBar;
 
-    void Start() { }
+    private float health;
+
+    void Start()
+    {
+        health = maxHealth;
+    }
 
     void Update()
     {
@@ -23,6 +30,7 @@ public class HealthController : MonoBehaviour {
     void Damage(float damage)
     {
         health -= damage;
+        healthBar.fillAmount = health / maxHealth;
     }
 
     void ImpactExplosion(Vector3 position)
