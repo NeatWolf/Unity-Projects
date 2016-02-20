@@ -3,7 +3,7 @@ using System.Collections;
 
 public class BoltDamager : MonoBehaviour {
 
-    public float damage;
+    public int damage;
     public string targetTag;
 
     private Collider thisCollider;
@@ -17,7 +17,8 @@ public class BoltDamager : MonoBehaviour {
     {
         if (other != thisCollider && other.CompareTag(targetTag))
         {
-            other.transform.SendMessage("Damage", damage);
+            DamageInfo damageInfo = new DamageInfo(gameObject, damage);
+            other.transform.SendMessage("Damage", damageInfo);
             other.transform.SendMessage("ImpactExplosion", transform.position);
             Destroy(gameObject);
         }
