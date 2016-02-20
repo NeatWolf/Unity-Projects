@@ -2,35 +2,45 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class HealthController : MonoBehaviour {
-
+public class HealthController : MonoBehaviour
+{
     public GameObject destroyExplosion;
     public GameObject impactExplosion;
-    public float maxHealth;
+    public int maxHealth;
+    public int xp;
     public Image healthBar;
 
-    private float health;
+    private int health;
+    private LevelUpSystem levelUpSystem;
 
     void Start()
     {
         health = maxHealth;
+        levelUpSystem = GameObject.FindGameObjectWithTag("GameController").GetComponent<LevelUpSystem>();
     }
 
-    void Update()
+    void Damage(DamageInfo damageInfo)
     {
-        if(health <= 0)
+        health -= damageInfo.Damage;
+
+        if(healthBar != null)
+        {
+            healthBar.fillAmount = (float)health / (float)maxHealth;
+        }
+
+        if (health <= 0)
         {
             GameObject explosion = Instantiate(destroyExplosion, transform.position, transform.rotation) as GameObject;
             Detonator explosionDetonator = explosion.GetComponent<Detonator>();
             explosionDetonator.size = transform.localScale.x * 2;
+
+            if (damageInfo.Sender.CompareTag("PlayerWeapon"))
+            {
+                levelUpSystem.GainExperience(xp);
+            }
+
             Destroy(gameObject);
         }
-    }
-
-    void Damage(float damage)
-    {
-        health -= damage;
-        healthBar.fillAmount = health / maxHealth;
     }
 
     void ImpactExplosion(Vector3 position)
