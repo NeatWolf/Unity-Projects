@@ -4,11 +4,9 @@ using UnityEngine.UI;
 
 public class IndicatorController : MonoBehaviour
 {
-
+    public UIProgressBarController healthBar;
     public Transform target;
     public Image offScreenIndicator;
-    public Image healthBarFull;
-    public Image healthBarEmpty;
 
     private Vector3 screenCenter;
 
@@ -26,8 +24,7 @@ public class IndicatorController : MonoBehaviour
         if (targetPosition.z > 0f && targetPosition.x >= 0f && targetPosition.x <= Screen.width && targetPosition.y >= 0f && targetPosition.y <= Screen.height)
         {
             print(targetPosition.ToString());
-            healthBarEmpty.rectTransform.anchoredPosition = new Vector3(targetPosition.x, targetPosition.y -25, 0f);
-            healthBarFull.rectTransform.anchoredPosition = new Vector3(targetPosition.x, targetPosition.y -25, 0f);
+            healthBar.anchoredPosition = new Vector3(targetPosition.x, targetPosition.y -25, 0f);
         }
         else // Offscreen - show directional arrow
         {

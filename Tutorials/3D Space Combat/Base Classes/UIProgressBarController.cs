@@ -19,16 +19,13 @@ public class UIProgressBarController : MonoBehaviour {
         }
     }
 
-    public Vector2 anchoredPosition
+	void Start ()
     {
-        get
-        {
-            return barEmptyImage.rectTransform.anchoredPosition;
-        }
-        set
-        {
-            barEmptyImage.rectTransform.anchoredPosition = value;
-            barFullImage.rectTransform.anchoredPosition = value;
-        }
-    }
+
+	}
+	
+	void Update ()
+    {
+	
+	}
 }

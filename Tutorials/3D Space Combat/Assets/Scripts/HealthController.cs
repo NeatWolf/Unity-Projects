@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using Assets.Scripts;
 
 public class HealthController : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class HealthController : MonoBehaviour
     public GameObject impactExplosion;
     public int maxHealth;
     public int xp;
-    public Image healthBar;
+    public UIProgressBarController healthBar;
 
     private int health;
     private LevelUpSystem levelUpSystem;
