@@ -3,12 +3,12 @@ using System.Collections;
 
 public class AISimple : MonoBehaviour {
 
-    public Transform target;
     public float followRange;
     public float snipeRange;
     public float moveSpeed;
     public float strafeSpeed;
 
+    private Transform player;
     private float distance;
     private float timer;
     private Rigidbody rb;
@@ -26,11 +26,12 @@ public class AISimple : MonoBehaviour {
     {
         rb = GetComponent<Rigidbody>();
         weaponController = GetComponent<AIWeaponController>();
+        player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 	
 	void FixedUpdate ()
     {
-        distance = Vector3.Distance(target.position, transform.position);
+        distance = Vector3.Distance(player.position, transform.position);
 
         if (Time.time >= timer)
         {
@@ -58,7 +59,7 @@ public class AISimple : MonoBehaviour {
 
     void PerformAttackManeuver()
     {
-        transform.LookAt(target);
+        transform.LookAt(player);
         weaponController.Fire();
 
         if(distance > followRange)
@@ -71,12 +72,12 @@ public class AISimple : MonoBehaviour {
     {
         if (distance < snipeRange)
         {
-            transform.LookAt(2.0f * transform.position - target.position);
+            transform.LookAt(2.0f * transform.position - player.position);
             rb.AddForce(transform.forward * moveSpeed);
         }
         else
         {
-            transform.LookAt(target);
+            transform.LookAt(player);
             if (strafeRight)
             {
                 rb.AddForce(transform.right * strafeSpeed);
@@ -85,7 +86,7 @@ public class AISimple : MonoBehaviour {
             {
                 rb.AddForce(transform.right * -strafeSpeed);
             }
-            transform.LookAt(target);
+            transform.LookAt(player);
             weaponController.Fire();
         }
     }
