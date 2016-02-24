@@ -34,6 +34,7 @@ public class IndicatorController : MonoBehaviour
             {
                 TargetIndicator box = getBoxIndicator();
                 box.anchoredPosition = new Vector3(targetPosition.x, targetPosition.y, 0f);
+                box.healthBarFillAmount = (float)obj.GetComponent<HealthController>().Health / (float)obj.GetComponent<HealthController>().maxHealth;
             }
             else // Offscreen - show directional arrow
             {

@@ -20,6 +20,14 @@ public class HealthController : MonoBehaviour
         levelUpSystem = GameObject.FindGameObjectWithTag("GameController").GetComponent<LevelUpSystem>();
     }
 
+    public int Health
+    {
+        get
+        {
+            return health;
+        }
+    }
+
     void Damage(DamageInfo damageInfo)
     {
         health -= damageInfo.Damage;
