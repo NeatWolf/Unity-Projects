@@ -25,6 +25,18 @@ public class TargetIndicator : MonoBehaviour {
         }
     }
 
+    public float healthBarFillAmount
+    {
+        get
+        {
+            return healthBar.fillAmount;
+        }
+        set
+        {
+            healthBar.fillAmount = value;
+        }
+    }
+
     public Vector2 boxSize
     {
         get
