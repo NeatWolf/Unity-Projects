@@ -136,6 +136,7 @@
     <Compile Include="Assets\Scripts\HealthController.cs" />
     <Compile Include="Assets\Scripts\IndicatorController.cs" />
     <Compile Include="Assets\Scripts\LevelUpSystem.cs" />
+    <Compile Include="Assets\Scripts\NoWarpZone.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\PrimaryWeapon.cs" />
     <Compile Include="Assets\Scripts\RandomRotator.cs" />
@@ -145,6 +146,7 @@
     <Compile Include="Assets\Scripts\TargetIndicator.cs" />
     <Compile Include="Assets\Scripts\TargetableObject.cs" />
     <Compile Include="Assets\Scripts\UIProgressBarController.cs" />
+    <Compile Include="Assets\Scripts\WarpDrive.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\3rd Party\Detonator Explosion Framework\Resources\Detonator\Textures\HeatDistort.shader" />
