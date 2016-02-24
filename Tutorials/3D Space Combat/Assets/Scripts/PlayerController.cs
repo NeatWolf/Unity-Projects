@@ -3,30 +3,32 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
-    public float idleSpeed;
-    public float moveSpeed;
-    public float strafeSpeed;
-    public float boostSpeed;
-    public float warpSpeed;
-    public float lookSpeed;
-    public int verticalLookLimit;
-    public float tilt;
-    public float zRealignWaitTime;
+    public float idleSpeed = 100.0f;
+    public float moveSpeed = 200.0f;
+    public float strafeSpeed = 100.0f;
+    public float combatBoostSpeed = 400.0f;
+    public float boostSpeed = 1000.0f;
+    public float warpSpeed = 1000000.0f;
+    public float lookSpeed = 0.1f;
+    public int verticalLookLimit = 60;
+    public float tilt = 5.0f;
     public ParticleSystem warpParticleSystem;
 
     private Rigidbody rb;
+    private WarpDrive wd;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        zRealignWaitTime = Time.time + zRealignWaitTime;
+        wd = GetComponent<WarpDrive>();
     }
 
     void FixedUpdate()
     {
         // Don't allow any other controls when in warp speed
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space) && wd != null && wd.IsWarpEnabled)
         {
+            print("In warp");
             warpParticleSystem.Play();
             rb.AddForce(transform.forward * warpSpeed);
         }
@@ -86,9 +88,10 @@ public class PlayerController : MonoBehaviour
             }
 
             // Apply the rotation
-            rb.rotation = Quaternion.Slerp(rb.rotation, modifiedDirection, lookSpeed);
+            rb.rotation = Quaternion.Slerp(rb.rotation, modifiedDirection, Mathf.Clamp(lookSpeed / (rb.velocity.magnitude * 0.05f), 0.02f, 0.1f));
             //rb.AddTorque(modifiedDirection.eulerAngles * lookSpeed);
             #endregion
         }
+        print(string.Format("velocity = {0}", rb.velocity.magnitude));
     }
 }
