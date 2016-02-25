@@ -9,9 +9,8 @@ public class CameraController : MonoBehaviour
     public float moveSpeed;
     public float rotationSpeed;
 
-    void LateUpdate()
+    void Update()
     {
-        //if(player.gameObject.GetComponent<WarpDrive>().)
         // Set the position behind the player by a given offset
         Vector3 wantedPosition = player.position - player.forward * offset;
 

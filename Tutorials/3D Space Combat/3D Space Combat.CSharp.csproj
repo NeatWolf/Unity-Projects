@@ -132,6 +132,7 @@
     <Compile Include="Assets\Scripts\CanvasFaceCamera.cs" />
     <Compile Include="Assets\Scripts\DamageInfo.cs" />
     <Compile Include="Assets\Scripts\EnemyManager.cs" />
+    <Compile Include="Assets\Scripts\FloatingOrigin.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\HealthController.cs" />
     <Compile Include="Assets\Scripts\IndicatorController.cs" />
@@ -147,6 +148,7 @@
     <Compile Include="Assets\Scripts\TargetableObject.cs" />
     <Compile Include="Assets\Scripts\UIProgressBarController.cs" />
     <Compile Include="Assets\Scripts\WarpDrive.cs" />
+    <Compile Include="Assets\Scripts\WarpTarget.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\3rd Party\Detonator Explosion Framework\Resources\Detonator\Textures\HeatDistort.shader" />
