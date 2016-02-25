@@ -8,33 +8,67 @@ public class PlayerController : MonoBehaviour
     public float strafeSpeed = 100.0f;
     public float combatBoostSpeed = 400.0f;
     public float boostSpeed = 1000.0f;
-    public float warpSpeed = 1000000.0f;
     public float lookSpeed = 0.1f;
     public int verticalLookLimit = 60;
     public float tilt = 5.0f;
-    public ParticleSystem warpParticleSystem;
 
     private Rigidbody rb;
-    private WarpDrive wd;
+    private WarpDrive warpDrive;
+    private bool movementLocked = false;
+    private State currentState = State.Default;
+    
+    private enum State
+    {
+        Default,
+        WarpStandby
+    }
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        wd = GetComponent<WarpDrive>();
+        warpDrive = GetComponent<WarpDrive>();
+    }
+
+    void Update()
+    {
+        // Lock onto warp target
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            // Cancel lock
+            if(currentState == State.WarpStandby)
+            {
+                LockMovement(false);
+                currentState = State.Default;
+            }
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                WarpTarget target = hit.collider.gameObject.GetComponent<WarpTarget>();
+                if(target != null)
+                {
+                    LockMovement(true);
+                    StartCoroutine(RotateTowards(target.targetTransform.position));
+                    warpDrive.TargetPosition = target.targetTransform.position;
+                    currentState = State.WarpStandby;
+                }
+            }
+        }
+
+        if(currentState == State.WarpStandby)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                warpDrive.Engage();
+                LockMovement(false);
+            }
+        }
     }
 
     void FixedUpdate()
     {
-        // Don't allow any other controls when in warp speed
-        if (Input.GetKey(KeyCode.Space) && wd != null && wd.IsWarpEnabled)
+        if (!movementLocked)
         {
-            print("In warp");
-            warpParticleSystem.Play();
-            rb.AddForce(transform.forward * warpSpeed);
-        }
-        else
-        {
-            warpParticleSystem.Stop();
             float inputVertical = Input.GetAxis("Vertical");
             float inputHorizontal = Input.GetAxis("Horizontal");
             Vector3 mousePosition = Input.mousePosition;
@@ -88,10 +122,30 @@ public class PlayerController : MonoBehaviour
             }
 
             // Apply the rotation
-            rb.rotation = Quaternion.Slerp(rb.rotation, modifiedDirection, Mathf.Clamp(lookSpeed / (rb.velocity.magnitude * 0.05f), 0.02f, 0.1f));
+            rb.rotation = Quaternion.Slerp(rb.rotation, modifiedDirection, lookSpeed);
             //rb.AddTorque(modifiedDirection.eulerAngles * lookSpeed);
             #endregion
         }
-        print(string.Format("velocity = {0}", rb.velocity.magnitude));
+
+        //print(string.Format("position = {0}", transform.position.ToString()));
+    }
+
+    public void LockMovement(bool setting)
+    {
+        movementLocked = setting;
+    }
+
+    IEnumerator RotateTowards(Vector3 lookAtPosition)
+    {
+        //Vector3 direction = (lookAtPosition - transform.position).normalized;
+        //Quaternion directionQuaternion = Quaternion.Euler(direction.x, direction.y, direction.z);
+        Quaternion direction = Quaternion.LookRotation(lookAtPosition);
+        print(string.Format("rotation: {0}, desired rotation: {1}", rb.rotation.ToString(), direction.ToString()));
+        while (rb.rotation != direction)
+        {
+            //print(string.Format("rotation: {0}", rb.rotation));
+            rb.rotation = Quaternion.Slerp(rb.rotation, direction, lookSpeed);
+        }
+        yield return null;
     }
 }

@@ -3,25 +3,20 @@ using System.Collections;
 
 public class WarpDrive : MonoBehaviour {
 
-    public float speedUponExit;
+    public ParticleSystem warpParticleSystem;
 
     private Rigidbody rb;
-    private bool _isWarpEnabled = true;
+    private Vector3 _targetPosition = Vector3.zero;
 
-    public bool IsWarpEnabled
+    public Vector3 TargetPosition
     {
         get
         {
-            return _isWarpEnabled;
+            return _targetPosition;
         }
         set
         {
-            _isWarpEnabled = value;
-            if (!value)
-            {
-                rb.velocity = Vector3.zero;
-                rb.Sleep();
-            }
+            _targetPosition = value;
         }
     }
 
@@ -30,12 +25,12 @@ public class WarpDrive : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
     }
 
-    void Update()
+    public void Engage()
     {
-        if(_isWarpEnabled && Input.GetKey(KeyCode.Space))
+        if(TargetPosition != Vector3.zero)
         {
-            //warpParticleSystem.Play();
-            //rb.velocity = transform.forward * 50000;
+            transform.position = TargetPosition;
+            TargetPosition = Vector3.zero;
         }
     }
 }
