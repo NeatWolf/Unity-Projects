@@ -7,17 +7,20 @@ public class IndicatorController : MonoBehaviour
 {
     public TargetIndicator boxIndicatorPrefab;
     public Image arrowIndicatorPrefab;
+    public DestinationIndicator warpIndicatorPrefab;
 
     private List<TargetIndicator> boxIndicatorPool = new List<TargetIndicator>();
     private int boxPoolUsedCount = 0;
     private List<Image> arrowIndicatorPool = new List<Image>();
     private int arrowPoolUsedCount = 0;
-
     private Vector3 screenCenter;
+    private DestinationIndicator warpIndicatorInstance;
 
     void Start()
     {
         screenCenter = new Vector3(Screen.width, Screen.height, 0) / 2;
+        warpIndicatorInstance = Instantiate(warpIndicatorPrefab);
+        warpIndicatorInstance.transform.parent = transform;
     }
 
     void LateUpdate()
@@ -25,7 +28,7 @@ public class IndicatorController : MonoBehaviour
         resetPool();
         TargetableObject[] objects = GameObject.FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[];
 
-        foreach(TargetableObject obj in objects)
+        foreach (TargetableObject obj in objects)
         {
             Vector3 targetPosition = Camera.main.WorldToScreenPoint(obj.transform.position);
 
@@ -35,6 +38,20 @@ public class IndicatorController : MonoBehaviour
                 TargetIndicator box = getBoxIndicator();
                 box.anchoredPosition = new Vector3(targetPosition.x, targetPosition.y, 0f);
                 box.healthBarFillAmount = (float)obj.GetComponent<HealthController>().Health / (float)obj.GetComponent<HealthController>().maxHealth;
+
+                print(string.Format("mouse position: {0}, target position: {1}", Input.mousePosition, targetPosition));
+                if(targetPosition.z < 500)
+                {
+                    if (Vector3.Distance(new Vector2(Input.mousePosition.x, Input.mousePosition.y), new Vector2(targetPosition.x, targetPosition.y)) < 100)
+                    {
+                        print("stretching box");
+                        box.boxSize = new Vector2(180, 120);
+                    }
+                    else
+                    {
+                        box.boxSize = new Vector2(100, 100);
+                    }
+                }
             }
             else // Offscreen - show directional arrow
             {
@@ -90,6 +107,24 @@ public class IndicatorController : MonoBehaviour
             }
         }
         cleanPool();
+
+        // Warp target indicators
+        // TODO: This is very hacky. Find a way to hide this without moving its position offscreen
+        warpIndicatorInstance.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(-1000, -1000);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            WarpTarget target = hit.collider.gameObject.GetComponent<WarpTarget>();
+            if (target != null)
+            {
+                
+                warpIndicatorInstance.gameObject.GetComponent<RectTransform>().anchoredPosition = Camera.main.WorldToScreenPoint(target.gameObject.transform.position);
+                warpIndicatorInstance.SetDestinationName(target.targetName);
+                //print(string.Format("Position: {0}, Entry point position: {1}, Size: {2}", Camera.main.WorldToScreenPoint(target.gameObject.transform.position), target.targetTransform.position, (Camera.main.WorldToScreenPoint(target.gameObject.GetComponent<Collider>().bounds.max) - Camera.main.WorldToScreenPoint(target.gameObject.GetComponent<Collider>().bounds.min)).magnitude));
+                warpIndicatorInstance.SetEntryPointPosition(target.targetTransform.position);
+            }
+        }
     }
 
     private void resetPool()

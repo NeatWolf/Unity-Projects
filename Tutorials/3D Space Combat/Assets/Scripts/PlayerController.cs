@@ -20,7 +20,8 @@ public class PlayerController : MonoBehaviour
     private enum State
     {
         Default,
-        WarpStandby
+        WarpStandby,
+        InCombat
     }
 
     void Start()
@@ -48,8 +49,8 @@ public class PlayerController : MonoBehaviour
                 if(target != null)
                 {
                     LockMovement(true);
-                    StartCoroutine(RotateTowards(target.targetTransform.position));
                     warpDrive.TargetPosition = target.targetTransform.position;
+                    StartCoroutine(RotateTowards(target.targetTransform.position));
                     currentState = State.WarpStandby;
                 }
             }
@@ -61,6 +62,7 @@ public class PlayerController : MonoBehaviour
             {
                 warpDrive.Engage();
                 LockMovement(false);
+                currentState = State.Default;
             }
         }
     }
@@ -85,7 +87,14 @@ public class PlayerController : MonoBehaviour
                 // Add boost speed force
                 if (Input.GetKey(KeyCode.LeftShift))
                 {
-                    rb.AddForce(transform.forward * boostSpeed);
+                    if (currentState == State.InCombat)
+                    {
+                        rb.AddForce(transform.forward * combatBoostSpeed);
+                    }
+                    else
+                    {
+                        rb.AddForce(transform.forward * boostSpeed);
+                    }
                 }
             }
             else
@@ -140,8 +149,7 @@ public class PlayerController : MonoBehaviour
         //Vector3 direction = (lookAtPosition - transform.position).normalized;
         //Quaternion directionQuaternion = Quaternion.Euler(direction.x, direction.y, direction.z);
         Quaternion direction = Quaternion.LookRotation(lookAtPosition);
-        print(string.Format("rotation: {0}, desired rotation: {1}", rb.rotation.ToString(), direction.ToString()));
-        while (rb.rotation != direction)
+        while (Quaternion.Angle(rb.rotation, direction) > 0.1)
         {
             //print(string.Format("rotation: {0}", rb.rotation));
             rb.rotation = Quaternion.Slerp(rb.rotation, direction, lookSpeed);

@@ -5,7 +5,6 @@ public class WarpDrive : MonoBehaviour {
 
     public ParticleSystem warpParticleSystem;
 
-    private Rigidbody rb;
     private Vector3 _targetPosition = Vector3.zero;
 
     public Vector3 TargetPosition
@@ -18,11 +17,6 @@ public class WarpDrive : MonoBehaviour {
         {
             _targetPosition = value;
         }
-    }
-
-    void Start()
-    {
-        rb = GetComponent<Rigidbody>();
     }
 
     public void Engage()
