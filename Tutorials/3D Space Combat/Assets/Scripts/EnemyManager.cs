@@ -5,16 +5,30 @@ public class EnemyManager : MonoBehaviour {
 
     public GameObject enemy;
     public float spawnTime = 10f;
-    public Transform[] spawnPoints;
+    public int spawnNumber = 5;
+    public Transform[] spawnPointTransforms;
     public Transform player;
+    public SpawnPoint spawnPoint;
 
-	void Start ()
+    private SpawnPoint[] spawnPoints;
+
+    void Start()
     {
-        foreach(Transform spawnPoint in spawnPoints)
+        spawnPoints = new SpawnPoint[spawnPointTransforms.Length];
+        for(int i = 0; i < spawnPointTransforms.Length - 1; i++)
         {
-            if(Vector3.Distance(player.position, spawnPoint.position) < 1000)
+            spawnPoints[i] = Instantiate(spawnPoint, spawnPointTransforms[i].position, spawnPointTransforms[i].rotation) as SpawnPoint;
+        }
+    }
+
+	void Update ()
+    {
+        foreach(SpawnPoint spawnPoint in spawnPoints)
+        {
+            if(spawnPoint != null && !spawnPoint.used && Vector3.Distance(player.position, spawnPoint.transform.position) < 1000)
             {
-                StartCoroutine(SpawnWave(spawnPoint, 5, 5));
+                StartCoroutine(SpawnWave(spawnPoint.transform, spawnNumber, spawnTime));
+                spawnPoint.used = true;
             }
         }
 	}
@@ -24,13 +38,7 @@ public class EnemyManager : MonoBehaviour {
         for(int i = 0; i < number; i++)
         {
             yield return new WaitForSeconds(period);
-            Spawn(spawnPoint);
+            Instantiate(enemy, spawnPoint.position, spawnPoint.rotation);
         }
-    }
-
-    private void Spawn(Transform spawnPoint)
-    {
-        int spawnPointIndex = Random.Range(0, spawnPoints.Length - 1);
-        Instantiate(enemy, spawnPoint.position, spawnPoint.rotation);
     }
 }

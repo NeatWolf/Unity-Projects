@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerController : MonoBehaviour
+public class Player : MonoBehaviour
 {
     public float idleSpeed = 100.0f;
     public float moveSpeed = 200.0f;
@@ -20,8 +20,7 @@ public class PlayerController : MonoBehaviour
     private enum State
     {
         Default,
-        WarpStandby,
-        InCombat
+        WarpStandby
     }
 
     void Start()
@@ -56,6 +55,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        // Engage warp
         if(currentState == State.WarpStandby)
         {
             if (Input.GetKeyDown(KeyCode.Space))
@@ -63,6 +63,29 @@ public class PlayerController : MonoBehaviour
                 warpDrive.Engage();
                 LockMovement(false);
                 currentState = State.Default;
+            }
+        }
+
+        // Check for enemies that are near
+        TargetableObject[] objects = GameObject.FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[];
+
+        if(objects.Length <= 0)
+        {
+            GameManager.instance.isInCombat = false;
+        }
+        else
+        {
+            foreach (TargetableObject obj in objects)
+            {
+                if (Vector3.Distance(obj.transform.position, transform.position) < 500)
+                {
+                    GameManager.instance.isInCombat = true;
+                    break;
+                }
+                else
+                {
+                    GameManager.instance.isInCombat = false;
+                }
             }
         }
     }
@@ -87,7 +110,7 @@ public class PlayerController : MonoBehaviour
                 // Add boost speed force
                 if (Input.GetKey(KeyCode.LeftShift))
                 {
-                    if (currentState == State.InCombat)
+                    if (GameManager.instance.isInCombat)
                     {
                         rb.AddForce(transform.forward * combatBoostSpeed);
                     }
@@ -117,14 +140,12 @@ public class PlayerController : MonoBehaviour
 
             // Rotate along the z-axis to counteract x movement
             directionEuler = modifiedDirection.eulerAngles;
-            //print(string.Format("z-axis rotation: {0}", transform.InverseTransformDirection(rb.velocity).x * tilt));
             modifiedDirection = Quaternion.Euler(directionEuler.x, directionEuler.y, transform.InverseTransformDirection(rb.velocity).x * tilt);
 
             // Rotate back to 0 if it has been knocked out of rotation
             float distanceFromCenterX = Mathf.Abs((Screen.width / 2) - mousePosition.x);
             float distanceFromCenterY = Mathf.Abs((Screen.height / 2) - mousePosition.y);
 
-            //print(string.Format("distance from center = ({0}, {1})", distanceFromCenterX, distanceFromCenterY));
             if (inputHorizontal == 0 && distanceFromCenterX < 32 && distanceFromCenterY < 32)
             {
                 modifiedDirection = Quaternion.Euler(modifiedDirection.eulerAngles.x, modifiedDirection.eulerAngles.y, 0f);
@@ -135,8 +156,6 @@ public class PlayerController : MonoBehaviour
             //rb.AddTorque(modifiedDirection.eulerAngles * lookSpeed);
             #endregion
         }
-
-        //print(string.Format("position = {0}", transform.position.ToString()));
     }
 
     public void LockMovement(bool setting)
