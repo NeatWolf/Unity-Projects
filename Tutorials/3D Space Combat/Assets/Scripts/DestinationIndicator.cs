@@ -7,23 +7,25 @@ public class DestinationIndicator : MonoBehaviour {
     public Image entryPoint;
     public Text destinationName;
 
-    private RectTransform rt;
-
-	void Start ()
+    public void SetAll(string name, Vector3 namePosition, Vector3 entryPosition)
     {
-        rt = GetComponent<RectTransform>();
-	}
-
-    public void SetSize(float size)
-    {
-        rt.sizeDelta = new Vector2(size, size);
+        SetDestinationName(name);
+        SetNamePosition(namePosition);
+        SetEntryPointPosition(entryPosition);
     }
 
     public void SetEntryPointPosition(Vector3 entryPosition)
     {
-        Vector3 parentScreenPosition = gameObject.GetComponent<RectTransform>().anchoredPosition;
         Vector3 screenPosition = Camera.main.WorldToScreenPoint(entryPosition);
-        entryPoint.rectTransform.anchoredPosition = new Vector2(screenPosition.x - parentScreenPosition.x, screenPosition.y - parentScreenPosition.y);
+        entryPoint.rectTransform.anchoredPosition = screenPosition;
+        print(string.Format("Entry point screen position: {0}", entryPoint.rectTransform.anchoredPosition));
+    }
+
+    public void SetNamePosition(Vector3 namePosition)
+    {
+        Vector3 screenPosition = Camera.main.WorldToScreenPoint(namePosition);
+        destinationName.rectTransform.anchoredPosition = screenPosition;
+        print(string.Format("Name screen position: {0}", destinationName.rectTransform.anchoredPosition));
     }
 
     public void SetDestinationName(string destName)

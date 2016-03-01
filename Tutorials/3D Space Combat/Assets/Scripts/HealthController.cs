@@ -17,7 +17,7 @@ public class HealthController : MonoBehaviour
     void Start()
     {
         health = maxHealth;
-        levelUpSystem = GameObject.FindGameObjectWithTag("GameController").GetComponent<LevelUpSystem>();
+        levelUpSystem = GameObject.FindGameObjectWithTag("Player").GetComponent<LevelUpSystem>();
     }
 
     public int Health

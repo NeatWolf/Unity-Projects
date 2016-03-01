@@ -1,13 +1,31 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GameController : MonoBehaviour {
+public class GameManager : MonoBehaviour {
 
     public int hazardCount;
     public GameObject[] hazards;
     public Vector3 hazardSpawnPosition;
     public Vector2 hazardSizeRange;
     public Transform planet;
+
+    [HideInInspector]
+    public bool isInCombat;
+
+    public static GameManager instance;
+
+    void Awake()
+    {
+        if(instance == null)
+        {
+            instance = this;
+        }
+        else if(instance != this)
+        {
+            Destroy(gameObject);
+        }
+        DontDestroyOnLoad(gameObject);
+    }
 
 	void Start ()
     {
