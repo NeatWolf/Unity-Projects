@@ -61,6 +61,11 @@ public class Player : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 warpDrive.Engage();
+            }
+
+            if (warpDrive.State == Enums.WARP_DRIVE_STATE.waitingForCommand)
+            {
+                warpDrive.PowerDown();
                 LockMovement(false);
                 currentState = State.Default;
             }

@@ -126,6 +126,8 @@
     <Compile Include="Assets\3rd Party\Standard Assets\Effects\ImageEffects\Scripts\Vortex.cs" />
     <Compile Include="Assets\Scripts\AISimple.cs" />
     <Compile Include="Assets\Scripts\AIWeaponController.cs" />
+    <Compile Include="Assets\Scripts\AdvancedAI.cs" />
+    <Compile Include="Assets\Scripts\BarTimingMiniGame.cs" />
     <Compile Include="Assets\Scripts\BoltDamager.cs" />
     <Compile Include="Assets\Scripts\BoltMover.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
@@ -133,6 +135,7 @@
     <Compile Include="Assets\Scripts\DamageInfo.cs" />
     <Compile Include="Assets\Scripts\DestinationIndicator.cs" />
     <Compile Include="Assets\Scripts\EnemyManager.cs" />
+    <Compile Include="Assets\Scripts\Enums.cs" />
     <Compile Include="Assets\Scripts\FloatingOrigin.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\HealthController.cs" />
@@ -141,7 +144,6 @@
     <Compile Include="Assets\Scripts\Loader.cs" />
     <Compile Include="Assets\Scripts\MainMenu.cs" />
     <Compile Include="Assets\Scripts\MissionsMenu.cs" />
-    <Compile Include="Assets\Scripts\NoWarpZone.cs" />
     <Compile Include="Assets\Scripts\PauseMenu.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\PrimaryWeapon.cs" />
@@ -152,6 +154,7 @@
     <Compile Include="Assets\Scripts\SpawnPoint.cs" />
     <Compile Include="Assets\Scripts\TargetIndicator.cs" />
     <Compile Include="Assets\Scripts\TargetableObject.cs" />
+    <Compile Include="Assets\Scripts\Timer.cs" />
     <Compile Include="Assets\Scripts\UIProgressBarController.cs" />
     <Compile Include="Assets\Scripts\WarpDrive.cs" />
     <Compile Include="Assets\Scripts\WarpTarget.cs" />

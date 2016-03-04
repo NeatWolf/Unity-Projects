@@ -18,14 +18,12 @@ public class DestinationIndicator : MonoBehaviour {
     {
         Vector3 screenPosition = Camera.main.WorldToScreenPoint(entryPosition);
         entryPoint.rectTransform.anchoredPosition = screenPosition;
-        print(string.Format("Entry point screen position: {0}", entryPoint.rectTransform.anchoredPosition));
     }
 
     public void SetNamePosition(Vector3 namePosition)
     {
         Vector3 screenPosition = Camera.main.WorldToScreenPoint(namePosition);
         destinationName.rectTransform.anchoredPosition = screenPosition;
-        print(string.Format("Name screen position: {0}", destinationName.rectTransform.anchoredPosition));
     }
 
     public void SetDestinationName(string destName)

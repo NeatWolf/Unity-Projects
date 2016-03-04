@@ -18,8 +18,8 @@ public class AISimple : MonoBehaviour {
 
     private enum Maneuver
     {
-        Attack = 0,
-        Sniping = 1
+        Attack,
+        Sniping
     };
 
     void Start ()
@@ -38,7 +38,7 @@ public class AISimple : MonoBehaviour {
             timer = Time.time + Random.Range(5, 10);
             currentManeuver = (Maneuver)Random.Range(0, 2);
             print(string.Format("currentManeuver: {0}", currentManeuver));
-            if(currentManeuver == Maneuver.Sniping)
+            if (currentManeuver == Maneuver.Sniping)
             {
                 isStrafingRight = RandomBoolean();
             }
