@@ -31,6 +31,11 @@ public class FloatingOrigin : MonoBehaviour
             Object[] objects = FindObjectsOfType(typeof(Transform));
             foreach (Object o in objects)
             {
+                if((o as Transform).gameObject.layer.Equals(LayerMask.NameToLayer("UI")))
+                {
+                    continue;
+                }
+
                 Transform t = (Transform)o;
                 if (t.parent == null)
                 {

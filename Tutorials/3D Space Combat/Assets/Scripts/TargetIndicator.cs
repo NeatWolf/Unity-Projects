@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class TargetIndicator : MonoBehaviour {
 
-    public Image box, healthBar;
+    public Image box, healthBar, trajectory;
 
     private RectTransform rt;
 

@@ -8,6 +8,8 @@ public class IndicatorController : MonoBehaviour
     public TargetIndicator boxIndicatorPrefab;
     public Image arrowIndicatorPrefab;
     public DestinationIndicator warpIndicatorPrefab;
+    public GameObject player;
+    public float projectileSpeed;
 
     private List<TargetIndicator> boxIndicatorPool = new List<TargetIndicator>();
     private int boxPoolUsedCount = 0;
@@ -16,8 +18,8 @@ public class IndicatorController : MonoBehaviour
     private Vector3 screenCenter;
     private DestinationIndicator warpIndicatorInstance;
 
-    private readonly float minSize = 350f;
-    private readonly float maxSize = 800f;
+    private readonly float minSize = 100f;
+    private readonly float maxSize = 300f;
     private readonly float expansionThreshold = 100f;
 
     void Start()
@@ -46,12 +48,15 @@ public class IndicatorController : MonoBehaviour
                 float multiplier = (maxSize - minSize) / expansionThreshold;
                 float sizeDimension = minSize;
                 box.healthBarVisible = false;
-                if(targetPosition.z < expansionThreshold)
+                if (targetPosition.z < expansionThreshold)
                 {
                     box.healthBarVisible = true;
                     sizeDimension = maxSize - (targetPosition.z * multiplier);
                 }
                 box.boxSize = new Vector2(sizeDimension, sizeDimension);
+
+                //Vector3 lead = CalculateLead(player.transform.position, obj.transform.position, projectileSpeed * 1.5f, obj.gameObject.GetComponent<Rigidbody>().velocity, player.GetComponent<Rigidbody>().velocity);
+                //box.trajectory.rectTransform.anchoredPosition = Camera.main.WorldToScreenPoint(lead) - screenCenter;
 
                 //print(string.Format("mouse position: {0}, target position: {1}", Input.mousePosition, targetPosition));
                 //if(targetPosition.z < 500)
@@ -198,6 +203,27 @@ public class IndicatorController : MonoBehaviour
             TargetIndicator lastBox = boxIndicatorPool[boxIndicatorPool.Count - 1];
             boxIndicatorPool.Remove(lastBox);
             Destroy(lastBox.gameObject);
+        }
+    }
+
+    private Vector3 CalculateLead(Vector3 shooterPosition, Vector3 targetPosition, float projectileSpeed, Vector3 targetVelocity, Vector3 playerVelocity)
+    {
+        Vector3 V = targetVelocity - playerVelocity;
+        Vector3 D = targetPosition - shooterPosition;
+        float A = V.sqrMagnitude - projectileSpeed * projectileSpeed;
+        float B = 2 * Vector3.Dot(D, V);
+        float C = D.sqrMagnitude;
+        if (A >= 0)
+        {
+            Debug.LogError("No solution exists");
+            return targetPosition;
+        }
+        else {
+            float rt = Mathf.Sqrt(B * B - 4 * A * C);
+            float dt1 = (-B + rt) / (2 * A);
+            float dt2 = (-B - rt) / (2 * A);
+            float dt = (dt1 < 0 ? dt2 : dt1);
+            return targetPosition + V * dt;
         }
     }
 }
