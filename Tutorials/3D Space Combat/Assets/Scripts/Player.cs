@@ -48,7 +48,7 @@ public class Player : MonoBehaviour
                 if(target != null)
                 {
                     LockMovement(true);
-                    warpDrive.TargetPosition = target.targetTransform.position;
+                    warpDrive.SetTarget(target.targetTransform.position);
                     StartCoroutine(RotateTowards(target.targetTransform.position));
                     currentState = State.WarpStandby;
                 }

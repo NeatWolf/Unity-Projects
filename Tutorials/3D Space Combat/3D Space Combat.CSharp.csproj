@@ -131,6 +131,7 @@
     <Compile Include="Assets\Scripts\BoltDamager.cs" />
     <Compile Include="Assets\Scripts\BoltMover.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
+    <Compile Include="Assets\Scripts\CameraShake.cs" />
     <Compile Include="Assets\Scripts\CanvasFaceCamera.cs" />
     <Compile Include="Assets\Scripts\DamageInfo.cs" />
     <Compile Include="Assets\Scripts\DestinationIndicator.cs" />
@@ -145,8 +146,10 @@
     <Compile Include="Assets\Scripts\MainMenu.cs" />
     <Compile Include="Assets\Scripts\MissionsMenu.cs" />
     <Compile Include="Assets\Scripts\PauseMenu.cs" />
+    <Compile Include="Assets\Scripts\PlanetAtmosphere.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\PrimaryWeapon.cs" />
+    <Compile Include="Assets\Scripts\RadialBlur.cs" />
     <Compile Include="Assets\Scripts\RandomRotator.cs" />
     <Compile Include="Assets\Scripts\ReticleController.cs" />
     <Compile Include="Assets\Scripts\RotateToCursor.cs" />
@@ -248,6 +251,7 @@
     <None Include="Assets\3rd Party\Standard Assets\Effects\ToonShading\Shaders\ToonLit.shader" />
     <None Include="Assets\3rd Party\Standard Assets\Effects\ToonShading\Shaders\ToonLitOutline.shader" />
     <None Include="Assets\Shaders\PlanetGlow.shader" />
+    <None Include="Assets\Shaders\RadialBlur.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
