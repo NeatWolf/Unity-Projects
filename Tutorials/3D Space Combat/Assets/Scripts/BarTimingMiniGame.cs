@@ -54,7 +54,6 @@ public class BarTimingMiniGame : MonoBehaviour {
                         OnResultReady(Enums.MINI_GAME_RESULT.good);
                     }
                 }
-                print("testingtesting");
                 bar.CrossFadeAlpha(0f, 0.25f, false);
                 cursor.CrossFadeAlpha(0f, 0.25f, false);
                 started = false;
@@ -66,9 +65,16 @@ public class BarTimingMiniGame : MonoBehaviour {
     {
         if (!started)
         {
+            Reset();
             bar.CrossFadeAlpha(1f, 0.12f, false);
             cursor.CrossFadeAlpha(1f, 0.12f, false);
             started = true;
         }
+    }
+
+    private void Reset()
+    {
+        cursor.rectTransform.anchoredPosition = new Vector2(bar.rectTransform.rect.xMin, 0f);
+        speed = bar.rectTransform.rect.width / (Mathf.Pow(2, timeInSeconds) - 1);
     }
 }

@@ -9,61 +9,59 @@ public class WarpDrive : MonoBehaviour {
     public Text countdownText;
     public Timer timer;
     public int chargeUpTime = 10;
+    public float warpSpeed;
 
-    private Vector3 targetPosition = Vector3.zero;
-    private Enums.WARP_DRIVE_STATE state;
-    private bool countingDown = false;
-    private bool miniGameStarted = false;
+    private Vector3 _targetPosition = Vector3.zero;
+    private float _distanceToTarget = 0f;
+    private Enums.WARP_DRIVE_STATE _state;
+    private bool _countingDown = false;
+    private bool _miniGameStarted = false;
+    private float _currentSpeed;
 
     void Start()
     {
-        state = Enums.WARP_DRIVE_STATE.off;
+        _state = Enums.WARP_DRIVE_STATE.off;
         timer = Instantiate(timer);
         countdownText.text = "";
         miniGame.OnResultReady += ProcessResult;
+        _currentSpeed = warpSpeed;
     }
 
     void Update()
     {
-        if (countingDown)
+        if (_countingDown)
         {
             if (timer.currentTime > 0)
             {
                 countdownText.text = string.Format("FTL in {0} . . .", ((int)timer.currentTime + 1).ToString());
-                if (!miniGameStarted)
+                if (!_miniGameStarted)
                 {
                     miniGame.StartMiniGame();
-                    miniGameStarted = true;
+                    _miniGameStarted = true;
                 }
             }
             else
             {
                 countdownText.text = "";
-                if (TargetPosition != Vector3.zero)
+                if (_targetPosition != Vector3.zero)
                 {
-                    state = Enums.WARP_DRIVE_STATE.on;
+                    _state = Enums.WARP_DRIVE_STATE.on;
 
-                    // Do warp
-                    transform.position = TargetPosition;
-                    TargetPosition = Vector3.zero;
-                    //
-
-                    state = Enums.WARP_DRIVE_STATE.waitingForCommand;
-                    countingDown = false;
+                    if(_distanceToTarget > 0f)
+                    {
+                        warpParticleSystem.Play();
+                        Accelerate();
+                        _distanceToTarget -= _currentSpeed;
+                    }
+                    else
+                    {
+                        warpParticleSystem.Stop();
+                        _currentSpeed = warpSpeed;
+                        _state = Enums.WARP_DRIVE_STATE.waitingForCommand;
+                        _countingDown = false;
+                    }
                 }
             }
-        }
-    }
-
-    public Vector3 TargetPosition
-    {
-        get
-        {
-            return targetPosition;
-        }
-        set
-        {
-            targetPosition = value;
         }
     }
 
@@ -71,23 +69,30 @@ public class WarpDrive : MonoBehaviour {
     {
         get
         {
-            return state;
+            return _state;
         }
+    }
+
+    public void SetTarget(Vector3 targetPosition)
+    {
+        _targetPosition = targetPosition;
+        _distanceToTarget = Vector3.Distance(transform.position, targetPosition);
+        print(string.Format("Distance to target: {0}", _distanceToTarget));
     }
 
     public void PowerDown()
     {
-        state = Enums.WARP_DRIVE_STATE.off;
+        _state = Enums.WARP_DRIVE_STATE.off;
     }
 
     public void Engage()
     {
-        if (!countingDown)
+        if (!_countingDown)
         {
-            state = Enums.WARP_DRIVE_STATE.charging;
+            _state = Enums.WARP_DRIVE_STATE.charging;
             Countdown(chargeUpTime);
-            countingDown = true;
-            miniGameStarted = false;
+            _countingDown = true;
+            _miniGameStarted = false;
         }
     }
 
@@ -111,5 +116,17 @@ public class WarpDrive : MonoBehaviour {
             default:
                 break;
         }
+    }
+
+    private float CalculateDistanceToTarget(Vector3 target)
+    {
+        return Vector3.Distance(transform.position, target);
+    }
+
+    private void Accelerate()
+    {
+        _currentSpeed += _currentSpeed * Time.deltaTime;
+        transform.position += transform.forward * _currentSpeed;
+        print(string.Format("Move forward {0}", _currentSpeed));
     }
 }
