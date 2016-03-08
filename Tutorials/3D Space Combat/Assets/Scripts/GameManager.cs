@@ -10,7 +10,9 @@ public class GameManager : MonoBehaviour {
     public Transform planet;
 
     [HideInInspector]
-    public bool isInCombat;
+    public bool isInCombat = false;
+    [HideInInspector]
+    public bool isPaused = false;
 
     public static GameManager instance;
 

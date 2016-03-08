@@ -31,118 +31,121 @@ public class IndicatorController : MonoBehaviour
 
     void LateUpdate()
     {
-        resetPool();
-        TargetableObject[] objects = GameObject.FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[];
-
-        foreach (TargetableObject obj in objects)
+        if (!GameManager.instance.isPaused)
         {
-            Vector3 targetPosition = Camera.main.WorldToScreenPoint(obj.transform.position);
+            resetPool();
+            TargetableObject[] objects = GameObject.FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[];
 
-            // If the target is onscreen show the onscreen indicator & health bar
-            if (targetPosition.z > 0f && targetPosition.x >= 0f && targetPosition.x <= Screen.width && targetPosition.y >= 0f && targetPosition.y <= Screen.height)
+            foreach (TargetableObject obj in objects)
             {
-                TargetIndicator box = getBoxIndicator();
-                box.anchoredPosition = new Vector3(targetPosition.x, targetPosition.y, 0f);
-                box.healthBarFillAmount = (float)obj.GetComponent<HealthController>().Health / (float)obj.GetComponent<HealthController>().maxHealth;
+                Vector3 targetPosition = Camera.main.WorldToScreenPoint(obj.transform.position);
 
-                float multiplier = (maxSize - minSize) / expansionThreshold;
-                float sizeDimension = minSize;
-                box.healthBarVisible = false;
-                if (targetPosition.z < expansionThreshold)
+                // If the target is onscreen show the onscreen indicator & health bar
+                if (targetPosition.z > 0f && targetPosition.x >= 0f && targetPosition.x <= Screen.width && targetPosition.y >= 0f && targetPosition.y <= Screen.height)
                 {
-                    box.healthBarVisible = true;
-                    sizeDimension = maxSize - (targetPosition.z * multiplier);
+                    TargetIndicator box = getBoxIndicator();
+                    box.anchoredPosition = new Vector3(targetPosition.x, targetPosition.y, 0f);
+                    box.healthBarFillAmount = (float)obj.GetComponent<HealthController>().Health / (float)obj.GetComponent<HealthController>().maxHealth;
+
+                    float multiplier = (maxSize - minSize) / expansionThreshold;
+                    float sizeDimension = minSize;
+                    box.healthBarVisible = false;
+                    if (targetPosition.z < expansionThreshold)
+                    {
+                        box.healthBarVisible = true;
+                        sizeDimension = maxSize - (targetPosition.z * multiplier);
+                    }
+                    box.boxSize = new Vector2(sizeDimension, sizeDimension);
+
+                    //Vector3 lead = CalculateLead(player.transform.position, obj.transform.position, projectileSpeed * 1.5f, obj.gameObject.GetComponent<Rigidbody>().velocity, player.GetComponent<Rigidbody>().velocity);
+                    //box.trajectory.rectTransform.anchoredPosition = Camera.main.WorldToScreenPoint(lead) - screenCenter;
+
+                    //print(string.Format("mouse position: {0}, target position: {1}", Input.mousePosition, targetPosition));
+                    //if(targetPosition.z < 500)
+                    //{
+                    //    if (Vector3.Distance(new Vector2(Input.mousePosition.x, Input.mousePosition.y), new Vector2(targetPosition.x, targetPosition.y)) < 100)
+                    //    {
+                    //        print("stretching box");
+                    //        box.boxSize = new Vector2(180, 120);
+                    //    }
+                    //    else
+                    //    {
+                    //        box.boxSize = new Vector2(100, 100);
+                    //    }
+                    //}
                 }
-                box.boxSize = new Vector2(sizeDimension, sizeDimension);
+                else // Offscreen - show directional arrow
+                {
+                    arrowIndicatorPrefab.enabled = true;
 
-                //Vector3 lead = CalculateLead(player.transform.position, obj.transform.position, projectileSpeed * 1.5f, obj.gameObject.GetComponent<Rigidbody>().velocity, player.GetComponent<Rigidbody>().velocity);
-                //box.trajectory.rectTransform.anchoredPosition = Camera.main.WorldToScreenPoint(lead) - screenCenter;
+                    if (targetPosition.z < 0)
+                    {
+                        targetPosition *= -1;
+                    }
 
-                //print(string.Format("mouse position: {0}, target position: {1}", Input.mousePosition, targetPosition));
-                //if(targetPosition.z < 500)
-                //{
-                //    if (Vector3.Distance(new Vector2(Input.mousePosition.x, Input.mousePosition.y), new Vector2(targetPosition.x, targetPosition.y)) < 100)
-                //    {
-                //        print("stretching box");
-                //        box.boxSize = new Vector2(180, 120);
-                //    }
-                //    else
-                //    {
-                //        box.boxSize = new Vector2(100, 100);
-                //    }
-                //}
+                    // Make origin the center of the screen instead of bottom-left
+                    targetPosition -= screenCenter;
+
+                    // Calculate the angle from the center of the screen to the target off-screen
+                    float angle = Mathf.Atan2(targetPosition.y, targetPosition.x);
+                    angle -= 90 * Mathf.Deg2Rad;
+
+                    float cos = Mathf.Cos(angle);
+                    float sin = -Mathf.Sin(angle);
+
+                    targetPosition = screenCenter + new Vector3(sin * 150, cos * 150, 0);
+
+                    float m = cos / sin;
+
+                    Vector3 screenBounds = screenCenter * 0.9f;
+
+                    // Top and bottom
+                    if (cos > 0)
+                    {
+                        targetPosition = new Vector3(screenBounds.y / m, screenBounds.y, 0);
+                    }
+                    else
+                    {
+                        targetPosition = new Vector3(-screenBounds.y / m, -screenBounds.y, 0);
+                    }
+
+                    // Right and left
+                    if (targetPosition.x > screenBounds.x)
+                    {
+                        targetPosition = new Vector3(screenBounds.x, screenBounds.x * m, 0);
+                    }
+                    else if (targetPosition.x < -screenBounds.x)
+                    {
+                        targetPosition = new Vector3(-screenBounds.x, -screenBounds.x * m, 0);
+                    }
+
+                    // Move origin back to bottom-left
+                    targetPosition += screenCenter;
+
+                    Image arrow = getArrowIndicator();
+                    arrow.rectTransform.rotation = Quaternion.Euler(0, 0, angle * Mathf.Rad2Deg);
+                    arrow.rectTransform.anchoredPosition = targetPosition;
+                }
             }
-            else // Offscreen - show directional arrow
+            cleanPool();
+
+            // Warp target indicators
+            warpIndicatorInstance.gameObject.SetActive(false);
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
             {
-                arrowIndicatorPrefab.enabled = true;
-
-                if (targetPosition.z < 0)
+                WarpTarget target = hit.collider.gameObject.GetComponent<WarpTarget>();
+                if (target != null)
                 {
-                    targetPosition *= -1;
+                    warpIndicatorInstance.gameObject.SetActive(true);
+                    warpIndicatorInstance.SetDestinationName(target.targetName);
+
+                    // Works with sphere colliders
+                    Vector3 topPosition = target.targetBoundary.bounds.center + new Vector3(0f, target.targetBoundary.bounds.extents.y * 0.75f, 0f);
+                    warpIndicatorInstance.SetNamePosition(topPosition);
+                    warpIndicatorInstance.SetEntryPointPosition(target.targetTransform.position);
                 }
-
-                // Make origin the center of the screen instead of bottom-left
-                targetPosition -= screenCenter;
-
-                // Calculate the angle from the center of the screen to the target off-screen
-                float angle = Mathf.Atan2(targetPosition.y, targetPosition.x);
-                angle -= 90 * Mathf.Deg2Rad;
-
-                float cos = Mathf.Cos(angle);
-                float sin = -Mathf.Sin(angle);
-
-                targetPosition = screenCenter + new Vector3(sin * 150, cos * 150, 0);
-
-                float m = cos / sin;
-
-                Vector3 screenBounds = screenCenter * 0.9f;
-
-                // Top and bottom
-                if (cos > 0)
-                {
-                    targetPosition = new Vector3(screenBounds.y / m, screenBounds.y, 0);
-                }
-                else
-                {
-                    targetPosition = new Vector3(-screenBounds.y / m, -screenBounds.y, 0);
-                }
-
-                // Right and left
-                if (targetPosition.x > screenBounds.x)
-                {
-                    targetPosition = new Vector3(screenBounds.x, screenBounds.x * m, 0);
-                }
-                else if (targetPosition.x < -screenBounds.x)
-                {
-                    targetPosition = new Vector3(-screenBounds.x, -screenBounds.x * m, 0);
-                }
-
-                // Move origin back to bottom-left
-                targetPosition += screenCenter;
-
-                Image arrow = getArrowIndicator();
-                arrow.rectTransform.rotation = Quaternion.Euler(0, 0, angle * Mathf.Rad2Deg);
-                arrow.rectTransform.anchoredPosition = targetPosition;
-            }
-        }
-        cleanPool();
-
-        // Warp target indicators
-        warpIndicatorInstance.gameObject.SetActive(false);
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
-        {
-            WarpTarget target = hit.collider.gameObject.GetComponent<WarpTarget>();
-            if (target != null)
-            {
-                warpIndicatorInstance.gameObject.SetActive(true);
-                warpIndicatorInstance.SetDestinationName(target.targetName);
-
-                // Works with sphere colliders
-                Vector3 topPosition = target.targetBoundary.bounds.center + new Vector3(0f, target.targetBoundary.bounds.extents.y * 0.75f, 0f);
-                warpIndicatorInstance.SetNamePosition(topPosition);
-                warpIndicatorInstance.SetEntryPointPosition(target.targetTransform.position);
             }
         }
     }
