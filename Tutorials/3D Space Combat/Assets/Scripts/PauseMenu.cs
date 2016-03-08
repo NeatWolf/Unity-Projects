@@ -14,14 +14,14 @@ public class PauseMenu : MonoBehaviour {
         if (isPaused)
         {
             pauseMenuCanvas.SetActive(true);
-            //mainCanvas.SetActive(false);
             Time.timeScale = 0f;
+            GameManager.instance.isPaused = true;
         }
         else
         {
             pauseMenuCanvas.SetActive(false);
-            //mainCanvas.SetActive(true);
             Time.timeScale = 1f;
+            GameManager.instance.isPaused = false;
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
