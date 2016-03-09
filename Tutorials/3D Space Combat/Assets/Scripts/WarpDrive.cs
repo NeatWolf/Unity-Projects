@@ -23,7 +23,7 @@ public class WarpDrive : MonoBehaviour {
         _state = Enums.WARP_DRIVE_STATE.off;
         timer = Instantiate(timer);
         countdownText.text = "";
-        miniGame.OnResultReady += ProcessResult;
+        miniGame.ResultReady += ProcessResult;
         _currentSpeed = warpSpeed;
     }
 
