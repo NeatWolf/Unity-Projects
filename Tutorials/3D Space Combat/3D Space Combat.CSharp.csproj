@@ -126,7 +126,6 @@
     <Compile Include="Assets\3rd Party\Standard Assets\Effects\ImageEffects\Scripts\Vortex.cs" />
     <Compile Include="Assets\Scripts\AISimple.cs" />
     <Compile Include="Assets\Scripts\AIWeaponController.cs" />
-    <Compile Include="Assets\Scripts\AdvancedAI.cs" />
     <Compile Include="Assets\Scripts\BarTimingMiniGame.cs" />
     <Compile Include="Assets\Scripts\BoltDamager.cs" />
     <Compile Include="Assets\Scripts\BoltMover.cs" />
@@ -144,6 +143,9 @@
     <Compile Include="Assets\Scripts\LevelUpSystem.cs" />
     <Compile Include="Assets\Scripts\Loader.cs" />
     <Compile Include="Assets\Scripts\MainMenu.cs" />
+    <Compile Include="Assets\Scripts\Mission.cs" />
+    <Compile Include="Assets\Scripts\MissionDetails.cs" />
+    <Compile Include="Assets\Scripts\MissionObjective.cs" />
     <Compile Include="Assets\Scripts\MissionsMenu.cs" />
     <Compile Include="Assets\Scripts\PauseMenu.cs" />
     <Compile Include="Assets\Scripts\PlanetAtmosphere.cs" />

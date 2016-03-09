@@ -12,7 +12,7 @@ public class BarTimingMiniGame : MonoBehaviour {
     public int timeInSeconds = 5;
 
     public delegate void MiniGameResultDelegate(Enums.MINI_GAME_RESULT result);
-    public event MiniGameResultDelegate OnResultReady;
+    public event MiniGameResultDelegate ResultReady;
 
     private float speed;
     private bool started = false;
@@ -41,17 +41,17 @@ public class BarTimingMiniGame : MonoBehaviour {
                 if (cursorPositionX > perfectPosition - perfectRange && cursorPositionX < perfectPosition + perfectRange)
                 {
                     // Perfect, skip entire countdown
-                    if(OnResultReady != null)
+                    if(ResultReady != null)
                     {
-                        OnResultReady(Enums.MINI_GAME_RESULT.perfect);
+                        ResultReady(Enums.MINI_GAME_RESULT.perfect);
                     }
                 }
                 else if (cursorPositionX > perfectPosition - acceptedRange && cursorPositionX < perfectPosition + acceptedRange)
                 {
                     // Good, reduce countdown
-                    if (OnResultReady != null)
+                    if (ResultReady != null)
                     {
-                        OnResultReady(Enums.MINI_GAME_RESULT.good);
+                        ResultReady(Enums.MINI_GAME_RESULT.good);
                     }
                 }
                 bar.CrossFadeAlpha(0f, 0.25f, false);
