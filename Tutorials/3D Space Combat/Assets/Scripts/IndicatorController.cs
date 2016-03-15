@@ -8,6 +8,7 @@ public class IndicatorController : MonoBehaviour
     public TargetIndicator boxIndicatorPrefab;
     public Image arrowIndicatorPrefab;
     public DestinationIndicator warpIndicatorPrefab;
+    public Image waypointImage;
     public GameObject player;
     public float projectileSpeed;
 
@@ -147,6 +148,9 @@ public class IndicatorController : MonoBehaviour
                     warpIndicatorInstance.SetEntryPointPosition(target.targetTransform.position);
                 }
             }
+
+            // Waypoint indicator
+            //waypointImage.gameObject.SetActive(false);
         }
     }
 

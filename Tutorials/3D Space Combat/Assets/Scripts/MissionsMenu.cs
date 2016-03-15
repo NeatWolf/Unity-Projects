@@ -9,13 +9,10 @@ public class MissionsMenu : MonoBehaviour
     public VerticalLayoutGroup missionsGroup;
     public MissionDetails detailsPanel;
 
-    private List<Mission> missions;
-
     private bool isOpen;
 
     void Start()
     {
-        missions = new List<Mission>();
         GameManager.NewMissionAcquired += new GameManager.NewMissionEventHandler(OnNewMissionAcquired);
     }
 
@@ -40,7 +37,7 @@ public class MissionsMenu : MonoBehaviour
         }
     }
 
-    public void DisplayMissionDetails(string missionName, string description, Dictionary<string, bool> objectives)
+    public void DisplayMissionDetails(string missionName, string description, Dictionary<string, Objective.ObjectiveState> objectives)
     {
         detailsPanel.SetDetails(missionName, description, objectives);
     }
@@ -48,7 +45,6 @@ public class MissionsMenu : MonoBehaviour
     private void OnNewMissionAcquired(Mission mission)
     {
         mission.SetOnClickMissionDetails(new Mission.MissionDetailsHandler(DisplayMissionDetails));
-        missions.Add(mission);
         mission.SetParent(missionsGroup);
         print("mission added");
     }
