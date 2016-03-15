@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Enums : ScriptableObject {
 
-    public enum WARP_DRIVE_STATE
+    public enum WarpDriveState
     {
         off,
         charging,
@@ -11,7 +11,7 @@ public class Enums : ScriptableObject {
         waitingForCommand
     }
 
-    public enum MINI_GAME_RESULT
+    public enum MiniGameResult
     {
         perfect,
         good,

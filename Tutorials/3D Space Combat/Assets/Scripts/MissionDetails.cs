@@ -17,7 +17,7 @@ public class MissionDetails : MonoBehaviour
         objectives = new List<MissionObjective>();
     }
 
-    public void SetDetails(string name, string description, Dictionary<string, bool> objectives)
+    public void SetDetails(string name, string description, Dictionary<string, Objective.ObjectiveState> objectives)
     {
         ClearObjectives();
         missionName.text = name.ToUpper();
@@ -28,12 +28,20 @@ public class MissionDetails : MonoBehaviour
         }
     }
 
-    public void AddObjective(string description, bool isCompleted)
+    public void AddObjective(string description, Objective.ObjectiveState state)
     {
         MissionObjective objective = Instantiate(missionObjectivePrefab) as MissionObjective;
         objective.SetDescription(description);
         objectives.Add(objective);
         objective.transform.SetParent(objectivesVerticalGroup.transform);
+        if (state.Equals(Objective.ObjectiveState.complete))
+        {
+            objective.IsCompleted = true;
+        }
+        else
+        {
+            objective.IsCompleted = false;
+        }
     }
 
     public void ClearObjectives()

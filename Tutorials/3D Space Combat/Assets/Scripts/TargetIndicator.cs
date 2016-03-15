@@ -8,7 +8,7 @@ public class TargetIndicator : MonoBehaviour {
 
     private RectTransform rt;
 
-    void Start()
+    void Awake()
     {
         rt = GetComponent<RectTransform>();
     }

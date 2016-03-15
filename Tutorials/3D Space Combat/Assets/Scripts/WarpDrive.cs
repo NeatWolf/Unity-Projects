@@ -13,14 +13,14 @@ public class WarpDrive : MonoBehaviour {
 
     private Vector3 _targetPosition = Vector3.zero;
     private float _distanceToTarget = 0f;
-    private Enums.WARP_DRIVE_STATE _state;
+    private Enums.WarpDriveState _state;
     private bool _countingDown = false;
     private bool _miniGameStarted = false;
     private float _currentSpeed;
 
     void Start()
     {
-        _state = Enums.WARP_DRIVE_STATE.off;
+        _state = Enums.WarpDriveState.off;
         timer = Instantiate(timer);
         countdownText.text = "";
         miniGame.ResultReady += ProcessResult;
@@ -45,7 +45,7 @@ public class WarpDrive : MonoBehaviour {
                 countdownText.text = "";
                 if (_targetPosition != Vector3.zero)
                 {
-                    _state = Enums.WARP_DRIVE_STATE.on;
+                    _state = Enums.WarpDriveState.on;
 
                     if(_distanceToTarget > 0f)
                     {
@@ -57,7 +57,7 @@ public class WarpDrive : MonoBehaviour {
                     {
                         warpParticleSystem.Stop();
                         _currentSpeed = warpSpeed;
-                        _state = Enums.WARP_DRIVE_STATE.waitingForCommand;
+                        _state = Enums.WarpDriveState.waitingForCommand;
                         _countingDown = false;
                     }
                 }
@@ -65,7 +65,7 @@ public class WarpDrive : MonoBehaviour {
         }
     }
 
-    public Enums.WARP_DRIVE_STATE State
+    public Enums.WarpDriveState State
     {
         get
         {
@@ -77,19 +77,18 @@ public class WarpDrive : MonoBehaviour {
     {
         _targetPosition = targetPosition;
         _distanceToTarget = Vector3.Distance(transform.position, targetPosition);
-        print(string.Format("Distance to target: {0}", _distanceToTarget));
     }
 
     public void PowerDown()
     {
-        _state = Enums.WARP_DRIVE_STATE.off;
+        _state = Enums.WarpDriveState.off;
     }
 
     public void Engage()
     {
         if (!_countingDown)
         {
-            _state = Enums.WARP_DRIVE_STATE.charging;
+            _state = Enums.WarpDriveState.charging;
             Countdown(chargeUpTime);
             _countingDown = true;
             _miniGameStarted = false;
@@ -103,14 +102,14 @@ public class WarpDrive : MonoBehaviour {
         timer.StartTimer();
     }
 
-    private void ProcessResult(Enums.MINI_GAME_RESULT result)
+    private void ProcessResult(Enums.MiniGameResult result)
     {
         switch (result)
         {
-            case Enums.MINI_GAME_RESULT.perfect:
+            case Enums.MiniGameResult.perfect:
                 timer.currentTime = 0.01f;
                 break;
-            case Enums.MINI_GAME_RESULT.good:
+            case Enums.MiniGameResult.good:
                 timer.currentTime = 3f;
                 break;
             default:
@@ -127,6 +126,5 @@ public class WarpDrive : MonoBehaviour {
     {
         _currentSpeed += _currentSpeed * Time.deltaTime;
         transform.position += transform.forward * _currentSpeed;
-        print(string.Format("Move forward {0}", _currentSpeed));
     }
 }

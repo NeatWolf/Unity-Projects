@@ -63,7 +63,7 @@ public class Player : MonoBehaviour
                 warpDrive.Engage();
             }
 
-            if (warpDrive.State == Enums.WARP_DRIVE_STATE.waitingForCommand)
+            if (warpDrive.State == Enums.WarpDriveState.waitingForCommand)
             {
                 warpDrive.PowerDown();
                 LockMovement(false);

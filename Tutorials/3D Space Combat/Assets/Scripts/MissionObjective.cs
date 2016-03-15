@@ -11,4 +11,16 @@ public class MissionObjective : MonoBehaviour
     {
         description.text = desc;
     }
+
+    public bool IsCompleted
+    {
+        get
+        {
+            return toggle.isOn;
+        }
+        set
+        {
+            toggle.isOn = value;
+        }
+    }
 }

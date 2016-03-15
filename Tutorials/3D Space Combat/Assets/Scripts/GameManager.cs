@@ -5,20 +5,22 @@ using System.Collections.Generic;
 public class GameManager : MonoBehaviour
 {
     public int hazardCount;
-    public GameObject[] hazards;
+    public GameObject[] asteroidPrefabs;
+    public GameObject enemyShipPrefab;
     public Vector3 hazardSpawnPosition;
     public Vector2 hazardSizeRange;
     public Transform planet;
-    public Mission missionPrefab;
+    public Quest firstQuest;
+    public GameObject deimosTravelObjective;
 
     [HideInInspector]
     public bool isInCombat = false;
     [HideInInspector]
     public bool isPaused = false;
-    [HideInInspector]
-    public List<Mission> missions;
 
     public static GameManager instance;
+    public static Transform playerTransform;
+    public static QuestManager questManager;
 
     public delegate void NewMissionEventHandler(Mission mission);
     public static event NewMissionEventHandler NewMissionAcquired;
@@ -34,13 +36,14 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
+        playerTransform = GameObject.FindWithTag("Player").GetComponent<Transform>();
+        questManager = gameObject.GetComponent<QuestManager>();
     }
 
 	void Start ()
     {
         SpawnHazards();
-        Invoke("AddMission", 2);
-        Invoke("AddMission2", 4);
+        Invoke("CreateAndAddTestMission", 2);
 	}
 	
     void SpawnHazards()
@@ -60,7 +63,7 @@ public class GameManager : MonoBehaviour
     {
         for(int i = 0; i < number; i++)
         {
-            GameObject hazard = hazards[Random.Range(0, hazards.Length)];
+            GameObject hazard = asteroidPrefabs[Random.Range(0, asteroidPrefabs.Length)];
             Vector3 spawnPosition = Random.onUnitSphere * Random.Range(innerRadius, outerRadius) + sphere.position;
             GameObject hazardGO = Instantiate(hazard, spawnPosition, Quaternion.identity) as GameObject;
             float hazardScale = Random.Range(hazardSizeRange.x, hazardSizeRange.y);
@@ -68,35 +71,27 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void AddMission()
+    private void CreateAndAddTestMission()
     {
-        Mission mission = Instantiate(missionPrefab) as Mission;
-        mission.MissionName = "Trouble over the Red Planet";
-        mission.description = "Destroy all enemies over Mars.";
-        mission.startingObjectives = new Dictionary<string, bool>()
+        // OBJECTIVE 1 - DEFEAT ENEMIES OVER MARS
+        // Create enemy ships for objective 1
+        List<ObjectiveTarget> enemiesObj1 = new List<ObjectiveTarget>();
+        for(int i = 0; i < 2; i++)
         {
-            { "Destroy all enemies (0/10)", false }
-        };
-
-        if (NewMissionAcquired != null)
-        {
-            NewMissionAcquired(mission);
+            GameObject enemyShip = Instantiate(enemyShipPrefab, new Vector3((i * 10f) - 50f, 0f, 100f), Quaternion.Euler(0f, 180f, 0f)) as GameObject;
+            ObjectiveTarget enemyTarget = enemyShip.AddComponent<ObjectiveTarget>();
+            enemiesObj1.Add(enemyTarget);
         }
-    }
 
-    private void AddMission2()
-    {
-        Mission mission = Instantiate(missionPrefab) as Mission;
-        mission.MissionName = "Shoot for the moon";
-        mission.description = "Destroy all enemies near Deimos.";
-        mission.startingObjectives = new Dictionary<string, bool>()
-        {
-            { "Destroy all enemies (0/10)", false }
-        };
+        Objective firstObjective = firstQuest.GetObjectiveAtIndex(0);
+        firstObjective.AssignTargets(enemiesObj1.ToArray());
 
-        if (NewMissionAcquired != null)
-        {
-            NewMissionAcquired(mission);
-        }
+        // OBJECTIVE 2 - TRAVEL TO DEIMOS
+        ObjectiveTarget deimos = deimosTravelObjective.AddComponent<ObjectiveTarget>();
+        
+        Objective secondObjective = firstQuest.GetObjectiveAtIndex(1);
+        secondObjective.AssignTarget(deimos);
+
+        //questManager.AddQuest(firstQuest);
     }
 }

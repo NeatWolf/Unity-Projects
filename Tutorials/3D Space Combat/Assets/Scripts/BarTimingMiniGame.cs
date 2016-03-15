@@ -11,7 +11,7 @@ public class BarTimingMiniGame : MonoBehaviour {
     public Image bar;
     public int timeInSeconds = 5;
 
-    public delegate void MiniGameResultDelegate(Enums.MINI_GAME_RESULT result);
+    public delegate void MiniGameResultDelegate(Enums.MiniGameResult result);
     public event MiniGameResultDelegate ResultReady;
 
     private float speed;
@@ -43,7 +43,7 @@ public class BarTimingMiniGame : MonoBehaviour {
                     // Perfect, skip entire countdown
                     if(ResultReady != null)
                     {
-                        ResultReady(Enums.MINI_GAME_RESULT.perfect);
+                        ResultReady(Enums.MiniGameResult.perfect);
                     }
                 }
                 else if (cursorPositionX > perfectPosition - acceptedRange && cursorPositionX < perfectPosition + acceptedRange)
@@ -51,7 +51,7 @@ public class BarTimingMiniGame : MonoBehaviour {
                     // Good, reduce countdown
                     if (ResultReady != null)
                     {
-                        ResultReady(Enums.MINI_GAME_RESULT.good);
+                        ResultReady(Enums.MiniGameResult.good);
                     }
                 }
                 bar.CrossFadeAlpha(0f, 0.25f, false);
