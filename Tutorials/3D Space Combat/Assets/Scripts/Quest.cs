@@ -17,9 +17,14 @@ public class Quest : MonoBehaviour
 
     public Objective[] objectives;
 
-	void Start ()
+    public delegate void QuestCompletedDelegate(Quest sender);
+    public event QuestCompletedDelegate OnCompleted;
+
+    void Start ()
     {
-        state = Objective.ObjectiveState.incomplete;
+        // Set the quest and the first objective to active
+        state = Objective.ObjectiveState.active;
+        currentObjective.state = Objective.ObjectiveState.active;
         GameObject objectiveParentGameObject = currentObjective.transform.parent.gameObject;
         if(objectiveParentGameObject != null)
         {
@@ -54,9 +59,13 @@ public class Quest : MonoBehaviour
         return null;
     }
 
-    public void OnCompleted()
+    public void OnObjectivesCompleted()
     {
         print(string.Format("completed quest: {0}", questName));
         state = Objective.ObjectiveState.complete;
+        if(OnCompleted != null)
+        {
+            OnCompleted(this);
+        }
     }
 }

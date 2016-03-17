@@ -35,13 +35,20 @@ public class QuestDetailsScreen : MonoBehaviour {
     {
         if(questName != null)
         {
-            questName.text = quest.questName;
+            questName.text = quest.questName.ToUpper();
         }
         if(description != null)
         {
             description.text = quest.description;
         }
-        
+
+        // Destroy all children
+        for (int i = 0; i < objectivesListTransform.childCount; i++)
+        {
+            Destroy(objectivesListTransform.GetChild(i).gameObject);
+        }
+
+        // Add objectives to list
         foreach (Objective obj in quest.objectives)
         {
             ObjectiveDisplay display = Instantiate(objectiveDisplayPrefab) as ObjectiveDisplay;

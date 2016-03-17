@@ -14,11 +14,15 @@ public class Objective : MonoBehaviour
 
     private float progress = 0f;
 
+    public delegate void ObjectiveCompletedDelegate(Objective sender);
+    public event ObjectiveCompletedDelegate OnCompleted;
+
     public Quest ParentScript { get; set; }
 
     public enum ObjectiveState
     {
-        incomplete,
+        hidden,
+        active,
         complete
     }
 
@@ -67,20 +71,25 @@ public class Objective : MonoBehaviour
         if (Mathf.Approximately(1f, progress) && state != ObjectiveState.complete)
         {
             state = ObjectiveState.complete;
-            OnCompleted();
+            OnCompletedObjective();
         }
     }
 
-    private void OnCompleted()
+    private void OnCompletedObjective()
     {
         if(nextObjective != null)
         {
             ParentScript.currentObjective = nextObjective;
+            ParentScript.currentObjective.state = ObjectiveState.active;
         }
         else
         {
             // All objectives complete, end quest
-            ParentScript.OnCompleted();
+            ParentScript.OnObjectivesCompleted();
+        }
+        if(OnCompleted != null)
+        {
+            OnCompleted(this);
         }
         print(string.Format("completed objective: {0}", description));
     }

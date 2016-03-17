@@ -2,21 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class QuestsDisplay : MonoBehaviour {
+public class QuestListDisplay : MonoBehaviour {
 
-    public Transform targetTransform;
+    public Transform listTransform;
     public QuestDisplay questDisplayPrefab;
 
     public QuestManager questManager;
 
 	void Start ()
     {
-        QuestManager.OnChanged += QuestManager_OnChanged;
+        questManager.OnChanged += QuestManager_OnChanged;
 	}
 
     void OnDestroy()
     {
-        QuestManager.OnChanged -= QuestManager_OnChanged;
+        questManager.OnChanged -= QuestManager_OnChanged;
     }
 
     void Update ()
@@ -24,9 +24,9 @@ public class QuestsDisplay : MonoBehaviour {
         
 	}
 
-    private void QuestManager_OnChanged(QuestManager questManager)
+    private void QuestManager_OnChanged(QuestManager sender)
     {
-        if (this.questManager == questManager)
+        if(sender == questManager)
         {
             Initialize(questManager);
         }
@@ -37,9 +37,9 @@ public class QuestsDisplay : MonoBehaviour {
         Debug.Log("Initializing QuestsDisplay");
 
         // Destroy all children
-        for(int i = 0; i < targetTransform.childCount; i++)
+        for(int i = 0; i < listTransform.childCount; i++)
         {
-            Destroy(targetTransform.GetChild(i).gameObject);
+            Destroy(listTransform.GetChild(i).gameObject);
         }
 
         // Initialize quest list
@@ -48,7 +48,7 @@ public class QuestsDisplay : MonoBehaviour {
         foreach(Quest quest in quests)
         {
             QuestDisplay display = Instantiate(questDisplayPrefab) as QuestDisplay;
-            display.transform.SetParent(targetTransform, false);
+            display.transform.SetParent(listTransform, false);
             display.Initialize(quest);
         }
     }
