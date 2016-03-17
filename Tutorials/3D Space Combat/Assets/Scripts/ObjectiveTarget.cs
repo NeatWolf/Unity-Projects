@@ -10,7 +10,7 @@ public class ObjectiveTarget : MonoBehaviour {
 
     void Start()
     {
-        state = Objective.ObjectiveState.incomplete;
+        state = Objective.ObjectiveState.active;
         visibleIndicator = true;
     }
 

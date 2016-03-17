@@ -7,7 +7,7 @@ public class QuestDisplay : MonoBehaviour {
     public Text textName;
     public Image sprite;
 
-    public delegate void ListItemDisplayDelegate(Quest senderItem);
+    public delegate void ListItemDisplayDelegate(Quest sender);
     public static event ListItemDisplayDelegate OnClick;
 
     public Quest quest;

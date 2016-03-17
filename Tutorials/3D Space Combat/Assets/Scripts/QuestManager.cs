@@ -5,11 +5,12 @@ using System;
 
 public class QuestManager : MonoBehaviour {
 
-    public QuestsDisplay questsDisplayPrefab;
+    public QuestListDisplay questsDisplayPrefab;
+    public Transform questMenuParent;
     public List<Quest> quests = new List<Quest>();
 
-    public delegate void QuestManagerDelegate(QuestManager questManager);
-    public static event QuestManagerDelegate OnChanged;
+    public delegate void QuestManagerDelegate(QuestManager sender);
+    public event QuestManagerDelegate OnChanged;
 
     private Quest _currentQuest;
 
@@ -20,24 +21,18 @@ public class QuestManager : MonoBehaviour {
 
     void Update()
     {
-        //Quest finishedQuest = null;
-        //foreach(Quest quest in quests)
-        //{
-        //    if(quest.state == Objective.ObjectiveState.complete)
-        //    {
-        //        finishedQuest = quest;
-        //        break;
-        //    }
-        //}
-        //if(finishedQuest != null)
-        //{
-        //    OnQuestCompleted(finishedQuest);
-        //}
+
+    }
+
+    private void Quest_OnCompleted(Quest sender)
+    {
+        Remove(sender);
     }
 
     public void Display()
     {
-        QuestsDisplay display = Instantiate(questsDisplayPrefab) as QuestsDisplay;
+        QuestListDisplay display = Instantiate(questsDisplayPrefab) as QuestListDisplay;
+        display.transform.SetParent(questMenuParent, false);
         display.Initialize(this);
     }
 
@@ -48,6 +43,7 @@ public class QuestManager : MonoBehaviour {
             return;
         }
         quests.Add(newQuest);
+        newQuest.OnCompleted += Quest_OnCompleted;
         if(OnChanged != null)
         {
             OnChanged(this);
@@ -64,26 +60,11 @@ public class QuestManager : MonoBehaviour {
         {
             return;
         }
+        quest.OnCompleted -= Quest_OnCompleted;
         quests.Remove(quest);
         if (OnChanged != null)
         {
             OnChanged(this);
         }
     }
-
-    //private void OnQuestCompleted(Quest quest)
-    //{
-    //    print(string.Format("Quest completed! - {0}", quest.name));
-    //    quests.Remove(quest);
-    //}
-
-    //public void AddQuest(Quest newQuest)
-    //{
-    //    quests.Add(newQuest);
-    //}
-
-    //public void SetCurrentQuest(Quest currentQuest)
-    //{
-    //    _currentQuest = currentQuest;
-    //}
 }

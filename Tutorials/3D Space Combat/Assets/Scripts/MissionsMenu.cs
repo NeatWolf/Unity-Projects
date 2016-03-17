@@ -1,51 +1,51 @@
-﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
-using System.Collections.Generic;
+﻿//using UnityEngine;
+//using System.Collections;
+//using UnityEngine.UI;
+//using System.Collections.Generic;
 
-public class MissionsMenu : MonoBehaviour
-{
-    public GameObject missionsMenuCanvas;
-    public VerticalLayoutGroup missionsGroup;
-    public MissionDetails detailsPanel;
+//public class MissionsMenu : MonoBehaviour
+//{
+//    public GameObject missionsMenuCanvas;
+//    public VerticalLayoutGroup missionsGroup;
+//    public MissionDetails detailsPanel;
 
-    private bool isOpen;
+//    private bool isOpen;
 
-    void Start()
-    {
-        GameManager.NewMissionAcquired += new GameManager.NewMissionEventHandler(OnNewMissionAcquired);
-    }
+//    void Start()
+//    {
+//        GameManager.NewMissionAcquired += new GameManager.NewMissionEventHandler(OnNewMissionAcquired);
+//    }
 
-    void Update()
-    {
-        if (isOpen)
-        {
-            missionsMenuCanvas.SetActive(true);
-            Time.timeScale = 0f;
-            GameManager.instance.isPaused = true;
-        }
-        else
-        {
-            missionsMenuCanvas.SetActive(false);
-            Time.timeScale = 1f;
-            GameManager.instance.isPaused = false;
-        }
+//    void Update()
+//    {
+//        if (isOpen)
+//        {
+//            missionsMenuCanvas.SetActive(true);
+//            Time.timeScale = 0f;
+//            GameManager.instance.isPaused = true;
+//        }
+//        else
+//        {
+//            missionsMenuCanvas.SetActive(false);
+//            Time.timeScale = 1f;
+//            GameManager.instance.isPaused = false;
+//        }
 
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            isOpen = !isOpen;
-        }
-    }
+//        if (Input.GetKeyDown(KeyCode.O))
+//        {
+//            isOpen = !isOpen;
+//        }
+//    }
 
-    public void DisplayMissionDetails(string missionName, string description, Dictionary<string, Objective.ObjectiveState> objectives)
-    {
-        detailsPanel.SetDetails(missionName, description, objectives);
-    }
+//    public void DisplayMissionDetails(string missionName, string description, Dictionary<string, Objective.ObjectiveState> objectives)
+//    {
+//        detailsPanel.SetDetails(missionName, description, objectives);
+//    }
 
-    private void OnNewMissionAcquired(Mission mission)
-    {
-        mission.SetOnClickMissionDetails(new Mission.MissionDetailsHandler(DisplayMissionDetails));
-        mission.SetParent(missionsGroup);
-        print("mission added");
-    }
-}
+//    private void OnNewMissionAcquired(Mission mission)
+//    {
+//        mission.SetOnClickMissionDetails(new Mission.MissionDetailsHandler(DisplayMissionDetails));
+//        mission.SetParent(missionsGroup);
+//        print("mission added");
+//    }
+//}

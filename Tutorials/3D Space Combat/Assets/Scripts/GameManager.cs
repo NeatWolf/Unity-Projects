@@ -22,9 +22,6 @@ public class GameManager : MonoBehaviour
     public static Transform playerTransform;
     public static QuestManager questManager;
 
-    public delegate void NewMissionEventHandler(Mission mission);
-    public static event NewMissionEventHandler NewMissionAcquired;
-
     void Awake()
     {
         if(instance == null)
