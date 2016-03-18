@@ -36,7 +36,7 @@ public class ObjectiveDisplay : MonoBehaviour {
         {
             switch (objective.state)
             {
-                case Objective.ObjectiveState.hidden:
+                case Objective.ObjectiveState.inactive:
                     gameObject.SetActive(false);
                     break;
                 case Objective.ObjectiveState.active:

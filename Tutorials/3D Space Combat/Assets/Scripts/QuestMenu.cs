@@ -5,12 +5,11 @@ public class QuestMenu : MonoBehaviour {
 
     public GameObject questMenuCanvas;
 
-    private Canvas canvas;
     private bool isPaused;
 
     void Start ()
     {
-        canvas = GetComponent<Canvas>();
+        
 	}
 
     void Update()

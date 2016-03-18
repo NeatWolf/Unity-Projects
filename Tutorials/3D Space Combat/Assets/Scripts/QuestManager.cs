@@ -67,4 +67,19 @@ public class QuestManager : MonoBehaviour {
             OnChanged(this);
         }
     }
+
+    public void SetActiveQuest(Quest selectedQuest)
+    {
+        foreach(Quest quest in quests)
+        {
+            if(quest == selectedQuest)
+            {
+                quest.state = Objective.ObjectiveState.active;
+            }
+            else
+            {
+                quest.state = Objective.ObjectiveState.inactive;
+            }
+        }
+    }
 }
