@@ -12,11 +12,13 @@ public class QuestListDisplay : MonoBehaviour {
 	void Start ()
     {
         questManager.OnChanged += QuestManager_OnChanged;
+        QuestDisplay.OnClick += QuestDisplay_OnClick;
 	}
 
     void OnDestroy()
     {
         questManager.OnChanged -= QuestManager_OnChanged;
+        QuestDisplay.OnClick -= QuestDisplay_OnClick;
     }
 
     void Update ()
@@ -30,6 +32,11 @@ public class QuestListDisplay : MonoBehaviour {
         {
             Initialize(questManager);
         }
+    }
+
+    private void QuestDisplay_OnClick(Quest sender)
+    {
+        Initialize(questManager);
     }
 
     public void Initialize(QuestManager questManager)

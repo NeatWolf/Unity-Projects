@@ -21,7 +21,7 @@ public class Objective : MonoBehaviour
 
     public enum ObjectiveState
     {
-        hidden,
+        inactive,
         active,
         complete
     }

@@ -13,11 +13,13 @@ public class QuestDetailsScreen : MonoBehaviour {
     {
         GameManager.questManager.Display();
         QuestDisplay.OnClick += QuestDisplay_OnClick;
+        QuestDisplay.OnPointerEnter += QuestDisplay_OnPointerEnter;
 	}
 
     void OnDestroy()
     {
         QuestDisplay.OnClick -= QuestDisplay_OnClick;
+        QuestDisplay.OnPointerEnter -= QuestDisplay_OnPointerEnter;
     }
 
     void Update ()
@@ -25,10 +27,15 @@ public class QuestDetailsScreen : MonoBehaviour {
 	
 	}
 
-    private void QuestDisplay_OnClick(Quest senderItem)
+    private void QuestDisplay_OnClick(Quest sender)
     {
-        Debug.Log(string.Format("Click handler for {0}", senderItem.questName));
-        Initialize(senderItem);
+        Debug.Log(string.Format("Click handler for {0}", sender.questName));
+    }
+
+    private void QuestDisplay_OnPointerEnter(Quest sender)
+    {
+        Debug.Log(string.Format("Hover handler for {0}", sender.questName));
+        Initialize(sender);
     }
 
     public void Initialize(Quest quest)

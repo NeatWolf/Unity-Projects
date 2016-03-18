@@ -6,9 +6,11 @@ public class QuestDisplay : MonoBehaviour {
 
     public Text textName;
     public Image sprite;
+    public Sprite activeMarker;
 
     public delegate void ListItemDisplayDelegate(Quest sender);
     public static event ListItemDisplayDelegate OnClick;
+    public static event ListItemDisplayDelegate OnPointerEnter;
 
     public Quest quest;
 
@@ -33,9 +35,17 @@ public class QuestDisplay : MonoBehaviour {
         {
             textName.text = quest.questName;
         }
-        if(sprite != null)
+        if(quest.state == Objective.ObjectiveState.active)
         {
-            sprite.sprite = quest.sprite;
+            Debug.Log(string.Format("Set quest as active ({0})", quest.questName));
+            sprite.color = new Color(255f, 255f, 255f, 255f);
+            sprite.sprite = activeMarker;
+        }
+        else if(quest.state == Objective.ObjectiveState.inactive)
+        {
+            Debug.Log(string.Format("Set quest as inactive ({0})", quest.questName));
+            sprite.color = new Color(255f, 255f, 255f, 0f);
+            sprite.sprite = null;
         }
     }
 
@@ -44,7 +54,7 @@ public class QuestDisplay : MonoBehaviour {
         string displayName = "nothing";
         if(quest != null)
         {
-            displayName = quest.questName;
+            GameManager.questManager.SetActiveQuest(quest);
         }
         if(OnClick != null)
         {
@@ -53,7 +63,25 @@ public class QuestDisplay : MonoBehaviour {
         }
         else
         {
-            Debug.Log(string.Format("Nobody is listening to {0}", displayName));
+            Debug.Log(string.Format("Nobody is listening to {0} Click event", displayName));
+        }
+    }
+
+    public void PointerEnter()
+    {
+        string displayName = "nothing";
+        if (quest != null)
+        {
+            displayName = quest.questName;
+        }
+        if (OnPointerEnter != null)
+        {
+            Debug.Log(string.Format("Hovered over {0}", displayName));
+            OnPointerEnter(quest);
+        }
+        else
+        {
+            Debug.Log(string.Format("Nobody is listening to {0} Hover event", displayName));
         }
     }
 }

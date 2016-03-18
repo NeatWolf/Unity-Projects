@@ -8,13 +8,11 @@ public class Quest : MonoBehaviour
     public string questName;
     [Multiline]
     public string description;
-    public Sprite sprite;
     public Objective currentObjective;
     public Image currentObjectiveArrow;
     public Image currentObjectiveIcon;
     public Text currentObjectiveDescription;
     public Objective.ObjectiveState state;
-
     public Objective[] objectives;
 
     public delegate void QuestCompletedDelegate(Quest sender);
@@ -23,7 +21,6 @@ public class Quest : MonoBehaviour
     void Start ()
     {
         // Set the quest and the first objective to active
-        state = Objective.ObjectiveState.active;
         currentObjective.state = Objective.ObjectiveState.active;
         GameObject objectiveParentGameObject = currentObjective.transform.parent.gameObject;
         if(objectiveParentGameObject != null)
