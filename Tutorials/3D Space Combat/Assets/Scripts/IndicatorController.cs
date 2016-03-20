@@ -8,7 +8,8 @@ public class IndicatorController : MonoBehaviour
     public TargetIndicator boxIndicatorPrefab;
     public Image arrowIndicatorPrefab;
     public DestinationIndicator warpIndicatorPrefab;
-    public Image waypointImage;
+    public Image objectiveArrowPrefab;
+    public Image objectiveIconPrefab;
     public GameObject player;
     public float projectileSpeed;
 
@@ -16,12 +17,23 @@ public class IndicatorController : MonoBehaviour
     private int boxPoolUsedCount = 0;
     private List<Image> arrowIndicatorPool = new List<Image>();
     private int arrowPoolUsedCount = 0;
+    private List<Image> objectiveArrowPool = new List<Image>();
+    private int objectiveArrowPoolUsedCount = 0;
+    private List<Image> objectiveIconPool = new List<Image>();
+    private int objectiveIconPoolUsedCount = 0;
     private Vector3 screenCenter;
     private DestinationIndicator warpIndicatorInstance;
 
     private readonly float minSize = 100f;
     private readonly float maxSize = 300f;
     private readonly float expansionThreshold = 100f;
+    private Image lastArrow;
+
+    private enum ArrowType
+    {
+        enemy,
+        waypoint
+    }
 
     void Start()
     {
@@ -35,6 +47,8 @@ public class IndicatorController : MonoBehaviour
         if (!GameManager.instance.isPaused)
         {
             resetPool();
+
+            // POSITION ENEMY ARROWS AND BOXES
             TargetableObject[] objects = GameObject.FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[];
 
             foreach (TargetableObject obj in objects)
@@ -77,55 +91,28 @@ public class IndicatorController : MonoBehaviour
                 }
                 else // Offscreen - show directional arrow
                 {
-                    arrowIndicatorPrefab.enabled = true;
+                    PositionArrowIndicator(targetPosition, ArrowType.enemy);
+                }
+            }
 
-                    if (targetPosition.z < 0)
+            // POSITION OBJECTIVE ARROWS AND INDICATORS
+            Vector3[] waypoints = GameManager.questManager.GetActiveQuestObjectiveTargets();
+            if (waypoints != null)
+            {
+                foreach (Vector3 waypoint in waypoints)
+                {
+                    Vector3 targetPosition = Camera.main.WorldToScreenPoint(waypoint);
+
+                    // If the target is onscreen show the onscreen indicator & health bar
+                    if (targetPosition.z > 0f && targetPosition.x >= 0f && targetPosition.x <= Screen.width && targetPosition.y >= 0f && targetPosition.y <= Screen.height)
                     {
-                        targetPosition *= -1;
-                    }
-
-                    // Make origin the center of the screen instead of bottom-left
-                    targetPosition -= screenCenter;
-
-                    // Calculate the angle from the center of the screen to the target off-screen
-                    float angle = Mathf.Atan2(targetPosition.y, targetPosition.x);
-                    angle -= 90 * Mathf.Deg2Rad;
-
-                    float cos = Mathf.Cos(angle);
-                    float sin = -Mathf.Sin(angle);
-
-                    targetPosition = screenCenter + new Vector3(sin * 150, cos * 150, 0);
-
-                    float m = cos / sin;
-
-                    Vector3 screenBounds = screenCenter * 0.9f;
-
-                    // Top and bottom
-                    if (cos > 0)
-                    {
-                        targetPosition = new Vector3(screenBounds.y / m, screenBounds.y, 0);
+                        Image indicatorImage = getObjectiveIcon();
+                        indicatorImage.rectTransform.anchoredPosition = new Vector3(targetPosition.x, targetPosition.y, 0f);
                     }
                     else
                     {
-                        targetPosition = new Vector3(-screenBounds.y / m, -screenBounds.y, 0);
+                        PositionArrowIndicator(targetPosition, ArrowType.waypoint);
                     }
-
-                    // Right and left
-                    if (targetPosition.x > screenBounds.x)
-                    {
-                        targetPosition = new Vector3(screenBounds.x, screenBounds.x * m, 0);
-                    }
-                    else if (targetPosition.x < -screenBounds.x)
-                    {
-                        targetPosition = new Vector3(-screenBounds.x, -screenBounds.x * m, 0);
-                    }
-
-                    // Move origin back to bottom-left
-                    targetPosition += screenCenter;
-
-                    Image arrow = getArrowIndicator();
-                    arrow.rectTransform.rotation = Quaternion.Euler(0, 0, angle * Mathf.Rad2Deg);
-                    arrow.rectTransform.anchoredPosition = targetPosition;
                 }
             }
             cleanPool();
@@ -148,9 +135,6 @@ public class IndicatorController : MonoBehaviour
                     warpIndicatorInstance.SetEntryPointPosition(target.targetTransform.position);
                 }
             }
-
-            // Waypoint indicator
-            //waypointImage.gameObject.SetActive(false);
         }
     }
 
@@ -158,6 +142,8 @@ public class IndicatorController : MonoBehaviour
     {
         boxPoolUsedCount = 0;
         arrowPoolUsedCount = 0;
+        objectiveArrowPoolUsedCount = 0;
+        objectiveIconPoolUsedCount = 0;
     }
 
     private TargetIndicator getBoxIndicator()
@@ -196,6 +182,42 @@ public class IndicatorController : MonoBehaviour
         return arrow;
     }
 
+    private Image getObjectiveArrow()
+    {
+        Image arrow;
+        if (objectiveArrowPoolUsedCount < objectiveArrowPool.Count)
+        {
+            arrow = objectiveArrowPool[objectiveArrowPoolUsedCount];
+        }
+        else
+        {
+            arrow = Instantiate(objectiveArrowPrefab);
+            arrow.transform.parent = transform;
+            objectiveArrowPool.Add(arrow);
+        }
+
+        objectiveArrowPoolUsedCount++;
+        return arrow;
+    }
+
+    private Image getObjectiveIcon()
+    {
+        Image icon;
+        if (objectiveIconPoolUsedCount < objectiveIconPool.Count)
+        {
+            icon = objectiveIconPool[objectiveIconPoolUsedCount];
+        }
+        else
+        {
+            icon = Instantiate(objectiveIconPrefab);
+            icon.transform.parent = transform;
+            objectiveIconPool.Add(icon);
+        }
+
+        objectiveIconPoolUsedCount++;
+        return icon;
+    }
+
     private void cleanPool()
     {
         while(arrowIndicatorPool.Count > arrowPoolUsedCount)
@@ -210,6 +232,22 @@ public class IndicatorController : MonoBehaviour
             TargetIndicator lastBox = boxIndicatorPool[boxIndicatorPool.Count - 1];
             boxIndicatorPool.Remove(lastBox);
             Destroy(lastBox.gameObject);
+        }
+
+        // Objective waypoint offscreen arrows
+        while (objectiveArrowPool.Count > objectiveArrowPoolUsedCount)
+        {
+            Image lastArrow = objectiveArrowPool[objectiveArrowPool.Count - 1];
+            objectiveArrowPool.Remove(lastArrow);
+            Destroy(lastArrow.gameObject);
+        }
+
+        // Objective waypoint onscreen indicator
+        while (objectiveIconPool.Count > objectiveIconPoolUsedCount)
+        {
+            Image lastIcon = objectiveIconPool[objectiveIconPool.Count - 1];
+            objectiveIconPool.Remove(lastIcon);
+            Destroy(lastIcon.gameObject);
         }
     }
 
@@ -232,5 +270,71 @@ public class IndicatorController : MonoBehaviour
             float dt = (dt1 < 0 ? dt2 : dt1);
             return targetPosition + V * dt;
         }
+    }
+
+    private void PositionArrowIndicator(Vector3 targetPosition, ArrowType arrowType)
+    {
+        arrowIndicatorPrefab.enabled = true;
+
+        if (targetPosition.z < 0)
+        {
+            targetPosition *= -1;
+        }
+
+        // Make origin the center of the screen instead of bottom-left
+        targetPosition -= screenCenter;
+
+        // Calculate the angle from the center of the screen to the target off-screen
+        float angle = Mathf.Atan2(targetPosition.y, targetPosition.x);
+        angle -= 90 * Mathf.Deg2Rad;
+
+        float cos = Mathf.Cos(angle);
+        float sin = -Mathf.Sin(angle);
+
+        targetPosition = screenCenter + new Vector3(sin * 150, cos * 150, 0);
+
+        float m = cos / sin;
+
+        Vector3 screenBounds = screenCenter * 0.9f;
+
+        // Top and bottom
+        if (cos > 0)
+        {
+            targetPosition = new Vector3(screenBounds.y / m, screenBounds.y, 0);
+        }
+        else
+        {
+            targetPosition = new Vector3(-screenBounds.y / m, -screenBounds.y, 0);
+        }
+
+        // Right and left
+        if (targetPosition.x > screenBounds.x)
+        {
+            targetPosition = new Vector3(screenBounds.x, screenBounds.x * m, 0);
+        }
+        else if (targetPosition.x < -screenBounds.x)
+        {
+            targetPosition = new Vector3(-screenBounds.x, -screenBounds.x * m, 0);
+        }
+
+        // Move origin back to bottom-left
+        targetPosition += screenCenter;
+
+        Image arrow;
+        switch (arrowType)
+        {
+            case ArrowType.enemy:
+                arrow = getArrowIndicator();
+                break;
+            case ArrowType.waypoint:
+                arrow = getObjectiveArrow();
+                break;
+            default:
+                arrow = getArrowIndicator();
+                break;
+        }
+        
+        arrow.rectTransform.rotation = Quaternion.Euler(0, 0, angle * Mathf.Rad2Deg);
+        arrow.rectTransform.anchoredPosition = targetPosition;
     }
 }

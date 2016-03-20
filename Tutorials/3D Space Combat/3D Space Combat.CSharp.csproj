@@ -163,6 +163,7 @@
     <Compile Include="Assets\Scripts\QuestListDisplay.cs" />
     <Compile Include="Assets\Scripts\QuestManager.cs" />
     <Compile Include="Assets\Scripts\QuestMenu.cs" />
+    <Compile Include="Assets\Scripts\QuestWaypointDisplay.cs" />
     <Compile Include="Assets\Scripts\RadialBlur.cs" />
     <Compile Include="Assets\Scripts\RandomRotator.cs" />
     <Compile Include="Assets\Scripts\ReticleController.cs" />
