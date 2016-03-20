@@ -106,12 +106,18 @@ public class IndicatorController : MonoBehaviour
                     // If the target is onscreen show the onscreen indicator & health bar
                     if (targetPosition.z > 0f && targetPosition.x >= 0f && targetPosition.x <= Screen.width && targetPosition.y >= 0f && targetPosition.y <= Screen.height)
                     {
-                        Image indicatorImage = getObjectiveIcon();
-                        indicatorImage.rectTransform.anchoredPosition = new Vector3(targetPosition.x, targetPosition.y, 0f);
+                        if (targetPosition.z > 200f)
+                        {
+                            Image indicatorImage = getObjectiveIcon();
+                            indicatorImage.rectTransform.anchoredPosition = new Vector3(targetPosition.x, targetPosition.y, 0f);
+                        }
                     }
                     else
                     {
-                        PositionArrowIndicator(targetPosition, ArrowType.waypoint);
+                        if (targetPosition.z < -200f)
+                        {
+                            PositionArrowIndicator(targetPosition, ArrowType.waypoint);
+                        }
                     }
                 }
             }
@@ -156,7 +162,7 @@ public class IndicatorController : MonoBehaviour
         else
         {
             box = Instantiate(boxIndicatorPrefab);
-            box.transform.parent = transform;
+            box.transform.SetParent(transform);
             boxIndicatorPool.Add(box);
         }
 
@@ -174,7 +180,7 @@ public class IndicatorController : MonoBehaviour
         else
         {
             arrow = Instantiate(arrowIndicatorPrefab);
-            arrow.transform.parent = transform;
+            arrow.transform.SetParent(transform);
             arrowIndicatorPool.Add(arrow);
         }
 
@@ -192,7 +198,7 @@ public class IndicatorController : MonoBehaviour
         else
         {
             arrow = Instantiate(objectiveArrowPrefab);
-            arrow.transform.parent = transform;
+            arrow.transform.SetParent(transform);
             objectiveArrowPool.Add(arrow);
         }
 
@@ -210,7 +216,7 @@ public class IndicatorController : MonoBehaviour
         else
         {
             icon = Instantiate(objectiveIconPrefab);
-            icon.transform.parent = transform;
+            icon.transform.SetParent(transform);
             objectiveIconPool.Add(icon);
         }
 

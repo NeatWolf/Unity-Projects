@@ -36,48 +36,57 @@ public class Objective : MonoBehaviour
 
     void Update()
     {
-        if(targets != null && targets.Length > 0)
+        // Only allow checking for current objective. If a later objective is completed before it is available to the player, 
+        // it will be set to complete as soon as it is available since all of its targets are completed
+        if (state == ObjectiveState.active)
         {
-            switch (kind)
+            if (targets != null && targets.Length > 0)
             {
-                case ObjectiveType.destroy:
-                    progress = 0f;
-                    foreach (var target in targets)
-                    {
-                        if (target == null || target.gameObject == null)
+                switch (kind)
+                {
+                    case ObjectiveType.destroy:
+                        progress = 0f;
+                        foreach (var target in targets)
                         {
-                            progress += 1f / targets.Length;
+                            if (target == null || target.gameObject == null)
+                            {
+                                progress += 1f / targets.Length;
+                            }
                         }
-                    }
-                    break;
-                case ObjectiveType.travel:
-                    progress = 0f;
-                    
-                    foreach(var target in targets)
-                    {
-                        if (target.state == ObjectiveState.complete)
-                        {
-                            progress += 1f / targets.Length;
-                        }
-                    }
-                    break;
-                case ObjectiveType.talk:
-                    break;
-                case ObjectiveType.collect:
-                    break;
-            }
-        }
+                        break;
+                    case ObjectiveType.travel:
+                        progress = 0f;
 
-        if (Mathf.Approximately(1f, progress) && state != ObjectiveState.complete)
-        {
-            state = ObjectiveState.complete;
-            OnCompletedObjective();
+                        foreach (var target in targets)
+                        {
+                            if (target.state == ObjectiveState.complete)
+                            {
+                                progress += 1f / targets.Length;
+                            }
+                        }
+                        break;
+                    case ObjectiveType.talk:
+                        break;
+                    case ObjectiveType.collect:
+                        break;
+                }
+            }
+
+            if (Mathf.Approximately(1f, progress) && state != ObjectiveState.complete)
+            {
+                state = ObjectiveState.complete;
+                OnCompletedObjective();
+            }
         }
     }
 
     private void OnCompletedObjective()
     {
-        if(nextObjective != null)
+        if (OnCompleted != null)
+        {
+            OnCompleted(this);
+        }
+        if (nextObjective != null)
         {
             ParentScript.currentObjective = nextObjective;
             ParentScript.currentObjective.state = ObjectiveState.active;
@@ -86,10 +95,6 @@ public class Objective : MonoBehaviour
         {
             // All objectives complete, end quest
             ParentScript.OnObjectivesCompleted();
-        }
-        if(OnCompleted != null)
-        {
-            OnCompleted(this);
         }
         print(string.Format("completed objective: {0}", description));
     }

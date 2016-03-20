@@ -7,12 +7,27 @@ public class QuestManager : MonoBehaviour {
 
     public QuestListDisplay questsDisplayPrefab;
     public Transform questMenuParent;
-    public List<Quest> quests = new List<Quest>();
+
 
     public delegate void QuestManagerDelegate(QuestManager sender);
+    public delegate void QuestAddedDelegate(Quest addedQuest);
     public event QuestManagerDelegate OnChanged;
+    public event QuestAddedDelegate OnQuestAdd;
 
     private Quest _activeQuest;
+    private List<Quest> _quests;
+
+    public List<Quest> Quests
+    {
+        get
+        {
+            if(_quests == null)
+            {
+                _quests = new List<Quest>();
+            }
+            return _quests;
+        }
+    }
 
     void Start()
     {
@@ -42,11 +57,15 @@ public class QuestManager : MonoBehaviour {
         {
             return;
         }
-        quests.Add(newQuest);
+        _quests.Add(newQuest);
         newQuest.OnCompleted += Quest_OnCompleted;
         if(OnChanged != null)
         {
             OnChanged(this);
+        }
+        if(OnQuestAdd != null)
+        {
+            OnQuestAdd(newQuest);
         }
     }
 
@@ -56,12 +75,12 @@ public class QuestManager : MonoBehaviour {
         {
             return;
         }
-        if (!quests.Contains(quest))
+        if (!_quests.Contains(quest))
         {
             return;
         }
         quest.OnCompleted -= Quest_OnCompleted;
-        quests.Remove(quest);
+        _quests.Remove(quest);
         if (OnChanged != null)
         {
             OnChanged(this);
@@ -70,7 +89,7 @@ public class QuestManager : MonoBehaviour {
 
     public void SetActiveQuest(Quest selectedQuest)
     {
-        foreach(Quest quest in quests)
+        foreach(Quest quest in _quests)
         {
             if(quest == selectedQuest)
             {
@@ -90,7 +109,6 @@ public class QuestManager : MonoBehaviour {
 
         if(_activeQuest != null)
         {
-            print("Active quest exists");
             foreach (ObjectiveTarget target in _activeQuest.currentObjective.targets)
             {
                 if(target != null)
