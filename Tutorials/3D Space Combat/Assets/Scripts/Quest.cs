@@ -41,8 +41,8 @@ public class Quest : MonoBehaviour
             }
         }
 	}
-	
-	public Objective GetObjectiveAtIndex(int index)
+
+    public Objective GetObjectiveAtIndex(int index)
     {
         foreach(var obj in objectives)
         {

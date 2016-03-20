@@ -51,7 +51,7 @@ public class QuestListDisplay : MonoBehaviour {
 
         // Initialize quest list
         this.questManager = questManager;
-        List<Quest> quests = questManager.quests;
+        List<Quest> quests = questManager.Quests;
         foreach(Quest quest in quests)
         {
             QuestDisplay display = Instantiate(questDisplayPrefab) as QuestDisplay;

@@ -89,6 +89,7 @@ public class GameManager : MonoBehaviour
         Objective secondObjective = firstQuest.GetObjectiveAtIndex(1);
         secondObjective.AssignTarget(deimos);
 
-        //questManager.AddQuest(firstQuest);
+        questManager.Add(firstQuest);
+        questManager.SetActiveQuest(firstQuest);
     }
 }

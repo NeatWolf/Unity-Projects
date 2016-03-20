@@ -14,7 +14,14 @@ public class QuestDetailsScreen : MonoBehaviour {
         GameManager.questManager.Display();
         QuestDisplay.OnClick += QuestDisplay_OnClick;
         QuestDisplay.OnPointerEnter += QuestDisplay_OnPointerEnter;
-	}
+        questName.text = "";
+        description.text = "";
+        // Destroy all children
+        for (int i = 0; i < objectivesListTransform.childCount; i++)
+        {
+            Destroy(objectivesListTransform.GetChild(i).gameObject);
+        }
+    }
 
     void OnDestroy()
     {
