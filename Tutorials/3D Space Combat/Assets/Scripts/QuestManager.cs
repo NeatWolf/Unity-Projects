@@ -12,7 +12,7 @@ public class QuestManager : MonoBehaviour {
     public delegate void QuestManagerDelegate(QuestManager sender);
     public event QuestManagerDelegate OnChanged;
 
-    private Quest _currentQuest;
+    private Quest _activeQuest;
 
     void Start()
     {
@@ -75,11 +75,35 @@ public class QuestManager : MonoBehaviour {
             if(quest == selectedQuest)
             {
                 quest.state = Objective.ObjectiveState.active;
+                _activeQuest = quest;
             }
             else
             {
                 quest.state = Objective.ObjectiveState.inactive;
             }
         }
+    }
+
+    public Vector3[] GetActiveQuestObjectiveTargets()
+    {
+        List<Vector3> targets = new List<Vector3>();
+
+        if(_activeQuest != null)
+        {
+            print("Active quest exists");
+            foreach (ObjectiveTarget target in _activeQuest.currentObjective.targets)
+            {
+                if(target != null)
+                {
+                    targets.Add(target.transform.position);
+                }
+            }
+        }
+        else
+        {
+            return null;
+        }
+
+        return targets.ToArray();
     }
 }

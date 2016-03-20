@@ -9,8 +9,6 @@ public class Quest : MonoBehaviour
     [Multiline]
     public string description;
     public Objective currentObjective;
-    public Image currentObjectiveArrow;
-    public Image currentObjectiveIcon;
     public Text currentObjectiveDescription;
     public Objective.ObjectiveState state;
     public Objective[] objectives;
