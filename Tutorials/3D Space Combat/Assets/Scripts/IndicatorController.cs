@@ -114,10 +114,7 @@ public class IndicatorController : MonoBehaviour
                     }
                     else
                     {
-                        if (targetPosition.z < -200f)
-                        {
-                            PositionArrowIndicator(targetPosition, ArrowType.waypoint);
-                        }
+                        PositionArrowIndicator(targetPosition, ArrowType.waypoint);
                     }
                 }
             }
