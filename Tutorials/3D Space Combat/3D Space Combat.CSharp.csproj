@@ -170,6 +170,7 @@
     <Compile Include="Assets\Scripts\TargetableObject.cs" />
     <Compile Include="Assets\Scripts\Timer.cs" />
     <Compile Include="Assets\Scripts\UIProgressBarController.cs" />
+    <Compile Include="Assets\Scripts\UpdateListItem.cs" />
     <Compile Include="Assets\Scripts\UpdatesDisplay.cs" />
     <Compile Include="Assets\Scripts\WarpDrive.cs" />
     <Compile Include="Assets\Scripts\WarpTarget.cs" />

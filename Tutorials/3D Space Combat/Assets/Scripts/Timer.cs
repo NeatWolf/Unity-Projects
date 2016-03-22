@@ -10,7 +10,7 @@ public class Timer : MonoBehaviour {
 
     private bool started = false;
 
-    void Start()
+    void Awake()
     {
         currentTime = startTime;
     }
@@ -24,6 +24,7 @@ public class Timer : MonoBehaviour {
             if (currentTime < 0)
             {
                 currentTime = 0;
+                started = false;
             }
         }
 	}
