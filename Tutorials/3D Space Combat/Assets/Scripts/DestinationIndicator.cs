@@ -16,8 +16,14 @@ public class DestinationIndicator : MonoBehaviour {
 
     public void SetEntryPointPosition(Vector3 entryPosition)
     {
+        entryPoint.enabled = true;
         Vector3 screenPosition = Camera.main.WorldToScreenPoint(entryPosition);
         entryPoint.rectTransform.anchoredPosition = screenPosition;
+    }
+
+    public void DisableEntryPoint()
+    {
+        entryPoint.enabled = false;
     }
 
     public void SetNamePosition(Vector3 namePosition)

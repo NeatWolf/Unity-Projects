@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
         // OBJECTIVE 1 - DEFEAT ENEMIES OVER MARS
         // Create enemy ships for objective 1
         List<ObjectiveTarget> enemiesObj1 = new List<ObjectiveTarget>();
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 5; i++)
         {
             GameObject enemyShip = Instantiate(enemyShipPrefab, new Vector3((i * 10f) - 50f, 0f, 100f), Quaternion.Euler(0f, 180f, 0f)) as GameObject;
             ObjectiveTarget enemyTarget = enemyShip.AddComponent<ObjectiveTarget>();

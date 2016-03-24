@@ -48,6 +48,30 @@ public class IndicatorController : MonoBehaviour
         {
             resetPool();
 
+            // POSITION OBJECTIVE ARROWS AND INDICATORS
+            Vector3[] waypoints = GameManager.questManager.GetActiveQuestObjectiveTargets();
+            if (waypoints != null)
+            {
+                foreach (Vector3 waypoint in waypoints)
+                {
+                    Vector3 targetPosition = Camera.main.WorldToScreenPoint(waypoint);
+
+                    // If the target is onscreen show the onscreen indicator & health bar
+                    if (targetPosition.z > 0f && targetPosition.x >= 0f && targetPosition.x <= Screen.width && targetPosition.y >= 0f && targetPosition.y <= Screen.height)
+                    {
+                        if (targetPosition.z > 200f)
+                        {
+                            Image indicatorImage = getObjectiveIcon();
+                            indicatorImage.rectTransform.anchoredPosition = new Vector3(targetPosition.x, targetPosition.y, 0f);
+                        }
+                    }
+                    else
+                    {
+                        PositionArrowIndicator(targetPosition, ArrowType.waypoint);
+                    }
+                }
+            }
+
             // POSITION ENEMY ARROWS AND BOXES
             TargetableObject[] objects = GameObject.FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[];
 
@@ -74,47 +98,12 @@ public class IndicatorController : MonoBehaviour
 
                     //Vector3 lead = CalculateLead(player.transform.position, obj.transform.position, projectileSpeed * 1.5f, obj.gameObject.GetComponent<Rigidbody>().velocity, player.GetComponent<Rigidbody>().velocity);
                     //box.trajectory.rectTransform.anchoredPosition = Camera.main.WorldToScreenPoint(lead) - screenCenter;
-
-                    //print(string.Format("mouse position: {0}, target position: {1}", Input.mousePosition, targetPosition));
-                    //if(targetPosition.z < 500)
-                    //{
-                    //    if (Vector3.Distance(new Vector2(Input.mousePosition.x, Input.mousePosition.y), new Vector2(targetPosition.x, targetPosition.y)) < 100)
-                    //    {
-                    //        print("stretching box");
-                    //        box.boxSize = new Vector2(180, 120);
-                    //    }
-                    //    else
-                    //    {
-                    //        box.boxSize = new Vector2(100, 100);
-                    //    }
-                    //}
                 }
                 else // Offscreen - show directional arrow
                 {
-                    PositionArrowIndicator(targetPosition, ArrowType.enemy);
-                }
-            }
-
-            // POSITION OBJECTIVE ARROWS AND INDICATORS
-            Vector3[] waypoints = GameManager.questManager.GetActiveQuestObjectiveTargets();
-            if (waypoints != null)
-            {
-                foreach (Vector3 waypoint in waypoints)
-                {
-                    Vector3 targetPosition = Camera.main.WorldToScreenPoint(waypoint);
-
-                    // If the target is onscreen show the onscreen indicator & health bar
-                    if (targetPosition.z > 0f && targetPosition.x >= 0f && targetPosition.x <= Screen.width && targetPosition.y >= 0f && targetPosition.y <= Screen.height)
+                    if (!OverlapsWaypoint(waypoints, obj.transform.position))
                     {
-                        if (targetPosition.z > 200f)
-                        {
-                            Image indicatorImage = getObjectiveIcon();
-                            indicatorImage.rectTransform.anchoredPosition = new Vector3(targetPosition.x, targetPosition.y, 0f);
-                        }
-                    }
-                    else
-                    {
-                        PositionArrowIndicator(targetPosition, ArrowType.waypoint);
+                        PositionArrowIndicator(targetPosition, ArrowType.enemy);
                     }
                 }
             }
@@ -135,7 +124,16 @@ public class IndicatorController : MonoBehaviour
                     // Works with sphere colliders
                     Vector3 topPosition = target.targetBoundary.bounds.center + new Vector3(0f, target.targetBoundary.bounds.extents.y * 0.75f, 0f);
                     warpIndicatorInstance.SetNamePosition(topPosition);
-                    warpIndicatorInstance.SetEntryPointPosition(target.targetTransform.position);
+
+                    // Disable entry point indicator if it is currently overlapping an objective marker
+                    if (!OverlapsWaypoint(waypoints, target.targetTransform.position))
+                    {
+                        warpIndicatorInstance.SetEntryPointPosition(target.targetTransform.position);
+                    }
+                    else
+                    {
+                        warpIndicatorInstance.DisableEntryPoint();
+                    }
                 }
             }
         }
@@ -339,5 +337,17 @@ public class IndicatorController : MonoBehaviour
         
         arrow.rectTransform.rotation = Quaternion.Euler(0, 0, angle * Mathf.Rad2Deg);
         arrow.rectTransform.anchoredPosition = targetPosition;
+    }
+
+    private bool OverlapsWaypoint(Vector3[] waypoints, Vector3 target)
+    {
+        foreach (var waypoint in waypoints)
+        {
+            if (target == waypoint)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class QuestDetailsScreen : MonoBehaviour {
 
-    public Text questName, description;
+    public Text questName, description, objectivesHeader;
     public Transform objectivesListTransform;
     public ObjectiveDisplay objectiveDisplayPrefab;
 
@@ -14,13 +14,7 @@ public class QuestDetailsScreen : MonoBehaviour {
         GameManager.questManager.Display();
         QuestDisplay.OnClick += QuestDisplay_OnClick;
         QuestDisplay.OnPointerEnter += QuestDisplay_OnPointerEnter;
-        questName.text = "";
-        description.text = "";
-        // Destroy all children
-        for (int i = 0; i < objectivesListTransform.childCount; i++)
-        {
-            Destroy(objectivesListTransform.GetChild(i).gameObject);
-        }
+        ResetDetails();
     }
 
     void OnDestroy()
@@ -33,6 +27,38 @@ public class QuestDetailsScreen : MonoBehaviour {
     {
 	
 	}
+
+    void OnEnable()
+    {
+        if(GameManager.questManager.Quests.Count > 0)
+        {
+            foreach(Quest quest in GameManager.questManager.Quests)
+            {
+                if(quest.state == Objective.ObjectiveState.active)
+                {
+                    Initialize(quest);
+                    break;
+                }
+            }
+        }
+        else
+        {
+            ResetDetails();
+        }
+    }
+
+    private void ResetDetails()
+    {
+        questName.text = "";
+        description.text = "";
+        objectivesHeader.text = "NO QUESTS";
+
+        // Destroy all objectives in list
+        for (int i = 0; i < objectivesListTransform.childCount; i++)
+        {
+            Destroy(objectivesListTransform.GetChild(i).gameObject);
+        }
+    }
 
     private void QuestDisplay_OnClick(Quest sender)
     {
@@ -47,6 +73,10 @@ public class QuestDetailsScreen : MonoBehaviour {
 
     public void Initialize(Quest quest)
     {
+        if(objectivesHeader != null)
+        {
+            objectivesHeader.text = "OBJECTIVES";
+        }
         if(questName != null)
         {
             questName.text = quest.questName.ToUpper();
