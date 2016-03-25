@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public Transform planet;
     public Quest firstQuest;
     public GameObject deimosTravelObjective;
+    public Transform deimosSpawnPoint;
 
     [HideInInspector]
     public bool isInCombat = false;
@@ -71,25 +72,31 @@ public class GameManager : MonoBehaviour
     private void CreateAndAddTestMission()
     {
         // OBJECTIVE 1 - DEFEAT ENEMIES OVER MARS
-        // Create enemy ships for objective 1
+        SpawnEnemyTargetsAtObjective(firstQuest, 0, enemyShipPrefab, 5, new Vector3(-50f, 0f, 100f));
+
+        // OBJECTIVE 2 - TRAVEL TO DEIMOS
+        ObjectiveTarget deimos = deimosTravelObjective.AddComponent<ObjectiveTarget>();
+        Objective secondObjective = firstQuest.GetObjectiveAtIndex(1);
+        secondObjective.AssignTarget(deimos);
+
+        // OBJECTIVE 3 - DEFEAT ENEMIES NEAR DEIMOS
+        SpawnEnemyTargetsAtObjective(firstQuest, 2, enemyShipPrefab, 5, deimosSpawnPoint.position);
+
+        questManager.Add(firstQuest);
+        questManager.SetActiveQuest(firstQuest);
+    }
+
+    private void SpawnEnemyTargetsAtObjective(Quest quest, int ObjectiveIndex, GameObject shipPrefab, int count, Vector3 spawnPosition)
+    {
         List<ObjectiveTarget> enemiesObj1 = new List<ObjectiveTarget>();
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < count; i++)
         {
-            GameObject enemyShip = Instantiate(enemyShipPrefab, new Vector3((i * 10f) - 50f, 0f, 100f), Quaternion.Euler(0f, 180f, 0f)) as GameObject;
+            GameObject enemyShip = Instantiate(shipPrefab, new Vector3((i * 10f) + spawnPosition.x, spawnPosition.y, spawnPosition.z), Quaternion.identity) as GameObject;
             ObjectiveTarget enemyTarget = enemyShip.AddComponent<ObjectiveTarget>();
             enemiesObj1.Add(enemyTarget);
         }
 
-        Objective firstObjective = firstQuest.GetObjectiveAtIndex(0);
+        Objective firstObjective = quest.GetObjectiveAtIndex(ObjectiveIndex);
         firstObjective.AssignTargets(enemiesObj1.ToArray());
-
-        // OBJECTIVE 2 - TRAVEL TO DEIMOS
-        ObjectiveTarget deimos = deimosTravelObjective.AddComponent<ObjectiveTarget>();
-
-        Objective secondObjective = firstQuest.GetObjectiveAtIndex(1);
-        secondObjective.AssignTarget(deimos);
-
-        questManager.Add(firstQuest);
-        questManager.SetActiveQuest(firstQuest);
     }
 }

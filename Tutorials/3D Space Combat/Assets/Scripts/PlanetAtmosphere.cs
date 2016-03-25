@@ -40,8 +40,11 @@ public class PlanetAtmosphere : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        print("Entering atmosphere. Destruction imminent");
-        Countdown(destroyTime);
+        if (other.CompareTag("Player"))
+        {
+            print("Entering atmosphere. Destruction imminent");
+            Countdown(destroyTime);
+        }
     }
 
     void OnTriggerExit(Collider other)

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class WarpDrive : MonoBehaviour {
 
     public ParticleSystem warpParticleSystem;
+    public RadialBlur radialBlur;
     public BarTimingMiniGame miniGame;
     public Text countdownText;
     public Timer timer;
@@ -50,12 +51,14 @@ public class WarpDrive : MonoBehaviour {
                     if(_distanceToTarget > 0f)
                     {
                         warpParticleSystem.Play();
+                        radialBlur.TurnOn();
                         Accelerate();
                         _distanceToTarget -= _currentSpeed;
                     }
                     else
                     {
                         warpParticleSystem.Stop();
+                        radialBlur.TurnOff();
                         _currentSpeed = warpSpeed;
                         _state = Enums.WarpDriveState.waitingForCommand;
                         _countingDown = false;
