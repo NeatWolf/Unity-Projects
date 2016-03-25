@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
     public float lookSpeed = 0.1f;
     public int verticalLookLimit = 60;
     public float tilt = 5.0f;
+    public RadialBlur radialBlur;
+    public InverseVignette vignette;
 
     private Rigidbody rb;
     private WarpDrive warpDrive;
@@ -115,6 +117,8 @@ public class Player : MonoBehaviour
                 // Add boost speed force
                 if (Input.GetKey(KeyCode.LeftShift))
                 {
+                    //radialBlur.TurnOn();
+                    //vignette.TurnOn();
                     if (GameManager.instance.isInCombat)
                     {
                         rb.AddForce(transform.forward * combatBoostSpeed);
@@ -124,6 +128,11 @@ public class Player : MonoBehaviour
                         rb.AddForce(transform.forward * boostSpeed);
                     }
                 }
+                //else
+                //{
+                //    radialBlur.TurnOff();
+                //    vignette.TurnOff();
+                //}
             }
             else
             {

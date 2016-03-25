@@ -32,27 +32,29 @@ public class AISimple : MonoBehaviour {
 	void FixedUpdate ()
     {
         distance = Vector3.Distance(player.position, transform.position);
-
-        if (Time.time >= timer)
+        if (distance < 500f)
         {
-            timer = Time.time + Random.Range(5, 10);
-            currentManeuver = (Maneuver)Random.Range(0, 2);
-            //print(string.Format("currentManeuver: {0}", currentManeuver));
-            if (currentManeuver == Maneuver.Sniping)
+            if (Time.time >= timer)
             {
-                isStrafingRight = RandomBoolean();
+                timer = Time.time + Random.Range(5, 10);
+                currentManeuver = (Maneuver)Random.Range(0, 2);
+                //print(string.Format("currentManeuver: {0}", currentManeuver));
+                if (currentManeuver == Maneuver.Sniping)
+                {
+                    isStrafingRight = RandomBoolean();
+                }
             }
-        }
-        else
-        {
-            switch (currentManeuver)
+            else
             {
-                case Maneuver.Attack:
-                    PerformAttackManeuver();
-                    break;
-                case Maneuver.Sniping:
-                    PerformSnipingManeuver(isStrafingRight);
-                    break;
+                switch (currentManeuver)
+                {
+                    case Maneuver.Attack:
+                        PerformAttackManeuver();
+                        break;
+                    case Maneuver.Sniping:
+                        PerformSnipingManeuver(isStrafingRight);
+                        break;
+                }
             }
         }
 	}

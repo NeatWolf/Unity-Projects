@@ -2,29 +2,29 @@
 using UnityStandardAssets.ImageEffects;
 
 [RequireComponent(typeof(Camera))]
-public class RadialBlur : MonoBehaviour
+public class InverseVignette : MonoBehaviour
 {
-    public Shader rbShader;
+    public Shader vignetteShader;
 
-    public float blendAmount = 0.5f;
-    public int samples = 8;
+    public float intensity = 0.036f;
+    public float blur = 0.0f;
 
-    private Material rbMaterial = null;
+    private Material vignetteMaterial = null;
     private bool isOn = false;
 
     private Material GetMaterial()
     {
-        if (rbMaterial == null)
+        if (vignetteMaterial == null)
         {
-            rbMaterial = new Material(rbShader);
-            rbMaterial.hideFlags = HideFlags.HideAndDontSave;
+            vignetteMaterial = new Material(vignetteShader);
+            vignetteMaterial.hideFlags = HideFlags.HideAndDontSave;
         }
-        return rbMaterial;
+        return vignetteMaterial;
     }
 
     void Start()
     {
-        if (rbShader == null)
+        if (vignetteShader == null)
         {
             Debug.LogError("shader missing!", this);
         }
@@ -44,9 +44,8 @@ public class RadialBlur : MonoBehaviour
     {
         if (isOn)
         {
-            GetMaterial().SetVector("_Center", new Vector4(0.5f, 0.5f, 0f, 0f));
-            GetMaterial().SetFloat("_BlendAmount", blendAmount);
-            GetMaterial().SetInt("_Samples", samples);
+            GetMaterial().SetFloat("_Intensity", intensity);
+            GetMaterial().SetFloat("_Blur", blur);
             Graphics.Blit(source, dest, GetMaterial());
         }
         else
