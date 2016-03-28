@@ -4,9 +4,9 @@ using System.Collections;
 public class ObjectiveTarget : MonoBehaviour {
 
     public bool visibleIndicator;
-    //public GameObject targetGameObject;
     public Objective.ObjectiveState state;
     public Objective.ObjectiveType kind;
+    public Objective objective;
 
     void Start()
     {
@@ -16,15 +16,18 @@ public class ObjectiveTarget : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && (kind == Objective.ObjectiveType.collect || kind == Objective.ObjectiveType.travel))
+        if (other.CompareTag("Player"))
         {
-            state = Objective.ObjectiveState.complete;
-        }
-    }
+            if (objective == null)
+            {
+                Debug.LogError("Objective target had no objective set");
+                return;
+            }
 
-    public void Initialize(Objective.ObjectiveState state, bool visibleIndicator)
-    {
-        this.state = state;
-        this.visibleIndicator = visibleIndicator;
+            if (objective.state == Objective.ObjectiveState.active && (kind == Objective.ObjectiveType.collect || kind == Objective.ObjectiveType.travel))
+            {
+                state = Objective.ObjectiveState.complete;
+            }
+        }
     }
 }

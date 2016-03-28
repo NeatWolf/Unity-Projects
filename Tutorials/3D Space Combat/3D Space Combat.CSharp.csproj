@@ -165,6 +165,7 @@
     <Compile Include="Assets\Scripts\ReticleController.cs" />
     <Compile Include="Assets\Scripts\RotateToCursor.cs" />
     <Compile Include="Assets\Scripts\SpaceDust.cs" />
+    <Compile Include="Assets\Scripts\SpaceFog.cs" />
     <Compile Include="Assets\Scripts\SpawnPoint.cs" />
     <Compile Include="Assets\Scripts\TargetIndicator.cs" />
     <Compile Include="Assets\Scripts\TargetableObject.cs" />

@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
     private void CreateAndAddTestMission()
     {
         // OBJECTIVE 1 - DEFEAT ENEMIES OVER MARS
-        SpawnEnemyTargetsAtObjective(firstQuest, 0, enemyShipPrefab, 5, new Vector3(-50f, 0f, 100f));
+        SpawnEnemyTargetsAtObjective(firstQuest, 0, enemyShipPrefab, 1, new Vector3(-50f, 0f, 100f));
 
         // OBJECTIVE 2 - TRAVEL TO DEIMOS
         ObjectiveTarget deimos = deimosTravelObjective.AddComponent<ObjectiveTarget>();
@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour
         secondObjective.AssignTarget(deimos);
 
         // OBJECTIVE 3 - DEFEAT ENEMIES NEAR DEIMOS
-        SpawnEnemyTargetsAtObjective(firstQuest, 2, enemyShipPrefab, 5, deimosSpawnPoint.position);
+        //SpawnEnemyTargetsAtObjective(firstQuest, 2, enemyShipPrefab, 5, deimosSpawnPoint.position);
 
         questManager.Add(firstQuest);
         questManager.SetActiveQuest(firstQuest);
@@ -96,7 +96,7 @@ public class GameManager : MonoBehaviour
             enemiesObj1.Add(enemyTarget);
         }
 
-        Objective firstObjective = quest.GetObjectiveAtIndex(ObjectiveIndex);
-        firstObjective.AssignTargets(enemiesObj1.ToArray());
+        Objective objective = quest.GetObjectiveAtIndex(ObjectiveIndex);
+        objective.AssignTargets(enemiesObj1.ToArray());
     }
 }

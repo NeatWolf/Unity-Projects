@@ -42,6 +42,10 @@ public class QuestManager : MonoBehaviour {
     private void Quest_OnCompleted(Quest sender)
     {
         Remove(sender);
+        if(_activeQuest == sender)
+        {
+            SetActiveQuest(null);
+        }
     }
 
     public void Display()
@@ -87,18 +91,29 @@ public class QuestManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Sets the provided quest to active and all others to inactive
+    /// </summary>
+    /// <param name="selectedQuest">null to set all quests to inactive</param>
     public void SetActiveQuest(Quest selectedQuest)
     {
-        foreach(Quest quest in _quests)
+        if(selectedQuest == null || _quests.Count <= 0)
         {
-            if(quest == selectedQuest)
+            _activeQuest = null;
+        }
+        else
+        {
+            foreach (Quest quest in _quests)
             {
-                quest.state = Objective.ObjectiveState.active;
-                _activeQuest = quest;
-            }
-            else
-            {
-                quest.state = Objective.ObjectiveState.inactive;
+                if (quest == selectedQuest)
+                {
+                    quest.state = Objective.ObjectiveState.active;
+                    _activeQuest = quest;
+                }
+                else
+                {
+                    quest.state = Objective.ObjectiveState.inactive;
+                }
             }
         }
     }

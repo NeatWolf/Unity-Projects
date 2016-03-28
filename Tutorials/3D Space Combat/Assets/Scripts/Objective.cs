@@ -105,12 +105,14 @@ public class Objective : MonoBehaviour
         foreach(var target in this.targets)
         {
             target.kind = kind;
+            target.objective = this;
         }
     }
 
     internal void AssignTarget(ObjectiveTarget target)
     {
         target.kind = kind;
+        target.objective = this;
         targets = new ObjectiveTarget[] { target };
     }
 }

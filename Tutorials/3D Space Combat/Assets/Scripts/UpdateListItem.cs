@@ -50,14 +50,12 @@ public class UpdateListItem : MonoBehaviour
         textComponent = GetComponent<Text>();
         height = rectTransform.rect.height;
         timer = GetComponent<Timer>();
-        Debug.Log("Called Awake on UpdateListItem");
 	}
 	
 	void Update ()
     {
         if (timer != null && timer.currentTime <= 0)
         {
-            Debug.Log("Remove from bottom");
             RemoveFromBottom();
             timer.ResetTimer();
         }
@@ -65,7 +63,6 @@ public class UpdateListItem : MonoBehaviour
 
     public void AddToTop()
     {
-        Debug.Log("AddToTop called");
         timer.ResetTimer();
         timer.StartTimer();
         StartCoroutine(FadeIn(animateTime));
@@ -74,14 +71,12 @@ public class UpdateListItem : MonoBehaviour
 
     public void RemoveFromBottom()
     {
-        Debug.Log("RemoveFromBottom called");
         StartCoroutine(FadeOut(animateTime));
         StartCoroutine(MoveDownCoroutine(animateTime));
     }
 
     public void MoveDown()
     {
-        Debug.Log("MoveDown called");
         StartCoroutine(MoveDownCoroutine(animateTime));
     }
 
