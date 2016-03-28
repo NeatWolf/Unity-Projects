@@ -4,8 +4,8 @@ using System.Collections;
 public class PrimaryWeapon : MonoBehaviour {
 
     public float fireRate;
-    public Transform shotSpawn;
-    public GameObject shot;
+    public Transform[] shotSpawns;
+    public GameObject shotPrefab;
 
     private float nextFire;
 	
@@ -14,7 +14,10 @@ public class PrimaryWeapon : MonoBehaviour {
 	    if(Input.GetKey(KeyCode.Mouse0) && Time.time > nextFire)
         {
             nextFire = Time.time + fireRate;
-            Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
+            foreach(var sp in shotSpawns)
+            {
+                Instantiate(shotPrefab, sp.position, sp.rotation);
+            }
         }
 	}
 }
