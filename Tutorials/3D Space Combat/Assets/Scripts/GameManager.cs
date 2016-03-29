@@ -18,10 +18,19 @@ public class GameManager : MonoBehaviour
     public bool isInCombat = false;
     [HideInInspector]
     public bool isPaused = false;
+    [HideInInspector]
+    public PauseType pauseType = PauseType.none;
 
     public static GameManager instance;
     public static Transform playerTransform;
     public static QuestManager questManager;
+
+    public enum PauseType
+    {
+        none,
+        pauseMenu,
+        questMenu
+    }
 
     void Awake()
     {

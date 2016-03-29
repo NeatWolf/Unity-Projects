@@ -5,22 +5,15 @@ public class QuestMenu : MonoBehaviour {
 
     public GameObject questMenuCanvas;
 
-    private bool isPaused;
-
-    void Start ()
-    {
-        
-	}
-
     void Update()
     {
-        if (isPaused)
+        if (GameManager.instance.isPaused && GameManager.instance.pauseType == GameManager.PauseType.questMenu)
         {
             questMenuCanvas.SetActive(true);
             Time.timeScale = 0f;
             GameManager.instance.isPaused = true;
         }
-        else
+        else if (!GameManager.instance.isPaused)
         {
             questMenuCanvas.SetActive(false);
             Time.timeScale = 1f;
@@ -29,7 +22,20 @@ public class QuestMenu : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.J))
         {
-            isPaused = !isPaused;
+            // If game is already paused because of another menu, don't do anything
+            if (GameManager.instance.isPaused && GameManager.instance.pauseType != GameManager.PauseType.questMenu)
+            {
+                return;
+            }
+            if (GameManager.instance.isPaused)
+            {
+                GameManager.instance.pauseType = GameManager.PauseType.none;
+            }
+            else
+            {
+                GameManager.instance.pauseType = GameManager.PauseType.questMenu;
+            }
+            GameManager.instance.isPaused = !GameManager.instance.isPaused;
         }
     }
 }

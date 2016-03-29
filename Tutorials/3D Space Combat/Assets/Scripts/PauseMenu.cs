@@ -5,18 +5,16 @@ using UnityEngine.SceneManagement;
 public class PauseMenu : MonoBehaviour {
 
     public GameObject pauseMenuCanvas;
-
-    private bool isPaused;
 	
 	void Update ()
     {
-        if (isPaused)
+        if (GameManager.instance.isPaused && GameManager.instance.pauseType == GameManager.PauseType.pauseMenu)
         {
             pauseMenuCanvas.SetActive(true);
             Time.timeScale = 0f;
             GameManager.instance.isPaused = true;
         }
-        else
+        else if(!GameManager.instance.isPaused)
         {
             pauseMenuCanvas.SetActive(false);
             Time.timeScale = 1f;
@@ -25,13 +23,21 @@ public class PauseMenu : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            isPaused = !isPaused;
+            if (GameManager.instance.isPaused)
+            {
+                GameManager.instance.pauseType = GameManager.PauseType.none;
+            }
+            else
+            {
+                GameManager.instance.pauseType = GameManager.PauseType.pauseMenu;
+            }
+            GameManager.instance.isPaused = !GameManager.instance.isPaused;
         }
 	}
 
     public void Resume()
     {
-        isPaused = false;
+        GameManager.instance.isPaused = false;
     }
 
     public void ExitToMainMenu()
