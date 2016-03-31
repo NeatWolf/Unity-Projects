@@ -17,6 +17,10 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public bool isInCombat = false;
     [HideInInspector]
+    public bool isShootingEnabled = true;
+    [HideInInspector]
+    public bool isCursorVisible = true;
+    [HideInInspector]
     public bool isPaused = false;
     [HideInInspector]
     public PauseType pauseType = PauseType.none;
@@ -49,8 +53,8 @@ public class GameManager : MonoBehaviour
 
 	void Start ()
     {
-        SpawnHazards();
-        Invoke("CreateAndAddTestMission", 2);
+        //SpawnHazards();
+        //Invoke("CreateAndAddTestMission", 2);
 	}
 	
     void SpawnHazards()

@@ -29,6 +29,14 @@ public class ReticleController : MonoBehaviour {
             else
             {
                 Cursor.SetCursor(reticleTexture, reticleHotSpot, cursorMode);
+                //if (!GameManager.instance.isCursorVisible)
+                //{
+                //    Cursor.visible = false;
+                //}
+                //else
+                //{
+                //    Cursor.visible = true;
+                //}
             }
         }
     }
