@@ -22,7 +22,8 @@ public class Player : MonoBehaviour
     private enum State
     {
         Default,
-        WarpStandby
+        WarpStandby,
+        Docked
     }
 
     void Start()
@@ -33,6 +34,18 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if(currentState == State.Docked)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Undock();
+            }
+            else
+            {
+                return;
+            }
+        }
+
         // Lock onto warp target
         if (Input.GetKeyDown(KeyCode.Tab))
         {
@@ -117,6 +130,7 @@ public class Player : MonoBehaviour
                 // Add boost speed force
                 if (Input.GetKey(KeyCode.LeftShift))
                 {
+                    GameManager.instance.isShootingEnabled = false;
                     //radialBlur.TurnOn();
                     //vignette.TurnOn();
                     if (GameManager.instance.isInCombat)
@@ -128,11 +142,12 @@ public class Player : MonoBehaviour
                         rb.AddForce(transform.forward * boostSpeed);
                     }
                 }
-                //else
-                //{
-                //    radialBlur.TurnOff();
-                //    vignette.TurnOff();
-                //}
+                else
+                {
+                    GameManager.instance.isShootingEnabled = true;
+                    //radialBlur.TurnOff();
+                    //vignette.TurnOff();
+                }
             }
             else
             {
@@ -177,6 +192,16 @@ public class Player : MonoBehaviour
         movementLocked = setting;
     }
 
+    public void Dock(Transform dockingTransform)
+    {
+        StartCoroutine(PerformDock(dockingTransform, 3f));
+    }
+
+    public void Undock()
+    {
+        StartCoroutine(PerformUndock(3f));
+    }
+
     IEnumerator RotateTowards(Vector3 lookAtPosition)
     {
         //Vector3 direction = (lookAtPosition - transform.position).normalized;
@@ -188,5 +213,78 @@ public class Player : MonoBehaviour
             rb.rotation = Quaternion.Slerp(rb.rotation, direction, lookSpeed);
         }
         yield return null;
+    }
+
+    IEnumerator PerformDock(Transform dockingTransform, float time)
+    {
+        currentState = State.Docked;
+        LockMovement(true);
+        GameManager.instance.isShootingEnabled = false;
+        GameManager.instance.isCursorVisible = false;
+        Vector3 startPosition = transform.position;
+        Quaternion startRotation = transform.rotation;
+        Vector3 midPosition = dockingTransform.position + new Vector3(0f, 10f, 0f);
+        Vector3 endPosition = dockingTransform.position;
+        Quaternion endRotation = dockingTransform.rotation;
+        float timeSinceStarted = 0f;
+        float percentageComplete = 0f;
+        float startTime = Time.time;
+
+        while (transform.position != midPosition && transform.rotation != endRotation)
+        {
+            timeSinceStarted = Time.time - startTime;
+            percentageComplete = timeSinceStarted / time;
+            transform.position = Vector3.Lerp(startPosition, midPosition, percentageComplete);
+            transform.rotation = Quaternion.Slerp(startRotation, endRotation, percentageComplete);
+            yield return null;
+        }
+
+        startPosition = transform.position;
+        timeSinceStarted = 0f;
+        percentageComplete = 0f;
+        startTime = Time.time;
+
+        while(transform.position != endPosition)
+        {
+            timeSinceStarted = Time.time - startTime;
+            percentageComplete = timeSinceStarted / time;
+            transform.position = Vector3.Lerp(startPosition, endPosition, percentageComplete);
+            yield return null;
+        }
+    }
+
+    IEnumerator PerformUndock(float time)
+    {
+        Vector3 startPosition = transform.position;
+        Vector3 midPosition = startPosition + new Vector3(0f, 10f, 0f);
+        Vector3 endPosition = midPosition + (transform.forward * 50f) + (transform.up * 5f);
+        float timeSinceStarted = 0f;
+        float percentageComplete = 0f;
+        float startTime = Time.time;
+
+        while (transform.position != midPosition)
+        {
+            timeSinceStarted = Time.time - startTime;
+            percentageComplete = timeSinceStarted / time;
+            transform.position = Vector3.Lerp(startPosition, midPosition, percentageComplete);
+            yield return null;
+        }
+
+        startPosition = transform.position;
+        timeSinceStarted = 0f;
+        percentageComplete = 0f;
+        startTime = Time.time;
+
+        while (transform.position != endPosition)
+        {
+            timeSinceStarted = Time.time - startTime;
+            percentageComplete = timeSinceStarted / time;
+            transform.position = Vector3.Lerp(startPosition, endPosition, percentageComplete);
+            yield return null;
+        }
+        currentState = State.Default;
+        LockMovement(false);
+        GameManager.instance.isShootingEnabled = true;
+        GameManager.instance.isCursorVisible = true;
     }
 }

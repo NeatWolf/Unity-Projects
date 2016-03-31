@@ -130,9 +130,9 @@
     <Compile Include="Assets\Scripts\BoltDamager.cs" />
     <Compile Include="Assets\Scripts\BoltMover.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
-    <Compile Include="Assets\Scripts\CanvasFaceCamera.cs" />
     <Compile Include="Assets\Scripts\DamageInfo.cs" />
     <Compile Include="Assets\Scripts\DestinationIndicator.cs" />
+    <Compile Include="Assets\Scripts\DockPoint.cs" />
     <Compile Include="Assets\Scripts\EnemyManager.cs" />
     <Compile Include="Assets\Scripts\Enums.cs" />
     <Compile Include="Assets\Scripts\FloatingOrigin.cs" />

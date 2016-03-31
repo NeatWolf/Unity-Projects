@@ -11,12 +11,15 @@ public class PrimaryWeapon : MonoBehaviour {
 	
 	void Update ()
     {
-	    if(Input.GetKey(KeyCode.Mouse0) && Time.time > nextFire)
+        if (GameManager.instance.isShootingEnabled && CompareTag("Player"))
         {
-            nextFire = Time.time + fireRate;
-            foreach(var sp in shotSpawns)
+            if (Input.GetKey(KeyCode.Mouse0) && Time.time > nextFire)
             {
-                Instantiate(shotPrefab, sp.position, sp.rotation);
+                nextFire = Time.time + fireRate;
+                foreach (var sp in shotSpawns)
+                {
+                    Instantiate(shotPrefab, sp.position, sp.rotation);
+                }
             }
         }
 	}
