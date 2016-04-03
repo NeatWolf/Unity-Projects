@@ -4,26 +4,24 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour {
 
-    public GameObject pauseMenuCanvas;
-	
+    public GameObject container;
+
 	void Update ()
     {
-        if (GameManager.instance.isPaused && GameManager.instance.pauseType == GameManager.PauseType.pauseMenu)
+        if (GameManager.instance.isMenuOpen && GameManager.instance.pauseType == GameManager.PauseType.pauseMenu)
         {
-            pauseMenuCanvas.SetActive(true);
+            container.SetActive(true);
             Time.timeScale = 0f;
-            GameManager.instance.isPaused = true;
         }
-        else if(!GameManager.instance.isPaused)
+        else if(!GameManager.instance.isMenuOpen)
         {
-            pauseMenuCanvas.SetActive(false);
+            container.SetActive(false);
             Time.timeScale = 1f;
-            GameManager.instance.isPaused = false;
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (GameManager.instance.isPaused)
+            if (GameManager.instance.isMenuOpen)
             {
                 GameManager.instance.pauseType = GameManager.PauseType.none;
             }
@@ -31,13 +29,13 @@ public class PauseMenu : MonoBehaviour {
             {
                 GameManager.instance.pauseType = GameManager.PauseType.pauseMenu;
             }
-            GameManager.instance.isPaused = !GameManager.instance.isPaused;
+            GameManager.instance.isMenuOpen = !GameManager.instance.isMenuOpen;
         }
 	}
 
     public void Resume()
     {
-        GameManager.instance.isPaused = false;
+        GameManager.instance.isMenuOpen = false;
     }
 
     public void ExitToMainMenu()
