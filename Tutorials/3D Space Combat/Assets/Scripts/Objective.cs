@@ -14,8 +14,9 @@ public class Objective : MonoBehaviour
 
     private float progress = 0f;
 
-    public delegate void ObjectiveCompletedDelegate(Objective sender);
-    public event ObjectiveCompletedDelegate OnCompleted;
+    public delegate void ObjectiveDelegate(Objective sender);
+    public event ObjectiveDelegate OnCompleted;
+    public event ObjectiveDelegate OnStarted;
 
     public Quest ParentScript { get; set; }
 
@@ -90,6 +91,7 @@ public class Objective : MonoBehaviour
         {
             ParentScript.currentObjective = nextObjective;
             ParentScript.currentObjective.state = ObjectiveState.active;
+            ParentScript.currentObjective.InvokeOnStartedEvent();
         }
         else
         {
@@ -97,6 +99,14 @@ public class Objective : MonoBehaviour
             ParentScript.OnObjectivesCompleted();
         }
         print(string.Format("completed objective: {0}", description));
+    }
+
+    public void InvokeOnStartedEvent()
+    {
+        if(OnStarted != null)
+        {
+            OnStarted(this);
+        }
     }
 
     public void AssignTargets(ObjectiveTarget[] targets)

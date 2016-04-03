@@ -4,15 +4,17 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
-    public int hazardCount;
+    public GameOverScreen gameOverScreen;
+    public Transform playerStartingTransform;
     public GameObject[] asteroidPrefabs;
-    public GameObject enemyShipPrefab;
-    public Vector3 hazardSpawnPosition;
-    public Vector2 hazardSizeRange;
-    public Transform planet;
+    public Vector2 asteroidSizeRange;
     public Quest firstQuest;
+    public Transform deimos;
+    public int deimosAsteroidCount;
     public GameObject deimosTravelObjective;
     public Transform deimosSpawnPoint;
+    public GameObject enemyShipPrefab;
+    public AudioClip dialogue1;
 
     [HideInInspector]
     public bool isInCombat = false;
@@ -53,11 +55,23 @@ public class GameManager : MonoBehaviour
 
 	void Start ()
     {
-        //SpawnHazards();
-        //Invoke("CreateAndAddTestMission", 2);
+        SpawnHazardsAroundSphere(deimos, 3600, 2600, deimosAsteroidCount);
+        playerTransform.position = playerStartingTransform.position;
+        playerTransform.rotation = playerStartingTransform.rotation;
+        Player player = playerTransform.GetComponent<Player>();
+        player.LockControls(true);
+        player.Dock(playerStartingTransform);
+        Invoke("InitializeTargetPracticeQuest", 10f);
+        player.LockControls(false);
+        DialogueManager.instance.BeginDialogue(dialogue1);
 	}
+
+    public void GameOver()
+    {
+        gameOverScreen.Display();
+    }
 	
-    void SpawnHazards()
+    private void SpawnHazards()
     {
         //for (int i = 0; i < hazardCount; i++)
         //{
@@ -67,7 +81,6 @@ public class GameManager : MonoBehaviour
         //    float hazardScale = Random.Range(hazardSizeRange.x, hazardSizeRange.y);
         //    hazardGO.transform.localScale = new Vector3(hazardScale, hazardScale, hazardScale);
         //}
-        SpawnHazardsAroundSphere(planet, 3600, 2600, hazardCount);
     }
 
     private void SpawnHazardsAroundSphere(Transform sphere, float outerRadius, float innerRadius, float number)
@@ -77,23 +90,23 @@ public class GameManager : MonoBehaviour
             GameObject hazard = asteroidPrefabs[Random.Range(0, asteroidPrefabs.Length)];
             Vector3 spawnPosition = Random.onUnitSphere * Random.Range(innerRadius, outerRadius) + sphere.position;
             GameObject hazardGO = Instantiate(hazard, spawnPosition, Quaternion.identity) as GameObject;
-            float hazardScale = Random.Range(hazardSizeRange.x, hazardSizeRange.y);
+            float hazardScale = Random.Range(asteroidSizeRange.x, asteroidSizeRange.y);
             hazardGO.transform.localScale = new Vector3(hazardScale, hazardScale, hazardScale);
         }
     }
 
-    private void CreateAndAddTestMission()
+    /// <summary>
+    /// Initialize the 'Target Practice' quest and add it to the Quest Manager
+    /// </summary>
+    private void InitializeTargetPracticeQuest()
     {
-        // OBJECTIVE 1 - DEFEAT ENEMIES OVER MARS
-        SpawnEnemyTargetsAtObjective(firstQuest, 0, enemyShipPrefab, 1, new Vector3(-50f, 0f, 100f));
-
-        // OBJECTIVE 2 - TRAVEL TO DEIMOS
+        // OBJECTIVE 1 - TRAVEL TO DEIMOS
         ObjectiveTarget deimos = deimosTravelObjective.AddComponent<ObjectiveTarget>();
-        Objective secondObjective = firstQuest.GetObjectiveAtIndex(1);
-        secondObjective.AssignTarget(deimos);
+        Objective firstObjective = firstQuest.GetObjectiveAtIndex(0);
+        firstObjective.AssignTarget(deimos);
 
-        // OBJECTIVE 3 - DEFEAT ENEMIES NEAR DEIMOS
-        //SpawnEnemyTargetsAtObjective(firstQuest, 2, enemyShipPrefab, 5, deimosSpawnPoint.position);
+        // OBJECTIVE 2 - DEFEAT RAIDERS
+        SpawnEnemyTargetsAtObjective(firstQuest, 1, enemyShipPrefab, 5, deimosSpawnPoint.position);
 
         questManager.Add(firstQuest);
         questManager.SetActiveQuest(firstQuest);

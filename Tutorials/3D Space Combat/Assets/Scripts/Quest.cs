@@ -20,6 +20,7 @@ public class Quest : MonoBehaviour
     {
         // Set the quest and the first objective to active
         currentObjective.state = Objective.ObjectiveState.active;
+        //currentObjective.InvokeOnStartedEvent();
         GameObject objectiveParentGameObject = currentObjective.transform.parent.gameObject;
         if(objectiveParentGameObject != null)
         {

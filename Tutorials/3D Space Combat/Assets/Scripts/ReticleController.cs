@@ -29,16 +29,18 @@ public class ReticleController : MonoBehaviour {
             else
             {
                 Cursor.SetCursor(reticleTexture, reticleHotSpot, cursorMode);
-                //if (!GameManager.instance.isCursorVisible)
-                //{
-                //    Cursor.visible = false;
-                //}
-                //else
-                //{
-                //    Cursor.visible = true;
-                //}
             }
         }
+        //if (!GameManager.instance.isCursorVisible)
+        //{
+        //    Cursor.lockState = CursorLockMode.Locked;
+        //    Cursor.visible = false;
+        //}
+        //else
+        //{
+        //    Cursor.lockState = CursorLockMode.None;
+        //    Cursor.visible = true;
+        //}
     }
 
     void OnMouseEnter()
