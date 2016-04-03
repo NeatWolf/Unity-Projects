@@ -18,7 +18,7 @@ public class ReticleController : MonoBehaviour {
 
     void Update()
     {
-        bool gamePaused = GameManager.instance.isPaused;
+        bool gamePaused = GameManager.instance.isMenuOpen;
         if (gamePaused != isPaused)
         {
             isPaused = gamePaused;

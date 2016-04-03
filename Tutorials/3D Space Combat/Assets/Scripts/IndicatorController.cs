@@ -43,7 +43,7 @@ public class IndicatorController : MonoBehaviour
 
     void LateUpdate()
     {
-        if (!GameManager.instance.isPaused)
+        if (!GameManager.instance.isMenuOpen)
         {
             resetPool();
 
@@ -76,35 +76,38 @@ public class IndicatorController : MonoBehaviour
 
             foreach (TargetableObject obj in objects)
             {
-                if (Vector3.Distance(obj.transform.position, GameManager.playerTransform.position) < 500f)
+                if (GameManager.playerTransform != null)
                 {
-                    Vector3 targetPosition = Camera.main.WorldToScreenPoint(obj.transform.position);
-
-                    // If the target is onscreen show the onscreen indicator & health bar
-                    if (targetPosition.z > 0f && targetPosition.x >= 0f && targetPosition.x <= Screen.width && targetPosition.y >= 0f && targetPosition.y <= Screen.height)
+                    if (Vector3.Distance(obj.transform.position, GameManager.playerTransform.position) < 500f)
                     {
-                        TargetIndicator box = getBoxIndicator();
-                        box.anchoredPosition = new Vector3(targetPosition.x, targetPosition.y, 0f);
-                        box.healthBarFillAmount = (float)obj.GetComponent<HealthController>().Health / (float)obj.GetComponent<HealthController>().maxHealth;
+                        Vector3 targetPosition = Camera.main.WorldToScreenPoint(obj.transform.position);
 
-                        float multiplier = (maxSize - minSize) / expansionThreshold;
-                        float sizeDimension = minSize;
-                        box.healthBarVisible = false;
-                        if (targetPosition.z < expansionThreshold)
+                        // If the target is onscreen show the onscreen indicator & health bar
+                        if (targetPosition.z > 0f && targetPosition.x >= 0f && targetPosition.x <= Screen.width && targetPosition.y >= 0f && targetPosition.y <= Screen.height)
                         {
-                            box.healthBarVisible = true;
-                            sizeDimension = maxSize - (targetPosition.z * multiplier);
+                            TargetIndicator box = getBoxIndicator();
+                            box.anchoredPosition = new Vector3(targetPosition.x, targetPosition.y, 0f);
+                            box.healthBarFillAmount = (float)obj.GetComponent<HealthController>().Health / (float)obj.GetComponent<HealthController>().maxHealth;
+
+                            float multiplier = (maxSize - minSize) / expansionThreshold;
+                            float sizeDimension = minSize;
+                            box.healthBarVisible = false;
+                            if (targetPosition.z < expansionThreshold)
+                            {
+                                box.healthBarVisible = true;
+                                sizeDimension = maxSize - (targetPosition.z * multiplier);
+                            }
+                            box.boxSize = new Vector2(sizeDimension, sizeDimension);
+
+                            //Vector3 lead = CalculateLead(player.transform.position, obj.transform.position, projectileSpeed * 1.5f, obj.gameObject.GetComponent<Rigidbody>().velocity, player.GetComponent<Rigidbody>().velocity);
+                            //box.trajectory.rectTransform.anchoredPosition = Camera.main.WorldToScreenPoint(lead) - screenCenter;
                         }
-                        box.boxSize = new Vector2(sizeDimension, sizeDimension);
-
-                        //Vector3 lead = CalculateLead(player.transform.position, obj.transform.position, projectileSpeed * 1.5f, obj.gameObject.GetComponent<Rigidbody>().velocity, player.GetComponent<Rigidbody>().velocity);
-                        //box.trajectory.rectTransform.anchoredPosition = Camera.main.WorldToScreenPoint(lead) - screenCenter;
-                    }
-                    else // Offscreen - show directional arrow
-                    {
-                        if (waypoints == null || !OverlapsWaypoint(waypoints, obj.transform.position))
+                        else // Offscreen - show directional arrow
                         {
-                            PositionArrowIndicator(targetPosition, ArrowType.enemy);
+                            if (waypoints == null || !OverlapsWaypoint(waypoints, obj.transform.position))
+                            {
+                                PositionArrowIndicator(targetPosition, ArrowType.enemy);
+                            }
                         }
                     }
                 }

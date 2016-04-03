@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts;
 
 public class GameManager : MonoBehaviour
 {
@@ -23,7 +24,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public bool isCursorVisible = true;
     [HideInInspector]
-    public bool isPaused = false;
+    public bool isMenuOpen = false;
     [HideInInspector]
     public PauseType pauseType = PauseType.none;
 
@@ -55,6 +56,7 @@ public class GameManager : MonoBehaviour
 
 	void Start ()
     {
+        Debug.Log("Starting GameManager");
         SpawnHazardsAroundSphere(deimos, 3600, 2600, deimosAsteroidCount);
         playerTransform.position = playerStartingTransform.position;
         playerTransform.rotation = playerStartingTransform.rotation;
@@ -64,7 +66,13 @@ public class GameManager : MonoBehaviour
         Invoke("InitializeTargetPracticeQuest", 10f);
         player.LockControls(false);
         DialogueManager.instance.BeginDialogue(dialogue1);
+        Invoke("KillPlayer", 10);
 	}
+
+    private void KillPlayer()
+    {
+        playerTransform.SendMessage("Damage", new DamageInfo(gameObject, 50));
+    }
 
     public void GameOver()
     {
