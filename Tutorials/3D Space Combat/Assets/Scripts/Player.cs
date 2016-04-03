@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     private Rigidbody rb;
     private WarpDrive warpDrive;
     private bool movementLocked = false;
+    private bool controlsLocked = false;
     private State currentState = State.Default;
     
     private enum State
@@ -36,7 +37,7 @@ public class Player : MonoBehaviour
     {
         if(currentState == State.Docked)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (!controlsLocked && Input.GetKeyDown(KeyCode.Space))
             {
                 Undock();
             }
@@ -47,7 +48,7 @@ public class Player : MonoBehaviour
         }
 
         // Lock onto warp target
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (!controlsLocked && Input.GetKeyDown(KeyCode.Tab))
         {
             // Cancel lock
             if(currentState == State.WarpStandby)
@@ -73,7 +74,7 @@ public class Player : MonoBehaviour
         // Engage warp
         if(currentState == State.WarpStandby)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (!controlsLocked && Input.GetKeyDown(KeyCode.Space))
             {
                 warpDrive.Engage();
             }
@@ -187,9 +188,14 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void LockMovement(bool setting)
+    public void LockMovement(bool isLocked)
     {
-        movementLocked = setting;
+        movementLocked = isLocked;
+    }
+
+    public void LockControls(bool isLocked)
+    {
+        controlsLocked = isLocked;
     }
 
     public void Dock(Transform dockingTransform)
@@ -257,7 +263,7 @@ public class Player : MonoBehaviour
     {
         Vector3 startPosition = transform.position;
         Vector3 midPosition = startPosition + new Vector3(0f, 10f, 0f);
-        Vector3 endPosition = midPosition + (transform.forward * 50f) + (transform.up * 5f);
+        Vector3 endPosition = midPosition + (transform.forward * 75f) + (transform.up * 5f);
         float timeSinceStarted = 0f;
         float percentageComplete = 0f;
         float startTime = Time.time;

@@ -61,6 +61,7 @@ public class UpdatesDisplay : MonoBehaviour {
         {
             Debug.Log("Subscribed to objective");
             obj.OnCompleted += Objective_OnCompleted;
+            obj.OnStarted += Objective_OnStarted;
         }
 
         // Notification of new quest
@@ -88,6 +89,16 @@ public class UpdatesDisplay : MonoBehaviour {
         updateLine.animateTime = animationTime;
         updateLine.Text = "Completed: " + sender.description;
         sender.OnCompleted -= Objective_OnCompleted;
+        itemsToBeAddedQueue.Enqueue(updateLine);
+    }
+
+    private void Objective_OnStarted(Objective sender)
+    {
+        UpdateListItem updateLine = Instantiate(updateListItemPrefab) as UpdateListItem;
+        updateLine.transform.SetParent(transform);
+        updateLine.animateTime = animationTime;
+        updateLine.Text = "Current Objective: " + sender.description;
+        sender.OnStarted -= Objective_OnStarted;
         itemsToBeAddedQueue.Enqueue(updateLine);
     }
 

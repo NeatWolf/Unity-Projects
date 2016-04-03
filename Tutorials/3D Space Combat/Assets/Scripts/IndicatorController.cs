@@ -113,28 +113,31 @@ public class IndicatorController : MonoBehaviour
 
             // Warp target indicators
             warpIndicatorInstance.gameObject.SetActive(false);
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
+            if (GameManager.instance.isCursorVisible)
             {
-                WarpTarget target = hit.collider.gameObject.GetComponent<WarpTarget>();
-                if (target != null)
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit))
                 {
-                    warpIndicatorInstance.gameObject.SetActive(true);
-                    warpIndicatorInstance.SetDestinationName(target.targetName);
-
-                    // Works with sphere colliders
-                    Vector3 topPosition = target.targetBoundary.bounds.center + new Vector3(0f, target.targetBoundary.bounds.extents.y * 0.75f, 0f);
-                    warpIndicatorInstance.SetNamePosition(topPosition);
-
-                    // Disable entry point indicator if it is currently overlapping an objective marker
-                    if (waypoints == null || !OverlapsWaypoint(waypoints, target.targetTransform.position))
+                    WarpTarget target = hit.collider.gameObject.GetComponent<WarpTarget>();
+                    if (target != null)
                     {
-                        warpIndicatorInstance.SetEntryPointPosition(target.targetTransform.position);
-                    }
-                    else
-                    {
-                        warpIndicatorInstance.DisableEntryPoint();
+                        warpIndicatorInstance.gameObject.SetActive(true);
+                        warpIndicatorInstance.SetDestinationName(target.targetName);
+
+                        // Works with sphere colliders
+                        Vector3 topPosition = target.targetBoundary.bounds.center + new Vector3(0f, target.targetBoundary.bounds.extents.y * 0.75f, 0f);
+                        warpIndicatorInstance.SetNamePosition(topPosition);
+
+                        // Disable entry point indicator if it is currently overlapping an objective marker
+                        if (waypoints == null || !OverlapsWaypoint(waypoints, target.targetTransform.position))
+                        {
+                            warpIndicatorInstance.SetEntryPointPosition(target.targetTransform.position);
+                        }
+                        else
+                        {
+                            warpIndicatorInstance.DisableEntryPoint();
+                        }
                     }
                 }
             }

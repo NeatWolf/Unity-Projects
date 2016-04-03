@@ -212,6 +212,7 @@
     <None Include="Assets\3rd Party\Standard Assets\Effects\ToonShading\Shaders\ToonBasicOutline.shader" />
     <None Include="Assets\3rd Party\Standard Assets\Effects\ToonShading\Shaders\ToonLit.shader" />
     <None Include="Assets\3rd Party\Standard Assets\Effects\ToonShading\Shaders\ToonLitOutline.shader" />
+    <None Include="Assets\Resources\Dialogues\dialogue1.txt" />
     <None Include="Assets\Shaders\InverseVignetting.shader" />
     <None Include="Assets\Shaders\PlanetGlow.shader" />
     <None Include="Assets\Shaders\RadialBlur.shader" />

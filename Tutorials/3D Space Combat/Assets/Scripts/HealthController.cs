@@ -48,6 +48,11 @@ public class HealthController : MonoBehaviour
                 levelUpSystem.GainExperience(xp);
             }
 
+            if (CompareTag("Player"))
+            {
+                GameManager.instance.GameOver();
+            }
+
             Destroy(gameObject);
         }
     }
