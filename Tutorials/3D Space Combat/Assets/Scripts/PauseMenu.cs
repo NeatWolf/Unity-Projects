@@ -21,15 +21,16 @@ public class PauseMenu : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (GameManager.instance.isMenuOpen)
+            if (GameManager.instance.isMenuOpen && GameManager.instance.pauseType == GameManager.PauseType.pauseMenu)
             {
+                GameManager.instance.isMenuOpen = false;
                 GameManager.instance.pauseType = GameManager.PauseType.none;
             }
-            else
+            else if(!GameManager.instance.isMenuOpen)
             {
+                GameManager.instance.isMenuOpen = true;
                 GameManager.instance.pauseType = GameManager.PauseType.pauseMenu;
             }
-            GameManager.instance.isMenuOpen = !GameManager.instance.isMenuOpen;
         }
 	}
 
@@ -40,7 +41,7 @@ public class PauseMenu : MonoBehaviour {
 
     public void ExitToMainMenu()
     {
-        SceneManager.LoadScene("Main Menu");
+        FadeInOut.instance.LoadLevel("Main Menu");
     }
 
     public void Quit()
