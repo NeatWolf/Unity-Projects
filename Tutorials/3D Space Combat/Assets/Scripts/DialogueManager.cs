@@ -49,34 +49,47 @@ public class DialogueManager : MonoBehaviour {
 
 	void Update ()
     {
-        if ((dialogueAudio != null) && (audioSource.clip != null) && audioSource.clip.name == dialogueAudio.name)
+        if (!GameManager.instance.isMenuOpen)
         {
-            // Check for <break/> or negative nextSubtitle
-            if (nextSubtitle > 0 && !subtitleText[nextSubtitle - 1].Contains("<break/>"))
+            if ((dialogueAudio != null) && (audioSource.clip != null) && audioSource.clip.name == dialogueAudio.name)
             {
-                subtitleUIText.text = displaySubtitle;
-            }
-            else
-            {
-                subtitleUIText.text = "";
-            }
+                audioSource.UnPause();
 
-            if (nextSubtitle < subtitleText.Count)
-            {
-                if (audioSource.timeSamples / RATE > subtitleTimings[nextSubtitle])
+                // Check for <break/> or negative nextSubtitle
+                if (nextSubtitle > 0 && !subtitleText[nextSubtitle - 1].Contains("<break/>"))
                 {
-                    displaySubtitle = subtitleText[nextSubtitle];
-                    nextSubtitle++;
+                    subtitleUIText.text = displaySubtitle;
+                }
+                else
+                {
+                    subtitleUIText.text = "";
+                }
+
+                if (nextSubtitle < subtitleText.Count)
+                {
+                    if (audioSource.timeSamples / RATE > subtitleTimings[nextSubtitle])
+                    {
+                        displaySubtitle = subtitleText[nextSubtitle];
+                        nextSubtitle++;
+                    }
+                }
+
+                if (nextTrigger < triggers.Count)
+                {
+                    if (audioSource.timeSamples / RATE > triggerTimings[nextTrigger])
+                    {
+                        // Perform trigger actions
+                    }
                 }
             }
-
-            if (nextTrigger < triggers.Count)
+        }
+        else
+        {
+            if ((dialogueAudio != null) && (audioSource.clip != null) && audioSource.clip.name == dialogueAudio.name)
             {
-                if (audioSource.timeSamples / RATE > triggerTimings[nextTrigger])
-                {
-                    // Perform trigger actions
-                }
+                audioSource.Pause();
             }
+            subtitleUIText.text = "";
         }
 	}
 

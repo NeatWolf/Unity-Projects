@@ -8,7 +8,6 @@ public class QuestManager : MonoBehaviour {
     public QuestListDisplay questsDisplayPrefab;
     public Transform questMenuParent;
 
-
     public delegate void QuestManagerDelegate(QuestManager sender);
     public delegate void QuestAddedDelegate(Quest addedQuest);
     public event QuestManagerDelegate OnChanged;
@@ -45,6 +44,10 @@ public class QuestManager : MonoBehaviour {
         if(_activeQuest == sender)
         {
             SetActiveQuest(null);
+        }
+        if(Quests.Count <= 0)
+        {
+            GameManager.instance.DisplayWinScreen();
         }
     }
 

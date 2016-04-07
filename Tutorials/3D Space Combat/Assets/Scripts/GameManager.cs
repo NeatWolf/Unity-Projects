@@ -6,6 +6,8 @@ using Assets.Scripts;
 public class GameManager : MonoBehaviour
 {
     public GameOverScreen gameOverScreen;
+    public GameOverScreen winScreen;
+    public CameraController cameraController;
     public Transform playerStartingTransform;
     public GameObject[] asteroidPrefabs;
     public Vector2 asteroidSizeRange;
@@ -32,11 +34,14 @@ public class GameManager : MonoBehaviour
     public static Transform playerTransform;
     public static QuestManager questManager;
 
+    private Player player;
+
     public enum PauseType
     {
         none,
         pauseMenu,
-        questMenu
+        questMenu,
+        gameOver
     }
 
     void Awake()
@@ -49,7 +54,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
         playerTransform = GameObject.FindWithTag("Player").GetComponent<Transform>();
         questManager = gameObject.GetComponent<QuestManager>();
     }
@@ -60,13 +65,14 @@ public class GameManager : MonoBehaviour
         SpawnHazardsAroundSphere(deimos, 3600, 2600, deimosAsteroidCount);
         playerTransform.position = playerStartingTransform.position;
         playerTransform.rotation = playerStartingTransform.rotation;
-        Player player = playerTransform.GetComponent<Player>();
+        player = playerTransform.GetComponent<Player>();
         player.LockControls(true);
-        player.Dock(playerStartingTransform);
-        Invoke("InitializeTargetPracticeQuest", 10f);
+        //player.Dock(playerStartingTransform);
+        Invoke("InitializeTargetPracticeQuest", 20f);
         player.LockControls(false);
         DialogueManager.instance.BeginDialogue(dialogue1);
-        Invoke("KillPlayer", 10);
+        //Invoke("KillPlayer", 10);
+        Invoke("DisplayWinScreen", 20);
 	}
 
     private void KillPlayer()
@@ -77,6 +83,32 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         gameOverScreen.Display();
+    }
+
+    public void DisplayWinScreen()
+    {
+        player.LockControls(true);
+        player.LockMovement(true);
+        player.idleSpeed = 0f;
+        winScreen.Display();
+    }
+
+    public void DockPlayer()
+    {
+        if (player != null)
+        {
+            player.Dock(playerStartingTransform);
+            cameraController.PerformDock();
+        }
+    }
+
+    public void UndockPlayer()
+    {
+        if (player != null)
+        {
+            player.Undock();
+            cameraController.PerformUndock();
+        }
     }
 	
     private void SpawnHazards()

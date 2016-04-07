@@ -6,7 +6,7 @@ public class MainMenu : MonoBehaviour {
 
     public void NewGame()
     {
-        SceneManager.LoadScene("Main");
+        FadeInOut.instance.LoadLevel("Main");
     }
 
     public void Quit()

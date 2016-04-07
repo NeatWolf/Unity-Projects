@@ -5,17 +5,21 @@ public class CameraController : MonoBehaviour
 {
     public float offset;
     public Transform player;
-
+    public Transform cam;
     public float moveSpeed;
     public float rotationSpeed;
-    public float shakeAmplitude;
-    public bool isShaking = false;
 
     private bool isLocked = false;
+    private Animator anim;
+
+    void Start()
+    {
+        anim = GetComponent<Animator>();
+    }
 
     void Update()
     {
-        if(player != null)
+        if (player != null)
         {
             if (!isLocked)
             {
@@ -28,23 +32,32 @@ public class CameraController : MonoBehaviour
                 // Set the position and rotation
                 transform.position = Vector3.Lerp(transform.position, wantedPosition, moveSpeed * Time.deltaTime);
                 transform.rotation = Quaternion.Slerp(transform.rotation, rotationXY, rotationSpeed * Time.deltaTime);
-
-                if (isShaking)
-                {
-                    Vector3 initialPosition = transform.position;
-                    transform.position = initialPosition + Random.insideUnitSphere * shakeAmplitude;
-                }
             }
         }
     }
 
     public void PerformDock()
     {
-        isLocked = true;
+        //isLocked = true;
     }
 
-    public void PerformUnDock()
+    public void PerformUndock()
     {
-        isLocked = false;
+        //anim.SetTrigger("Undock");
+        //Invoke("UnlockController", 6f);
     }
+
+    private void LockController()
+    {
+
+    }
+
+    //private void UnlockController()
+    //{
+    //    transform.position = cam.transform.localPosition;
+    //    transform.rotation = cam.transform.localRotation;
+    //    cam.transform.localPosition = Vector3.zero;
+    //    cam.transform.localRotation = Quaternion.identity;
+    //    isLocked = false;
+    //}
 }

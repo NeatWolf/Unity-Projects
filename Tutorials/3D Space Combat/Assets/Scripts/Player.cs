@@ -39,7 +39,7 @@ public class Player : MonoBehaviour
         {
             if (!controlsLocked && Input.GetKeyDown(KeyCode.Space))
             {
-                Undock();
+                GameManager.instance.UndockPlayer();
             }
             else
             {
@@ -223,6 +223,7 @@ public class Player : MonoBehaviour
 
     IEnumerator PerformDock(Transform dockingTransform, float time)
     {
+        Debug.Log("Player docking coroutine");
         currentState = State.Docked;
         LockMovement(true);
         GameManager.instance.isShootingEnabled = false;
@@ -232,17 +233,21 @@ public class Player : MonoBehaviour
         Vector3 midPosition = dockingTransform.position + new Vector3(0f, 10f, 0f);
         Vector3 endPosition = dockingTransform.position;
         Quaternion endRotation = dockingTransform.rotation;
+
         float timeSinceStarted = 0f;
         float percentageComplete = 0f;
         float startTime = Time.time;
 
-        while (transform.position != midPosition && transform.rotation != endRotation)
+        if (Vector3.Distance(transform.position, dockingTransform.position) > 1f)
         {
-            timeSinceStarted = Time.time - startTime;
-            percentageComplete = timeSinceStarted / time;
-            transform.position = Vector3.Lerp(startPosition, midPosition, percentageComplete);
-            transform.rotation = Quaternion.Slerp(startRotation, endRotation, percentageComplete);
-            yield return null;
+            while (transform.position != midPosition && transform.rotation != endRotation)
+            {
+                timeSinceStarted = Time.time - startTime;
+                percentageComplete = timeSinceStarted / time;
+                transform.position = Vector3.Lerp(startPosition, midPosition, percentageComplete);
+                transform.rotation = Quaternion.Slerp(startRotation, endRotation, percentageComplete);
+                yield return null;
+            }
         }
 
         startPosition = transform.position;
@@ -261,9 +266,10 @@ public class Player : MonoBehaviour
 
     IEnumerator PerformUndock(float time)
     {
+        Debug.Log("Player undocking coroutine");
         Vector3 startPosition = transform.position;
         Vector3 midPosition = startPosition + new Vector3(0f, 10f, 0f);
-        Vector3 endPosition = midPosition + (transform.forward * 75f) + (transform.up * 5f);
+        Vector3 endPosition = midPosition + (transform.forward * 100f) + (transform.up * 5f);
         float timeSinceStarted = 0f;
         float percentageComplete = 0f;
         float startTime = Time.time;

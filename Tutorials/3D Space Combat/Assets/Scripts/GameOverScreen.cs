@@ -18,18 +18,19 @@ public class GameOverScreen : MonoBehaviour {
         Time.timeScale = 0.5f;
         gameObject.SetActive(true);
         GameManager.instance.isMenuOpen = true;
+        GameManager.instance.pauseType = GameManager.PauseType.gameOver;
     }
 
     public void Retry()
     {
         CloseMenu();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        FadeInOut.instance.LoadLevel(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void ExitToMainMenu()
     {
         CloseMenu();
-        SceneManager.LoadScene("Main Menu");
+        FadeInOut.instance.LoadLevel("Main Menu");
     }
 
     private void CloseMenu()
@@ -37,5 +38,6 @@ public class GameOverScreen : MonoBehaviour {
         anim.SetTrigger("FadeOutTrigger");
         Time.timeScale = 1f;
         GameManager.instance.isMenuOpen = false;
+        GameManager.instance.pauseType = GameManager.PauseType.none;
     }
 }
