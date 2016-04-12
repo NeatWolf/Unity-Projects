@@ -43,10 +43,10 @@ public class IndicatorController : MonoBehaviour
 
     void LateUpdate()
     {
+        resetPool();
+
         if (!GameManager.instance.isMenuOpen)
         {
-            resetPool();
-
             // POSITION OBJECTIVE ARROWS AND INDICATORS
             Vector3[] waypoints = GameManager.questManager.GetActiveQuestObjectiveTargets();
             if (waypoints != null)
@@ -55,7 +55,7 @@ public class IndicatorController : MonoBehaviour
                 {
                     Vector3 targetPosition = Camera.main.WorldToScreenPoint(waypoint);
 
-                    // If the target is onscreen show the onscreen indicator & health bar
+                    // If the target is onscreen show the onscreen indicator
                     if (targetPosition.z > 0f && targetPosition.x >= 0f && targetPosition.x <= Screen.width && targetPosition.y >= 0f && targetPosition.y <= Screen.height)
                     {
                         if (targetPosition.z > 200f)
@@ -112,7 +112,7 @@ public class IndicatorController : MonoBehaviour
                     }
                 }
             }
-            cleanPool();
+            
 
             // Warp target indicators
             warpIndicatorInstance.gameObject.SetActive(false);
@@ -145,6 +145,7 @@ public class IndicatorController : MonoBehaviour
                 }
             }
         }
+        cleanPool();
     }
 
     private void resetPool()

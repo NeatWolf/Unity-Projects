@@ -198,6 +198,12 @@ public class Player : MonoBehaviour
         controlsLocked = isLocked;
     }
 
+    public IEnumerator LockControlsDelayed(bool isLocked, float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        LockControls(isLocked);
+    }
+
     public void Dock(Transform dockingTransform)
     {
         StartCoroutine(PerformDock(dockingTransform, 3f));
