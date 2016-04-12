@@ -13,6 +13,15 @@ public class GameOverScreen : MonoBehaviour {
         gameObject.SetActive(false);
 	}
 
+    public void CloseMenu()
+    {
+        anim.SetTrigger("FadeOutTrigger");
+        Time.timeScale = 1f;
+        GameManager.instance.isMenuOpen = false;
+        GameManager.instance.pauseType = GameManager.PauseType.none;
+        GameManager.instance.CloseWinScreen();
+    }
+
     public void Display()
     {
         Time.timeScale = 0.5f;
@@ -31,13 +40,5 @@ public class GameOverScreen : MonoBehaviour {
     {
         CloseMenu();
         FadeInOut.instance.LoadLevel("Main Menu");
-    }
-
-    private void CloseMenu()
-    {
-        anim.SetTrigger("FadeOutTrigger");
-        Time.timeScale = 1f;
-        GameManager.instance.isMenuOpen = false;
-        GameManager.instance.pauseType = GameManager.PauseType.none;
     }
 }

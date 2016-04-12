@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public Transform deimosSpawnPoint;
     public GameObject enemyShipPrefab;
     public AudioClip dialogue1;
+    public AudioClip ambienceClip;
 
     [HideInInspector]
     public bool isInCombat = false;
@@ -35,6 +36,7 @@ public class GameManager : MonoBehaviour
     public static QuestManager questManager;
 
     private Player player;
+    private AudioSource audioAmbience;
 
     public enum PauseType
     {
@@ -57,22 +59,37 @@ public class GameManager : MonoBehaviour
         //DontDestroyOnLoad(gameObject);
         playerTransform = GameObject.FindWithTag("Player").GetComponent<Transform>();
         questManager = gameObject.GetComponent<QuestManager>();
+        audioAmbience = gameObject.AddComponent<AudioSource>();
+        audioAmbience.clip = ambienceClip;
+        audioAmbience.loop = true;
+        audioAmbience.volume = 0.25f;
     }
 
 	void Start ()
     {
-        Debug.Log("Starting GameManager");
+        // Spawn asteroids around Deimos
         SpawnHazardsAroundSphere(deimos, 3600, 2600, deimosAsteroidCount);
+
+        // Position player at start transform
         playerTransform.position = playerStartingTransform.position;
         playerTransform.rotation = playerStartingTransform.rotation;
+
+        // Lock player controls until after intro dialogue
         player = playerTransform.GetComponent<Player>();
-        player.LockControls(true);
+        //player.LockControls(true);
+        //StartCoroutine(player.LockControlsDelayed(false, 26.5f));
+        //player.LockControls(false);
+
         //player.Dock(playerStartingTransform);
-        Invoke("InitializeTargetPracticeQuest", 20f);
-        player.LockControls(false);
+
+        audioAmbience.Play();
+
+        // Add quest after intro dialogue
+        Invoke("InitializeTargetPracticeQuest", 5.5f);
         DialogueManager.instance.BeginDialogue(dialogue1);
+
         //Invoke("KillPlayer", 10);
-        Invoke("DisplayWinScreen", 20);
+        Invoke("DisplayWinScreen", 10);
 	}
 
     private void KillPlayer()
@@ -89,8 +106,13 @@ public class GameManager : MonoBehaviour
     {
         player.LockControls(true);
         player.LockMovement(true);
-        player.idleSpeed = 0f;
         winScreen.Display();
+    }
+
+    public void CloseWinScreen()
+    {
+        player.LockControls(false);
+        player.LockMovement(false);
     }
 
     public void DockPlayer()

@@ -22,7 +22,7 @@ public class AISimple : MonoBehaviour {
         Sniping
     };
 
-    void Start ()
+    void Awake ()
     {
         rb = GetComponent<Rigidbody>();
         weaponController = GetComponent<AIWeaponController>();
@@ -36,38 +36,43 @@ public class AISimple : MonoBehaviour {
             distance = Vector3.Distance(player.position, transform.position);
             if (distance < 500f)
             {
-                if (Time.time >= timer)
-                {
-                    timer = Time.time + Random.Range(5, 10);
-                    currentManeuver = (Maneuver)Random.Range(0, 2);
-                    //print(string.Format("currentManeuver: {0}", currentManeuver));
-                    if (currentManeuver == Maneuver.Sniping)
-                    {
-                        isStrafingRight = RandomBoolean();
-                    }
-                }
-                else
-                {
-                    switch (currentManeuver)
-                    {
-                        case Maneuver.Attack:
-                            PerformAttackManeuver();
-                            break;
-                        case Maneuver.Sniping:
-                            PerformSnipingManeuver(isStrafingRight);
-                            break;
-                    }
-                }
+                Shooting();
             }
         }
 	}
+
+    private void Shooting()
+    {
+        if (Time.time >= timer)
+        {
+            timer = Time.time + Random.Range(5, 10);
+            currentManeuver = (Maneuver)Random.Range(0, 2);
+            //print(string.Format("currentManeuver: {0}", currentManeuver));
+            if (currentManeuver == Maneuver.Sniping)
+            {
+                isStrafingRight = RandomBoolean();
+            }
+        }
+        else
+        {
+            switch (currentManeuver)
+            {
+                case Maneuver.Attack:
+                    PerformAttackManeuver();
+                    break;
+                case Maneuver.Sniping:
+                    PerformSnipingManeuver(isStrafingRight);
+                    break;
+            }
+        }
+    }
 
     void PerformAttackManeuver()
     {
         transform.LookAt(player);
         weaponController.Fire();
 
-        if(distance > followRange)
+        if (distance > followRange)
         {
             rb.AddForce(transform.forward * moveSpeed);
         }
@@ -98,7 +103,7 @@ public class AISimple : MonoBehaviour {
 
     private bool RandomBoolean()
     {
-        if(Random.value >= 5)
+        if(Random.value >= 0.5f)
         {
             return true;
         }

@@ -1,11 +1,8 @@
 <time/>000.000|<break/>
-<time/>005.000|What do you think of my new ship, David?
-<time/>008.000|It's...nice. Why is it yellow?
-<time/>012.000|Man, ugh! Because it came in yellow! Why do you always have to say something negative? David!
-<time/>018.000|What can we do for you today Mark?
-<time/>022.000|I want another contract. You got something for me?
-<time/>026.000|We've seen a small band of raiders on the other side of Deimos.
-<time/>029.000|They seem to have flown a little too far from home in an effort to find more resources to harvest.
-<time/>035.000|They shouldn't be much of a challenge, even with the new...ship
-<time/>040.000|Alright, I'll take it.
-<time/>040.000|<break/>
+<time/>005.000|Got something for me?
+<time/>007.500|I'll give you an easy one to let you test out the new ship.
+<time/>011.500|That won't be necess-
+<time/>013.000|We've located a small band of raiders near Deimos. They seem to have flown a little too far from home in an effort to find more resources to harvest.
+<time/>020.500|Hopefully this is straightforward enough for you.
+<time/>024.000|I think I can handle it.
+<time/>026.500|<break/>
