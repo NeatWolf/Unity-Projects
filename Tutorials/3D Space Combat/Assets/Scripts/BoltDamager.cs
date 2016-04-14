@@ -5,9 +5,10 @@ using Assets.Scripts;
 public class BoltDamager : MonoBehaviour {
 
     public int damage;
-    public string targetTag;
+    public TargetableObject.Allegiance targetAllegiance;
 
     private Collider thisCollider;
+    private TargetableObject otherTarget;
 
     void Start()
     {
@@ -16,12 +17,19 @@ public class BoltDamager : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        if (other != thisCollider && other.CompareTag(targetTag))
+        otherTarget = other.GetComponent<TargetableObject>();
+        if (thisCollider != null && otherTarget != null)
         {
-            DamageInfo damageInfo = new DamageInfo(gameObject, damage);
-            other.transform.SendMessage("Damage", damageInfo);
-            other.transform.SendMessage("ImpactExplosion", transform.position);
-            Destroy(gameObject);
+            if (other != thisCollider)
+            {
+                if (otherTarget.allegiance == targetAllegiance)
+                {
+                    DamageInfo damageInfo = new DamageInfo(gameObject, damage);
+                    other.transform.SendMessage("Damage", damageInfo);
+                    other.transform.SendMessage("ImpactExplosion", transform.position);
+                    Destroy(gameObject);
+                }
+            }
         }
     }
 }

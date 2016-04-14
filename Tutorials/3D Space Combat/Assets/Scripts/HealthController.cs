@@ -17,7 +17,15 @@ public class HealthController : MonoBehaviour
     void Start()
     {
         health = maxHealth;
-        levelUpSystem = GameObject.FindGameObjectWithTag("Player").GetComponent<LevelUpSystem>();
+        GameObject playerGO = GameObject.FindGameObjectWithTag("Player");
+        if(playerGO != null)
+        {
+            levelUpSystem = playerGO.GetComponent<LevelUpSystem>();
+        }
+        else
+        {
+            Debug.LogError("Player is missing from the scene");
+        }
     }
 
     public int Health
@@ -43,7 +51,7 @@ public class HealthController : MonoBehaviour
             Detonator explosionDetonator = explosion.GetComponent<Detonator>();
             explosionDetonator.size = transform.localScale.x * 2;
 
-            if (damageInfo.Sender.CompareTag("PlayerWeapon"))
+            if (levelUpSystem != null && damageInfo.Sender.CompareTag("PlayerWeapon"))
             {
                 levelUpSystem.GainExperience(xp);
             }
