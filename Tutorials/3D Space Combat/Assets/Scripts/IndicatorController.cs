@@ -76,7 +76,7 @@ public class IndicatorController : MonoBehaviour
 
             foreach (TargetableObject obj in objects)
             {
-                if (GameManager.playerTransform != null)
+                if (!obj.CompareTag("Player") && GameManager.playerTransform != null)
                 {
                     if (Vector3.Distance(obj.transform.position, GameManager.playerTransform.position) < 500f)
                     {

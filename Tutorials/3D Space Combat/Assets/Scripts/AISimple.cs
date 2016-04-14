@@ -6,11 +6,14 @@ public class AISimple : MonoBehaviour {
     public float followRange;
     public float snipeRange;
     public float moveSpeed;
+    public float combatBoostSpeed;
     public float strafeSpeed;
 
-    private Transform player;
+    private TargetableObject targetableObject;
+    private Transform target;
     private float distance;
-    private float timer;
+    private float maneuverTimer;
+    private float chooseTargetTimer;
     private Rigidbody rb;
     private AIWeaponController weaponController;
     private Maneuver currentManeuver;
@@ -26,28 +29,62 @@ public class AISimple : MonoBehaviour {
     {
         rb = GetComponent<Rigidbody>();
         weaponController = GetComponent<AIWeaponController>();
-        player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 	
 	void FixedUpdate ()
     {
-        if (player != null)
+        ChooseTarget();
+
+        if (target != null)
         {
-            distance = Vector3.Distance(player.position, transform.position);
+            distance = Vector3.Distance(target.position, transform.position);
             if (distance < 500f)
             {
                 Shooting();
             }
         }
+        else
+        {
+            // Fight is finished
+        }
 	}
+
+    private void ChooseTarget()
+    {
+        if (Time.time >= chooseTargetTimer || target == null)
+        {
+            chooseTargetTimer = Time.time + Random.Range(5, 30);
+
+            int attempts = 100;
+            TargetableObject[] objects = FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[];
+            if(objects.Length > 0)
+            {
+                do
+                {
+                    targetableObject = objects[Random.Range(0, objects.Length)];
+                    target = targetableObject.transform;
+                    attempts--;
+                    if(attempts <= 0)
+                    {
+                        target = null;
+                        break;
+                    }
+                } while (target == null || targetableObject.allegiance == GetComponent<TargetableObject>().allegiance);
+            }
+            else
+            {
+                target = null;
+            }
+        }
+    }
 
     private void Shooting()
     {
-        if (Time.time >= timer)
+        if (Time.time >= maneuverTimer)
         {
-            timer = Time.time + Random.Range(5, 10);
+            maneuverTimer = Time.time + Random.Range(5, 10);
             currentManeuver = (Maneuver)Random.Range(0, 2);
-            //print(string.Format("currentManeuver: {0}", currentManeuver));
+            print(string.Format("currentManeuver: {0}", currentManeuver));
             if (currentManeuver == Maneuver.Sniping)
             {
                 isStrafingRight = RandomBoolean();
@@ -67,9 +104,9 @@ public class AISimple : MonoBehaviour {
         }
     }
 
-    void PerformAttackManeuver()
+    private void PerformAttackManeuver()
     {
-        transform.LookAt(player);
+        transform.LookAt(target);
         weaponController.Fire();
 
         if (distance > followRange)
@@ -78,16 +115,16 @@ public class AISimple : MonoBehaviour {
         }
     }
 
-    void PerformSnipingManeuver(bool strafeRight)
+    private void PerformSnipingManeuver(bool strafeRight)
     {
         if (distance < snipeRange)
         {
-            transform.LookAt(2.0f * transform.position - player.position);
+            transform.LookAt(2.0f * transform.position - target.position);
             rb.AddForce(transform.forward * moveSpeed);
         }
         else
         {
-            transform.LookAt(player);
+            transform.LookAt(target);
             if (strafeRight)
             {
                 rb.AddForce(transform.right * strafeSpeed);
@@ -96,7 +133,7 @@ public class AISimple : MonoBehaviour {
             {
                 rb.AddForce(transform.right * -strafeSpeed);
             }
-            transform.LookAt(player);
+            transform.LookAt(target);
             weaponController.Fire();
         }
     }
