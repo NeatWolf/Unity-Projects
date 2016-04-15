@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(TargetableObject))]
 public class AISimple : MonoBehaviour {
 
     public float followRange;
@@ -18,6 +19,7 @@ public class AISimple : MonoBehaviour {
     private AIWeaponController weaponController;
     private Maneuver currentManeuver;
     private bool isStrafingRight;
+    private TargetableObject.Allegiance allegiance;
 
     private enum Maneuver
     {
@@ -29,23 +31,27 @@ public class AISimple : MonoBehaviour {
     {
         rb = GetComponent<Rigidbody>();
         weaponController = GetComponent<AIWeaponController>();
+        allegiance = GetComponent<TargetableObject>().allegiance;
     }
 	
 	void FixedUpdate ()
     {
-        ChooseTarget();
+        if (Vector3.Distance(GameManager.playerTransform.position, transform.position) < 2000f)
+        {
+            ChooseTarget();
 
-        if (target != null)
-        {
-            distance = Vector3.Distance(target.position, transform.position);
-            if (distance < 500f)
+            if (target != null)
             {
-                Shooting();
+                distance = Vector3.Distance(target.position, transform.position);
+                if (distance < 500f)
+                {
+                    Shooting();
+                }
             }
-        }
-        else
-        {
-            // Fight is finished
+            else
+            {
+                // Fight is finished
+            }
         }
 	}
 
@@ -55,21 +61,26 @@ public class AISimple : MonoBehaviour {
         {
             chooseTargetTimer = Time.time + Random.Range(5, 30);
 
-            int attempts = 100;
+            bool possibleTarget = false;
             TargetableObject[] objects = FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[];
-            if(objects.Length > 0)
+
+            // Check if there is an appropriate target
+            foreach(var obj in objects)
+            {
+                if(obj.allegiance != allegiance)
+                {
+                    possibleTarget = true;
+                }
+            }
+
+            // Choose a random target
+            if(possibleTarget)
             {
                 do
                 {
                     targetableObject = objects[Random.Range(0, objects.Length)];
                     target = targetableObject.transform;
-                    attempts--;
-                    if(attempts <= 0)
-                    {
-                        target = null;
-                        break;
-                    }
-                } while (target == null || targetableObject.allegiance == GetComponent<TargetableObject>().allegiance);
+                } while (target == null || targetableObject.allegiance == allegiance);
             }
             else
             {

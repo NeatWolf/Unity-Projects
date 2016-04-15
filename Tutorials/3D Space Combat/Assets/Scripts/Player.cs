@@ -98,10 +98,13 @@ public class Player : MonoBehaviour
         {
             foreach (TargetableObject obj in objects)
             {
-                if (Vector3.Distance(obj.transform.position, transform.position) < 500)
+                if (obj.allegiance != TargetableObject.Allegiance.Friendly)
                 {
-                    GameManager.instance.isInCombat = true;
-                    break;
+                    if (Vector3.Distance(obj.transform.position, transform.position) < 500)
+                    {
+                        GameManager.instance.isInCombat = true;
+                        break;
+                    }
                 }
                 else
                 {

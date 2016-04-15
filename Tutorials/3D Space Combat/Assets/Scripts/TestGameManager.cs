@@ -7,7 +7,27 @@ public class TestGameManager : MonoBehaviour
     public GameObject friendlyShipPrefab;
     public float spawnRadius = 500f;
 
-	void Start ()
+    [HideInInspector]
+    public bool isInCombat = false;
+    [HideInInspector]
+    public bool isShootingEnabled = true;
+
+    public static TestGameManager instance;
+
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
+        //DontDestroyOnLoad(gameObject);
+    }
+
+    void Start ()
     {
         SpawnEnemies(20);
         SpawnFriendlies(20);
