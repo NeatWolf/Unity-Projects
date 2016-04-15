@@ -76,7 +76,7 @@ public class IndicatorController : MonoBehaviour
 
             foreach (TargetableObject obj in objects)
             {
-                if (!obj.CompareTag("Player") && GameManager.playerTransform != null)
+                if (!obj.CompareTag("Player") && obj.allegiance != TargetableObject.Allegiance.Friendly && GameManager.playerTransform != null)
                 {
                     if (Vector3.Distance(obj.transform.position, GameManager.playerTransform.position) < 500f)
                     {
@@ -305,7 +305,7 @@ public class IndicatorController : MonoBehaviour
 
         float m = cos / sin;
 
-        Vector3 screenBounds = screenCenter * 0.9f;
+        Vector3 screenBounds = screenCenter * 0.97f;
 
         // Top and bottom
         if (cos > 0)

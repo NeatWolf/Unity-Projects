@@ -5,6 +5,7 @@ using Assets.Scripts;
 
 public class GameManager : MonoBehaviour
 {
+    public bool isTesting = false;
     public GameOverScreen gameOverScreen;
     public GameOverScreen winScreen;
     public CameraController cameraController;
@@ -12,13 +13,19 @@ public class GameManager : MonoBehaviour
     public GameObject[] asteroidPrefabs;
     public Vector2 asteroidSizeRange;
     public Quest firstQuest;
-    public Transform deimos;
+    public Transform deimosTransform;
     public int deimosAsteroidCount;
     public GameObject deimosTravelObjective;
     public Transform deimosSpawnPoint;
+    public GameObject earthTravelObjective;
+    public Transform earthSpawnPoint;
     public GameObject enemyShipPrefab;
+    public GameObject friendlyShipPrefab;
     public AudioClip dialogue1;
     public AudioClip ambienceClip;
+
+    public float testSpawnRadius;
+    public int testCount;
 
     [HideInInspector]
     public bool isInCombat = false;
@@ -67,29 +74,36 @@ public class GameManager : MonoBehaviour
 
 	void Start ()
     {
-        // Spawn asteroids around Deimos
-        SpawnHazardsAroundSphere(deimos, 3600, 2600, deimosAsteroidCount);
+        if (!isTesting)
+        {
+            // Spawn asteroids around Deimos
+            SpawnHazardsAroundSphere(deimosTransform, 9000, 6500, deimosAsteroidCount);
 
-        // Position player at start transform
-        playerTransform.position = playerStartingTransform.position;
-        playerTransform.rotation = playerStartingTransform.rotation;
+            // Position player at start transform
+            playerTransform.position = playerStartingTransform.position;
+            playerTransform.rotation = playerStartingTransform.rotation;
 
-        // Lock player controls until after intro dialogue
-        player = playerTransform.GetComponent<Player>();
-        //player.LockControls(true);
-        //StartCoroutine(player.LockControlsDelayed(false, 26.5f));
-        //player.LockControls(false);
+            // Lock player controls until after intro dialogue
+            player = playerTransform.GetComponent<Player>();
+            player.LockControls(true);
+            StartCoroutine(player.LockControlsDelayed(false, 26.5f));
+            //player.LockControls(false);
 
-        //player.Dock(playerStartingTransform);
+            //player.Dock(playerStartingTransform);
 
-        audioAmbience.Play();
+            audioAmbience.Play();
 
-        // Add quest after intro dialogue
-        Invoke("InitializeTargetPracticeQuest", 5.5f);
-        DialogueManager.instance.BeginDialogue(dialogue1);
+            // Add quest after intro dialogue
+            Invoke("InitializeTargetPracticeQuest", 24f);
+            DialogueManager.instance.BeginDialogue(dialogue1);
 
-        //Invoke("KillPlayer", 10);
-        Invoke("DisplayWinScreen", 10);
+            //Invoke("KillPlayer", 10);
+            //Invoke("DisplayWinScreen", 10);
+        }
+        else
+        {
+            StartTest();
+        }
 	}
 
     private void KillPlayer()
@@ -168,23 +182,59 @@ public class GameManager : MonoBehaviour
         firstObjective.AssignTarget(deimos);
 
         // OBJECTIVE 2 - DEFEAT RAIDERS
-        SpawnEnemyTargetsAtObjective(firstQuest, 1, enemyShipPrefab, 5, deimosSpawnPoint.position);
+        SpawnPrefabsForObjective(firstQuest, 1, enemyShipPrefab, 5, deimosSpawnPoint.position, 50);
+
+        // OBJECTIVE 3 - TRAVEL TO EARTH
+        ObjectiveTarget earth = earthTravelObjective.AddComponent<ObjectiveTarget>();
+        Objective thirdObjective = firstQuest.GetObjectiveAtIndex(2);
+        thirdObjective.AssignTarget(earth);
+        // Setup spawn of enemies and friendlies so they only spawn when player reaches this objective
+        thirdObjective.OnStarted += ThirdObjective_OnStarted;
+        //TODO: unsubscribe to this!!!
+
+        // OBJECTIVE 4 - AID IN THE FIGHT
+        // AI only start battling when player approaches the area
 
         questManager.Add(firstQuest);
         questManager.SetActiveQuest(firstQuest);
     }
 
-    private void SpawnEnemyTargetsAtObjective(Quest quest, int ObjectiveIndex, GameObject shipPrefab, int count, Vector3 spawnPosition)
+    private void ThirdObjective_OnStarted(Objective sender)
     {
-        List<ObjectiveTarget> enemiesObj1 = new List<ObjectiveTarget>();
-        for (int i = 0; i < count; i++)
+        SpawnPrefabsForObjective(firstQuest, 3, enemyShipPrefab, 20, earthSpawnPoint.position, 100f);
+        SpawnPrefabs(friendlyShipPrefab, 20, earthSpawnPoint.position, 100f);
+    }
+
+    private void SpawnPrefabsForObjective(Quest quest, int ObjectiveIndex, GameObject shipPrefab, int spawnCount, Vector3 spawnCenter, float spawnRadius)
+    {
+        List<ObjectiveTarget> objectiveTargets = new List<ObjectiveTarget>();
+
+        List<GameObject> spawned = SpawnPrefabs(shipPrefab, spawnCount, spawnCenter, spawnRadius);
+
+        foreach(var unit in spawned)
         {
-            GameObject enemyShip = Instantiate(shipPrefab, new Vector3((i * 10f) + spawnPosition.x, spawnPosition.y, spawnPosition.z), Quaternion.identity) as GameObject;
-            ObjectiveTarget enemyTarget = enemyShip.AddComponent<ObjectiveTarget>();
-            enemiesObj1.Add(enemyTarget);
+            ObjectiveTarget target = unit.AddComponent<ObjectiveTarget>();
+            objectiveTargets.Add(target);
         }
 
         Objective objective = quest.GetObjectiveAtIndex(ObjectiveIndex);
-        objective.AssignTargets(enemiesObj1.ToArray());
+        objective.AssignTargets(objectiveTargets.ToArray());
+    }
+
+    private List<GameObject> SpawnPrefabs(GameObject prefab, int count, Vector3 center, float radius)
+    {
+        List<GameObject> spawned = new List<GameObject>();
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 spawnPosition = new Vector3(Random.Range(center.x - radius, center.x + radius), Random.Range(center.y - radius, center.y + radius), Random.Range(center.z - radius, center.z + radius));
+            spawned.Add(Instantiate(prefab, spawnPosition, Quaternion.identity) as GameObject);
+        }
+        return spawned;
+    }
+
+    private void StartTest()
+    {
+        SpawnPrefabs(enemyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
+        SpawnPrefabs(friendlyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
     }
 }
