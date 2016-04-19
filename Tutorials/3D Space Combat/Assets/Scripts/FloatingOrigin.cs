@@ -24,70 +24,73 @@ public class FloatingOrigin : MonoBehaviour
 
     void LateUpdate()
     {
-        Vector3 cameraPosition = gameObject.transform.position;
-        cameraPosition.y = 0f;
-        if (cameraPosition.magnitude > threshold)
+        if (!GameManager.instance.cameraController.IsWarping)
         {
-            Object[] objects = FindObjectsOfType(typeof(Transform));
-            foreach (Object o in objects)
+            Vector3 cameraPosition = gameObject.transform.position;
+            cameraPosition.y = 0f;
+            if (cameraPosition.magnitude > threshold)
             {
-                if((o as Transform).gameObject.layer.Equals(LayerMask.NameToLayer("UI")))
+                Object[] objects = FindObjectsOfType(typeof(Transform));
+                foreach (Object o in objects)
                 {
-                    continue;
+                    if ((o as Transform).gameObject.layer.Equals(LayerMask.NameToLayer("UI")))
+                    {
+                        continue;
+                    }
+
+                    Transform t = (Transform)o;
+                    if (t.parent == null)
+                    {
+                        t.position -= cameraPosition;
+                    }
                 }
 
-                Transform t = (Transform)o;
-                if (t.parent == null)
-                {
-                    t.position -= cameraPosition;
-                }
-            }
-
-            // new particles... very similar to old version above
-            objects = FindObjectsOfType(typeof(ParticleSystem));
-            foreach (UnityEngine.Object o in objects)
-            {
-                ParticleSystem sys = (ParticleSystem)o;
-
-                if (sys.simulationSpace != ParticleSystemSimulationSpace.World)
-                    continue;
-
-                if (parts == null || parts.Length < sys.maxParticles)
-                    parts = new ParticleSystem.Particle[sys.maxParticles];
-
-                int num = sys.GetParticles(parts);
-                for (int i = 0; i < num; ++i)
-                {
-                    parts[i].position -= cameraPosition;
-                }
-
-                sys.SetParticles(parts, num);
-            }
-
-            if (physicsThreshold > 0f)
-            {
-                float physicsThreshold2 = physicsThreshold * physicsThreshold; // simplify check on threshold
-                objects = FindObjectsOfType(typeof(Rigidbody));
+                // new particles... very similar to old version above
+                objects = FindObjectsOfType(typeof(ParticleSystem));
                 foreach (UnityEngine.Object o in objects)
                 {
-                    Rigidbody r = (Rigidbody)o;
-                    if (r.gameObject.transform.position.sqrMagnitude > physicsThreshold2)
+                    ParticleSystem sys = (ParticleSystem)o;
+
+                    if (sys.simulationSpace != ParticleSystemSimulationSpace.World)
+                        continue;
+
+                    if (parts == null || parts.Length < sys.maxParticles)
+                        parts = new ParticleSystem.Particle[sys.maxParticles];
+
+                    int num = sys.GetParticles(parts);
+                    for (int i = 0; i < num; ++i)
                     {
+                        parts[i].position -= cameraPosition;
+                    }
+
+                    sys.SetParticles(parts, num);
+                }
+
+                if (physicsThreshold > 0f)
+                {
+                    float physicsThreshold2 = physicsThreshold * physicsThreshold; // simplify check on threshold
+                    objects = FindObjectsOfType(typeof(Rigidbody));
+                    foreach (UnityEngine.Object o in objects)
+                    {
+                        Rigidbody r = (Rigidbody)o;
+                        if (r.gameObject.transform.position.sqrMagnitude > physicsThreshold2)
+                        {
 #if OLD_PHYSICS
                         r.sleepAngularVelocity = float.MaxValue;
                         r.sleepVelocity = float.MaxValue;
 #else
-                        r.sleepThreshold = float.MaxValue;
+                            r.sleepThreshold = float.MaxValue;
 #endif
-                    }
-                    else
-                    {
+                        }
+                        else
+                        {
 #if OLD_PHYSICS
                         r.sleepAngularVelocity = defaultSleepVelocity;
                         r.sleepVelocity = defaultAngularVelocity;
 #else
-                        r.sleepThreshold = defaultSleepThreshold;
+                            r.sleepThreshold = defaultSleepThreshold;
 #endif
+                        }
                     }
                 }
             }

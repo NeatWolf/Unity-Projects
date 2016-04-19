@@ -234,7 +234,7 @@ public class GameManager : MonoBehaviour
 
     private void StartTest()
     {
-        SpawnPrefabs(enemyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
-        SpawnPrefabs(friendlyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
+        //SpawnPrefabs(enemyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
+        //SpawnPrefabs(friendlyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
     }
 }
