@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class WarpDrive : MonoBehaviour {
 
     public ParticleSystem warpParticleSystem;
+    public CameraController cameraController;
     public RadialBlur radialBlur;
     public BarTimingMiniGame miniGame;
     public Text countdownText;
@@ -13,11 +14,9 @@ public class WarpDrive : MonoBehaviour {
     public float warpSpeed;
 
     private Vector3 _targetPosition = Vector3.zero;
-    private float _distanceToTarget = 0f;
     private Enums.WarpDriveState _state;
     private bool _countingDown = false;
     private bool _miniGameStarted = false;
-    private float _currentSpeed;
 
     void Start()
     {
@@ -25,7 +24,6 @@ public class WarpDrive : MonoBehaviour {
         timer = Instantiate(timer);
         countdownText.text = "";
         miniGame.ResultReady += ProcessResult;
-        _currentSpeed = warpSpeed;
     }
 
     void Update()
@@ -44,26 +42,12 @@ public class WarpDrive : MonoBehaviour {
             else
             {
                 countdownText.text = "";
-                if (_targetPosition != Vector3.zero)
-                {
-                    _state = Enums.WarpDriveState.on;
 
-                    if(_distanceToTarget > 0f)
-                    {
-                        warpParticleSystem.Play();
-                        radialBlur.TurnOn();
-                        Accelerate();
-                        _distanceToTarget -= _currentSpeed;
-                    }
-                    else
-                    {
-                        warpParticleSystem.Stop();
-                        radialBlur.TurnOff();
-                        _currentSpeed = warpSpeed;
-                        _state = Enums.WarpDriveState.waitingForCommand;
-                        _countingDown = false;
-                    }
-                }
+                // Perform warp
+                warpParticleSystem.Play();
+                radialBlur.TurnOn();
+                StartCoroutine(PerformWarpMove(5f, 0.5f, 0.25f, 200f));
+                _countingDown = false;
             }
         }
     }
@@ -79,7 +63,7 @@ public class WarpDrive : MonoBehaviour {
     public void SetTarget(Vector3 targetPosition)
     {
         _targetPosition = targetPosition;
-        _distanceToTarget = Vector3.Distance(transform.position, targetPosition);
+        Debug.Log(string.Format("Target Position: {0}", _targetPosition));
     }
 
     public void PowerDown()
@@ -96,6 +80,39 @@ public class WarpDrive : MonoBehaviour {
             _countingDown = true;
             _miniGameStarted = false;
         }
+    }
+
+    IEnumerator PerformWarpMove(float time, float effectsStartTime, float effectsEndTime, float speedLinesSpeed)
+    {
+        cameraController.EnterWarp(effectsStartTime, speedLinesSpeed);
+        _state = Enums.WarpDriveState.on;
+        GameObject startPosition = new GameObject();
+        startPosition.transform.position = transform.position;
+        GameObject endPosition = new GameObject();
+        endPosition.transform.position = _targetPosition;
+
+        if (endPosition.transform.position == Vector3.zero)
+        {
+            yield break;
+        }
+
+        float timeSinceStarted = 0f;
+        float percentageComplete = 0f;
+        float startTime = Time.time;
+
+        while (percentageComplete < 1f)
+        {
+            timeSinceStarted = Time.time - startTime;
+            percentageComplete = timeSinceStarted / time;
+            transform.position = Vector3.Lerp(startPosition.transform.position, endPosition.transform.position, percentageComplete);
+            yield return null;
+        }
+        Destroy(startPosition);
+        Destroy(endPosition);
+        warpParticleSystem.Stop();
+        cameraController.ExitWarp(effectsEndTime);
+        //radialBlur.TurnOff();
+        _state = Enums.WarpDriveState.waitingForCommand;
     }
 
     private void Countdown(int startTime)
@@ -118,16 +135,5 @@ public class WarpDrive : MonoBehaviour {
             default:
                 break;
         }
-    }
-
-    private float CalculateDistanceToTarget(Vector3 target)
-    {
-        return Vector3.Distance(transform.position, target);
-    }
-
-    private void Accelerate()
-    {
-        _currentSpeed += _currentSpeed * Time.deltaTime;
-        transform.position += transform.forward * _currentSpeed;
     }
 }
