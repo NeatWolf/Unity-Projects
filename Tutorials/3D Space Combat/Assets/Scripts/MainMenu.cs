@@ -4,6 +4,21 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour {
 
+    public Camera cam;
+    public GameObject controlsGameObject;
+    public GameObject titleGameObject;
+    public GameObject menuGameObject;
+    public GameObject backButton;
+
+    private Animator camAnim;
+
+    void Start()
+    {
+        controlsGameObject.SetActive(false);
+        backButton.SetActive(false);
+        camAnim = cam.GetComponent<Animator>();
+    }
+
     public void NewGame()
     {
         Debug.Log("Load Main scene");
@@ -14,5 +29,23 @@ public class MainMenu : MonoBehaviour {
     {
         Debug.Log("Quit application");
         Application.Quit();
+    }
+
+    public void Options()
+    {
+        camAnim.SetTrigger("EnterControls");
+        controlsGameObject.SetActive(true);
+        titleGameObject.SetActive(false);
+        menuGameObject.SetActive(false);
+        backButton.SetActive(true);
+    }
+
+    public void Back()
+    {
+        camAnim.SetTrigger("Back");
+        controlsGameObject.SetActive(false);
+        titleGameObject.SetActive(true);
+        menuGameObject.SetActive(true);
+        backButton.SetActive(false);
     }
 }

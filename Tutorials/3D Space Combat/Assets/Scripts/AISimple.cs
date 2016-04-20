@@ -9,6 +9,7 @@ public class AISimple : MonoBehaviour {
     public float moveSpeed;
     public float combatBoostSpeed;
     public float strafeSpeed;
+    public float lookSpeed;
 
     private TargetableObject targetableObject;
     private Transform target;
@@ -118,6 +119,8 @@ public class AISimple : MonoBehaviour {
     private void PerformAttackManeuver()
     {
         transform.LookAt(target);
+        //Quaternion lookAtRotation = Quaternion.LookRotation(target.position);
+        //transform.rotation = Quaternion.Slerp(transform.rotation, lookAtRotation, lookSpeed);
         weaponController.Fire();
 
         if (distance > followRange)
@@ -130,12 +133,15 @@ public class AISimple : MonoBehaviour {
     {
         if (distance < snipeRange)
         {
+            //Quaternion lookAtRotation = Quaternion.LookRotation(2.0f * transform.position - target.position);
+            //transform.rotation = Quaternion.Slerp(transform.rotation, lookAtRotation, lookSpeed);
             transform.LookAt(2.0f * transform.position - target.position);
             rb.AddForce(transform.forward * moveSpeed);
         }
         else
         {
-            transform.LookAt(target);
+            Quaternion lookAtRotation = Quaternion.LookRotation(target.position);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookAtRotation, lookSpeed);
             if (strafeRight)
             {
                 rb.AddForce(transform.right * strafeSpeed);
@@ -144,6 +150,8 @@ public class AISimple : MonoBehaviour {
             {
                 rb.AddForce(transform.right * -strafeSpeed);
             }
+            //lookAtRotation = Quaternion.LookRotation(target.position);
+            //transform.rotation = Quaternion.Slerp(transform.rotation, lookAtRotation, lookSpeed);
             transform.LookAt(target);
             weaponController.Fire();
         }
