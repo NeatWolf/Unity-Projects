@@ -20,6 +20,8 @@ public class ReticleController : MonoBehaviour {
         }
         else
         {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
             Cursor.SetCursor(cursorTexture, cursorHotSpot, cursorMode);
         }
     }
