@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class DialogueManager : MonoBehaviour {
 
     public Text subtitleUIText;
+    public Image backgroundImg;
     public List<float> subtitleTimings = new List<float>();
     public List<string> subtitleText = new List<string>();
     public List<float> triggerTimings = new List<float>();
@@ -58,10 +59,12 @@ public class DialogueManager : MonoBehaviour {
                 // Check for <break/> or negative nextSubtitle
                 if (nextSubtitle > 0 && !subtitleText[nextSubtitle - 1].Contains("<break/>"))
                 {
+                    backgroundImg.enabled = true;
                     subtitleUIText.text = displaySubtitle;
                 }
                 else
                 {
+                    backgroundImg.enabled = false;
                     subtitleUIText.text = "";
                 }
 
