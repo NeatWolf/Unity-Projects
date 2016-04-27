@@ -23,9 +23,9 @@ public class IndicatorController : MonoBehaviour
     private Vector3 screenCenter;
     private DestinationIndicator warpIndicatorInstance;
 
-    private readonly float minSize = 100f;
-    private readonly float maxSize = 300f;
-    private readonly float expansionThreshold = 100f;
+    private readonly float minAlpha = 75f;
+    private readonly float maxAlpha = 200f;
+    private readonly float alphaThreshold = 60f;
     private Image lastArrow;
 
     private enum ArrowType
@@ -89,15 +89,17 @@ public class IndicatorController : MonoBehaviour
                             box.anchoredPosition = new Vector3(targetPosition.x, targetPosition.y, 0f);
                             box.healthBarFillAmount = (float)obj.GetComponent<HealthController>().Health / (float)obj.GetComponent<HealthController>().maxHealth;
 
-                            float multiplier = (maxSize - minSize) / expansionThreshold;
-                            float sizeDimension = minSize;
+                            float multiplier = (maxAlpha - minAlpha) / alphaThreshold;
+                            float currentAlpha = maxAlpha;
                             box.healthBarVisible = false;
-                            if (targetPosition.z < expansionThreshold)
+                            if (targetPosition.z < alphaThreshold)
                             {
                                 box.healthBarVisible = true;
-                                sizeDimension = maxSize - (targetPosition.z * multiplier);
+                                currentAlpha = minAlpha + (targetPosition.z * multiplier);
                             }
-                            box.boxSize = new Vector2(sizeDimension, sizeDimension);
+                            
+                            box.boxAlpha = currentAlpha / 255f;
+                            Debug.Log(string.Format("currentAlpha: {0}, alpha: {1}", currentAlpha, box.boxAlpha));
 
                             //Vector3 lead = CalculateLead(player.transform.position, obj.transform.position, projectileSpeed * 1.5f, obj.gameObject.GetComponent<Rigidbody>().velocity, player.GetComponent<Rigidbody>().velocity);
                             //box.trajectory.rectTransform.anchoredPosition = Camera.main.WorldToScreenPoint(lead) - screenCenter;

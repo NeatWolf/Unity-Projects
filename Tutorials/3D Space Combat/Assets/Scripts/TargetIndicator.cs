@@ -37,15 +37,17 @@ public class TargetIndicator : MonoBehaviour {
         }
     }
 
-    public Vector2 boxSize
+    public float boxAlpha
     {
         get
         {
-            return box.rectTransform.sizeDelta;
+            return box.color.a;
         }
         set
         {
-            box.rectTransform.sizeDelta = value;
+            Color c = box.color;
+            c.a = value;
+            box.color = c;
         }
     }
 
