@@ -4,9 +4,7 @@ using UnityEngine.UI;
 
 public class WarpDrive : MonoBehaviour {
 
-    public ParticleSystem warpParticleSystem;
     public CameraController cameraController;
-    public RadialBlur radialBlur;
     public BarTimingMiniGame miniGame;
     public Text countdownText;
     public Timer timer;
@@ -44,8 +42,6 @@ public class WarpDrive : MonoBehaviour {
                 countdownText.text = "";
 
                 // Perform warp
-                warpParticleSystem.Play();
-                radialBlur.TurnOn();
                 StartCoroutine(PerformWarpMove(5f, 0.5f, 0.25f, 200f));
                 _countingDown = false;
             }
@@ -109,9 +105,7 @@ public class WarpDrive : MonoBehaviour {
         }
         Destroy(startPosition);
         Destroy(endPosition);
-        warpParticleSystem.Stop();
         cameraController.ExitWarp(effectsEndTime);
-        //radialBlur.TurnOff();
         _state = Enums.WarpDriveState.waitingForCommand;
     }
 

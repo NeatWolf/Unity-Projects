@@ -11,8 +11,7 @@ public class Player : MonoBehaviour
     public float lookSpeed = 0.1f;
     public int verticalLookLimit = 60;
     public float tilt = 5.0f;
-    public RadialBlur radialBlur;
-    public InverseVignette vignette;
+    public CameraController cameraController;
 
     private Rigidbody rb;
     private WarpDrive warpDrive;
@@ -24,7 +23,8 @@ public class Player : MonoBehaviour
     {
         Default,
         WarpStandby,
-        Docked
+        Docked,
+        Boosting
     }
 
     void Start()
@@ -134,9 +134,14 @@ public class Player : MonoBehaviour
                 // Add boost speed force
                 if (Input.GetKey(KeyCode.LeftShift))
                 {
+                    if(currentState != State.Boosting)
+                    {
+                        cameraController.EnterBoost();
+                        lookSpeed /= 5f;
+                    }
+                    currentState = State.Boosting;
                     GameManager.instance.isShootingEnabled = false;
-                    //radialBlur.TurnOn();
-                    //vignette.TurnOn();
+
                     if (GameManager.instance.isInCombat)
                     {
                         rb.AddForce(transform.forward * combatBoostSpeed);
@@ -148,9 +153,13 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
+                    if(currentState == State.Boosting)
+                    {
+                        cameraController.ExitBoost();
+                        lookSpeed *= 5f;
+                    }
+                    currentState = State.Default;
                     GameManager.instance.isShootingEnabled = true;
-                    //radialBlur.TurnOff();
-                    //vignette.TurnOff();
                 }
             }
             else

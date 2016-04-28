@@ -7,7 +7,8 @@ public class CameraController : MonoBehaviour
     public float offset;
     public Transform player;
     public Transform cam;
-    public ParticleSystem speedLines;
+    public ParticleSystem warpSpeedLines;
+    public ParticleSystem boostSpeedLines;
     public float moveSpeed;
     public float rotationSpeed;
     public float fieldOfViewChange;
@@ -18,6 +19,8 @@ public class CameraController : MonoBehaviour
     private bool isWarping = false;
     private Animator anim;
     private TiltShift tiltShift;
+    private float startingMoveSpeed;
+    private Vector3 velocity = Vector3.zero;
 
     public bool IsWarping
     {
@@ -31,6 +34,7 @@ public class CameraController : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         tiltShift = cam.GetComponent<TiltShift>();
+        startingMoveSpeed = moveSpeed;
     }
 
     void LateUpdate()
@@ -40,13 +44,14 @@ public class CameraController : MonoBehaviour
             if (!isLocked)
             {
                 // Set the position behind the player by a given offset
-                Vector3 wantedPosition = player.position - player.forward * offset;
+                Vector3 wantedPosition = player.transform.position - player.transform.forward * offset;
 
                 // Remove z-axis rotation
-                Quaternion rotationXY = Quaternion.Euler(player.rotation.eulerAngles.x, player.rotation.eulerAngles.y, 0f);
+                Quaternion rotationXY = Quaternion.Euler(player.transform.rotation.eulerAngles.x, player.transform.rotation.eulerAngles.y, 0f);
 
                 // Set the position and rotation
                 transform.position = Vector3.Lerp(transform.position, wantedPosition, moveSpeed * Time.deltaTime);
+                //transform.position = Vector3.SmoothDamp(transform.position, wantedPosition, ref velocity, moveSpeed);
                 transform.rotation = Quaternion.Slerp(transform.rotation, rotationXY, rotationSpeed * Time.deltaTime);
             }
 
@@ -80,6 +85,35 @@ public class CameraController : MonoBehaviour
     //    isLocked = false;
     //}
 
+    IEnumerator ShakeForSeconds(float time, float intensity)
+    {
+        if (intensity > 0)
+        {
+            float originalIntensity = shakeIntensity;
+            shakeIntensity = intensity;
+            isShaking = true;
+            yield return new WaitForSeconds(time);
+            //float timeSinceStarted = 0f;
+            //float percentageComplete = 0f;
+            //float startTime = Time.time;
+
+            //while (percentageComplete < 1f)
+            //{
+            //    timeSinceStarted = Time.time - startTime;
+            //    percentageComplete = timeSinceStarted / time;
+            //    shakeIntensity = Mathf.Lerp(intensity, 0f, percentageComplete);
+            //    yield return null;
+            //}
+            isShaking = false;
+            shakeIntensity = originalIntensity;
+        }
+        else
+        {
+            Debug.LogWarning("Shake intensity was set to zero or negative");
+        }
+    }
+
+    #region Warp
     public void EnterWarp(float effectsTime, float speedLinesSpeed)
     {
         isShaking = true;
@@ -92,8 +126,88 @@ public class CameraController : MonoBehaviour
     {
         isShaking = false;
         isWarping = false;
-        moveSpeed = 6f;
+        moveSpeed = startingMoveSpeed;
         StartCoroutine(PerformExitWarp(time));
+    }
+
+    IEnumerator PerformEnterWarp(float time, float speedLinesSpeed)
+    {
+        // Field of view
+        Camera cameraGO = cam.GetComponent<Camera>();
+        float startFoV = cameraGO.fieldOfView;
+        float endFoV = cameraGO.fieldOfView + fieldOfViewChange;
+
+        // Speed lines
+        float startLinesSpeed = 0f;
+        float endLinesSpeed = speedLinesSpeed;
+        warpSpeedLines.Play();
+
+        float timeSinceStarted = 0f;
+        float percentageComplete = 0f;
+        float startTime = Time.time;
+
+        while (percentageComplete < 1f)
+        {
+            timeSinceStarted = Time.time - startTime;
+            percentageComplete = timeSinceStarted / time;
+            tiltShift.maxBlurSize = Mathf.Lerp(0f, 5f, percentageComplete);
+            cameraGO.fieldOfView = Mathf.Lerp(startFoV, endFoV, percentageComplete);
+            warpSpeedLines.startSpeed = Mathf.Lerp(startLinesSpeed, endLinesSpeed, percentageComplete);
+            yield return null;
+        }
+    }
+
+    IEnumerator PerformExitWarp(float time)
+    {
+        // Field of view
+        Camera cameraGO = cam.GetComponent<Camera>();
+        float startFoV = cameraGO.fieldOfView;
+        float endFoV = cameraGO.fieldOfView - fieldOfViewChange;
+
+        // Speed lines
+        float startLinesSpeed = warpSpeedLines.startSpeed;
+        float endLinesSpeed = 0f;
+
+        float timeSinceStarted = 0f;
+        float percentageComplete = 0f;
+        float startTime = Time.time;
+
+        while (percentageComplete < 1f)
+        {
+            timeSinceStarted = Time.time - startTime;
+            percentageComplete = timeSinceStarted / time;
+            tiltShift.maxBlurSize = Mathf.Lerp(5f, 0f, percentageComplete);
+            cameraGO.fieldOfView = Mathf.Lerp(startFoV, endFoV, percentageComplete);
+            warpSpeedLines.startSpeed = Mathf.Lerp(startLinesSpeed, endLinesSpeed, percentageComplete);
+            yield return null;
+        }
+        warpSpeedLines.Stop();
+    }
+    #endregion
+
+    #region Boost
+    public void EnterBoost()
+    {
+        isShaking = true;
+        if (GameManager.instance.isInCombat)
+        {
+            moveSpeed *= 1.5f;
+            boostSpeedLines.startSpeed = 150f;
+            boostSpeedLines.Play();
+        }
+        else
+        {
+            moveSpeed *= 3.5f;
+            boostSpeedLines.startSpeed = 300f;
+            boostSpeedLines.Play();
+        }
+    }
+
+    public void ExitBoost()
+    {
+        isShaking = false;
+        moveSpeed = startingMoveSpeed;
+        boostSpeedLines.Stop();
     }
 
     IEnumerator PerformFollowSpeedUp(float time, float scale)
@@ -131,58 +245,5 @@ public class CameraController : MonoBehaviour
             yield return null;
         }
     }
-
-    IEnumerator PerformEnterWarp(float time, float speedLinesSpeed)
-    {
-        // Field of view
-        Camera cameraGO = cam.GetComponent<Camera>();
-        float startFoV = cameraGO.fieldOfView;
-        float endFoV = cameraGO.fieldOfView + fieldOfViewChange;
-
-        // Speed lines
-        float startLinesSpeed = 0f;
-        float endLinesSpeed = speedLinesSpeed;
-        speedLines.Play();
-
-        float timeSinceStarted = 0f;
-        float percentageComplete = 0f;
-        float startTime = Time.time;
-
-        while (percentageComplete < 1f)
-        {
-            timeSinceStarted = Time.time - startTime;
-            percentageComplete = timeSinceStarted / time;
-            tiltShift.maxBlurSize = Mathf.Lerp(0f, 5f, percentageComplete);
-            cameraGO.fieldOfView = Mathf.Lerp(startFoV, endFoV, percentageComplete);
-            speedLines.startSpeed = Mathf.Lerp(startLinesSpeed, endLinesSpeed, percentageComplete);
-            yield return null;
-        }
-    }
-
-    IEnumerator PerformExitWarp(float time)
-    {
-        // Field of view
-        Camera cameraGO = cam.GetComponent<Camera>();
-        float startFoV = cameraGO.fieldOfView;
-        float endFoV = cameraGO.fieldOfView - fieldOfViewChange;
-
-        // Speed lines
-        float startLinesSpeed = speedLines.startSpeed;
-        float endLinesSpeed = 0f;
-
-        float timeSinceStarted = 0f;
-        float percentageComplete = 0f;
-        float startTime = Time.time;
-
-        while (percentageComplete < 1f)
-        {
-            timeSinceStarted = Time.time - startTime;
-            percentageComplete = timeSinceStarted / time;
-            tiltShift.maxBlurSize = Mathf.Lerp(5f, 0f, percentageComplete);
-            cameraGO.fieldOfView = Mathf.Lerp(startFoV, endFoV, percentageComplete);
-            speedLines.startSpeed = Mathf.Lerp(startLinesSpeed, endLinesSpeed, percentageComplete);
-            yield return null;
-        }
-        speedLines.Stop();
-    }
+    #endregion
 }

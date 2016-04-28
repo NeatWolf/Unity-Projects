@@ -77,7 +77,7 @@ public class GameManager : MonoBehaviour
         if (!isTesting)
         {
             // Spawn asteroids around Deimos
-            SpawnHazardsAroundSphere(deimosTransform, 9000, 6500, deimosAsteroidCount);
+            SpawnHazardsAroundSphere(deimosTransform, 8500, 5500, deimosAsteroidCount);
 
             // Position player at start transform
             playerTransform.position = playerStartingTransform.position;
@@ -163,6 +163,7 @@ public class GameManager : MonoBehaviour
     {
         for(int i = 0; i < number; i++)
         {
+            Debug.Log("Spawned hazard");
             GameObject hazard = asteroidPrefabs[Random.Range(0, asteroidPrefabs.Length)];
             Vector3 spawnPosition = Random.onUnitSphere * Random.Range(innerRadius, outerRadius) + sphere.position;
             GameObject hazardGO = Instantiate(hazard, spawnPosition, Quaternion.identity) as GameObject;
@@ -234,7 +235,8 @@ public class GameManager : MonoBehaviour
 
     private void StartTest()
     {
-        SpawnPrefabs(enemyShipPrefab, 1, Vector3.zero, testSpawnRadius);
+        SpawnHazardsAroundSphere(deimosTransform, 8000, 5500, deimosAsteroidCount);
+        //SpawnPrefabs(enemyShipPrefab, 1, Vector3.zero, testSpawnRadius);
         //SpawnPrefabs(friendlyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
     }
 }
