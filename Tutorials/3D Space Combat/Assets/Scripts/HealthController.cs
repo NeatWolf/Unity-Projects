@@ -38,11 +38,15 @@ public class HealthController : MonoBehaviour
 
     void Damage(DamageInfo damageInfo)
     {
+        if (CompareTag("Player"))
+        {
+            GameManager.instance.cameraController.ShakeForSeconds(0.6f, 0.6f);
+        }
         health -= damageInfo.Damage;
 
         if(healthBar != null)
         {
-            healthBar.fillAmount = (float)health / (float)maxHealth;
+            healthBar.fillAmount = health / maxHealth;
         }
 
         if (health <= 0)

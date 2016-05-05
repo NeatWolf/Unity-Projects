@@ -77,7 +77,7 @@ public class GameManager : MonoBehaviour
         if (!isTesting)
         {
             // Spawn asteroids around Deimos
-            SpawnHazardsAroundSphere(deimosTransform, 8500, 5500, deimosAsteroidCount);
+            //SpawnHazardsAroundSphere(deimosTransform, 9000, 5800, deimosAsteroidCount);
 
             // Position player at start transform
             playerTransform.position = playerStartingTransform.position;
@@ -235,8 +235,8 @@ public class GameManager : MonoBehaviour
 
     private void StartTest()
     {
-        SpawnHazardsAroundSphere(deimosTransform, 8000, 5500, deimosAsteroidCount);
-        //SpawnPrefabs(enemyShipPrefab, 1, Vector3.zero, testSpawnRadius);
+        //SpawnHazardsAroundSphere(deimosTransform, 9000, 5800, deimosAsteroidCount);
+        //SpawnPrefabs(enemyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
         //SpawnPrefabs(friendlyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
     }
 }

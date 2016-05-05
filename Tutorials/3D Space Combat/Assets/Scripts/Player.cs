@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     public int verticalLookLimit = 60;
     public float tilt = 5.0f;
     public CameraController cameraController;
+    public ParticleSystem[] thrusters;
 
     private Rigidbody rb;
     private WarpDrive warpDrive;
@@ -116,6 +117,8 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        Vector3 forwardForce = Vector3.zero;
+
         if (!movementLocked)
         {
             float inputVertical = Input.GetAxis("Vertical");
@@ -124,12 +127,12 @@ public class Player : MonoBehaviour
 
             #region Velocity Logic
             // Add base force
-            rb.AddForce(transform.forward * idleSpeed);
+            forwardForce += transform.forward * idleSpeed;
 
             // Add forward or backward force
             if (inputVertical > 0)
             {
-                rb.AddForce(transform.forward * moveSpeed * inputVertical);
+                forwardForce += transform.forward * moveSpeed * inputVertical;
 
                 // Add boost speed force
                 if (Input.GetKey(KeyCode.LeftShift))
@@ -144,11 +147,11 @@ public class Player : MonoBehaviour
 
                     if (GameManager.instance.isInCombat)
                     {
-                        rb.AddForce(transform.forward * combatBoostSpeed);
+                        forwardForce += transform.forward * combatBoostSpeed;
                     }
                     else
                     {
-                        rb.AddForce(transform.forward * boostSpeed);
+                        forwardForce += transform.forward * boostSpeed;
                     }
                 }
                 else
@@ -164,9 +167,10 @@ public class Player : MonoBehaviour
             }
             else
             {
-                rb.AddForce(transform.forward * idleSpeed * inputVertical);
+                forwardForce += transform.forward * idleSpeed * inputVertical;
             }
 
+            rb.AddForce(forwardForce);
             rb.AddForce(transform.right * strafeSpeed * inputHorizontal);
             #endregion
 
@@ -197,6 +201,17 @@ public class Player : MonoBehaviour
             rb.rotation = Quaternion.Slerp(rb.rotation, modifiedDirection, lookSpeed);
             //rb.AddTorque(modifiedDirection.eulerAngles * lookSpeed);
             #endregion
+        }
+
+        
+        foreach(var thruster in thrusters)
+        {
+            // For moving speed we want lifetime at 0.5, for idle speed we want lifetime at 0.4
+            //thruster.startLifetime = Mathf.Clamp(Mathf.Log10(forwardForce.sqrMagnitude / 0.16f) / Mathf.Log10(76000000000), 0.2f, 0.8f);
+
+            // For moving speed we want lifetime at 0.5, for idle speed we want lifetime at 0.4
+            thruster.startLifetime = Mathf.Clamp(Mathf.Log10(forwardForce.sqrMagnitude / 83.965f) / Mathf.Log10(275855), 0.1f, 0.7f);
+            Debug.Log(string.Format("Forward Force: {0}", thruster.startLifetime));
         }
     }
 

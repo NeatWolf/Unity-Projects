@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/SciFi_Fighter_AK5.unity
+- path: Assets/EarthRendering Free/Test.unity
   isLoaded: 1
   isActive: 1

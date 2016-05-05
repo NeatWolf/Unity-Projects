@@ -85,25 +85,29 @@ public class CameraController : MonoBehaviour
     //    isLocked = false;
     //}
 
-    IEnumerator ShakeForSeconds(float time, float intensity)
+    public void ShakeForSeconds(float time, float intensity)
+    {
+        StartCoroutine(PerformShakeForSeconds(time, intensity));
+    }
+
+    IEnumerator PerformShakeForSeconds(float time, float intensity)
     {
         if (intensity > 0)
         {
             float originalIntensity = shakeIntensity;
             shakeIntensity = intensity;
             isShaking = true;
-            yield return new WaitForSeconds(time);
-            //float timeSinceStarted = 0f;
-            //float percentageComplete = 0f;
-            //float startTime = Time.time;
+            float timeSinceStarted = 0f;
+            float percentageComplete = 0f;
+            float startTime = Time.time;
 
-            //while (percentageComplete < 1f)
-            //{
-            //    timeSinceStarted = Time.time - startTime;
-            //    percentageComplete = timeSinceStarted / time;
-            //    shakeIntensity = Mathf.Lerp(intensity, 0f, percentageComplete);
-            //    yield return null;
-            //}
+            while (percentageComplete < 1f)
+            {
+                timeSinceStarted = Time.time - startTime;
+                percentageComplete = timeSinceStarted / time;
+                shakeIntensity = Mathf.Lerp(intensity, 0f, percentageComplete);
+                yield return null;
+            }
             isShaking = false;
             shakeIntensity = originalIntensity;
         }
