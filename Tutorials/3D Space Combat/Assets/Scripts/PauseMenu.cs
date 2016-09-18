@@ -8,6 +8,7 @@ public class PauseMenu : MonoBehaviour {
     public GameObject container;
     public GameObject headerText;
     public GameObject menuButtons;
+    public RectTransform menuActualSize;
     public GameObject controlsPanelPrefab;
     public GameObject menuButtonPrefab;
 
@@ -21,7 +22,7 @@ public class PauseMenu : MonoBehaviour {
             container.SetActive(true);
             Time.timeScale = 0f;
         }
-        else if(!GameManager.instance.isMenuOpen)
+        else if (!GameManager.instance.isMenuOpen)
         {
             container.SetActive(false);
             Time.timeScale = 1f;
@@ -34,13 +35,13 @@ public class PauseMenu : MonoBehaviour {
                 GameManager.instance.isMenuOpen = false;
                 GameManager.instance.pauseType = GameManager.PauseType.none;
             }
-            else if(!GameManager.instance.isMenuOpen)
+            else if (!GameManager.instance.isMenuOpen)
             {
                 GameManager.instance.isMenuOpen = true;
                 GameManager.instance.pauseType = GameManager.PauseType.pauseMenu;
             }
         }
-	}
+    }
 
     public void Resume()
     {
@@ -54,12 +55,14 @@ public class PauseMenu : MonoBehaviour {
 
         // Controls Panel
         controlsPanelGO = Instantiate(controlsPanelPrefab);
-        controlsPanelGO.transform.SetParent(transform);
+        controlsPanelGO.transform.SetParent(menuActualSize);
         RectTransform controlsPanelRect = controlsPanelGO.GetComponent<RectTransform>();
-        controlsPanelRect.anchorMin = new Vector2(0.5f, 0.5f);
-        controlsPanelRect.anchorMax = new Vector2(0.5f, 0.5f);
+        controlsPanelRect.anchorMin = new Vector2(0, 0.5f);
+        controlsPanelRect.anchorMax = new Vector2(1, 0.5f);
         controlsPanelRect.pivot = new Vector2(0.5f, 0.5f);
-        controlsPanelRect.anchoredPosition = new Vector2(0f, 0f);
+        controlsPanelRect.anchoredPosition = new Vector2(0f, controlsPanelRect.rect.height / 2f);
+        controlsPanelRect.offsetMin = new Vector2(10f, controlsPanelRect.offsetMin.y);
+        controlsPanelRect.offsetMax = new Vector2(-10f, controlsPanelRect.offsetMax.y);
 
         // Back Button
         menuButtonGO = Instantiate(menuButtonPrefab);
@@ -68,9 +71,9 @@ public class PauseMenu : MonoBehaviour {
         menuButtonRect.anchorMin = new Vector2(0.5f, 0.5f);
         menuButtonRect.anchorMax = new Vector2(0.5f, 0.5f);
         menuButtonRect.pivot = new Vector2(0.5f, 0.5f);
-        menuButtonRect.anchoredPosition = new Vector2(0f, (-controlsPanelGO.GetComponent<RectTransform>().sizeDelta.y / 2f) - 25f);
-        menuButtonRect.sizeDelta = new Vector2(500f, menuButtonRect.sizeDelta.y);
-        menuButtonRect.GetComponentInChildren<Text>().text = "Back";
+        menuButtonRect.anchoredPosition = new Vector2(0f, -menuActualSize.rect.height / 4f);
+        menuButtonRect.sizeDelta = new Vector2(350f, menuButtonRect.sizeDelta.y);
+        menuButtonRect.GetComponentInChildren<Text>().text = "BACK";
         menuButtonGO.GetComponent<Button>().onClick.AddListener(() => Back());
     }
 

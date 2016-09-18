@@ -34,6 +34,10 @@ public class BarTimingMiniGame : MonoBehaviour {
                 speed += speed * Time.deltaTime;
                 cursor.rectTransform.anchoredPosition += new Vector2(speed, 0f);
             }
+            else
+            {
+                Close();
+            }
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -54,12 +58,17 @@ public class BarTimingMiniGame : MonoBehaviour {
                         ResultReady(Enums.MiniGameResult.good);
                     }
                 }
-                bar.CrossFadeAlpha(0f, 0.25f, false);
-                cursor.CrossFadeAlpha(0f, 0.25f, false);
-                started = false;
+                Close();
             }
         }
 	}
+
+    public void Close()
+    {
+        bar.CrossFadeAlpha(0f, 0.25f, false);
+        cursor.CrossFadeAlpha(0f, 0.25f, false);
+        started = false;
+    }
 
     public void StartMiniGame()
     {

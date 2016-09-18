@@ -70,7 +70,7 @@ public class LevelUpSystem : MonoBehaviour {
 
     private IEnumerator ShowLevelUpPopup(int level)
     {
-        levelUpText.text = string.Format("You reached level {0}", level.ToString());
+        levelUpText.text = string.Format("YOU REACHED LEVEL {0}", level.ToString());
         levelUpText.CrossFadeAlpha(1, 0.5f, false);
         yield return new WaitForSeconds(5);
         levelUpText.CrossFadeAlpha(0, 0.5f, false);

@@ -6,6 +6,7 @@ public class TestGameManager : MonoBehaviour
     public GameObject enemyShipPrefab;
     public GameObject friendlyShipPrefab;
     public float spawnRadius = 500f;
+    public int spawnCount = 20;
 
     [HideInInspector]
     public bool isInCombat = false;
@@ -29,8 +30,8 @@ public class TestGameManager : MonoBehaviour
 
     void Start ()
     {
-        SpawnEnemies(20);
-        SpawnFriendlies(20);
+        SpawnEnemies(spawnCount);
+        SpawnFriendlies(spawnCount);
 	}
 
     private void SpawnEnemies(int count)

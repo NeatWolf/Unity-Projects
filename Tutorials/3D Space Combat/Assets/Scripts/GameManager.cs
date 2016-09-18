@@ -22,7 +22,6 @@ public class GameManager : MonoBehaviour
     public GameObject enemyShipPrefab;
     public GameObject friendlyShipPrefab;
     public AudioClip dialogue1;
-    public AudioClip ambienceClip;
 
     public float testSpawnRadius;
     public int testCount;
@@ -43,7 +42,6 @@ public class GameManager : MonoBehaviour
     public static QuestManager questManager;
 
     private Player player;
-    private AudioSource audioAmbience;
 
     public enum PauseType
     {
@@ -66,10 +64,6 @@ public class GameManager : MonoBehaviour
         //DontDestroyOnLoad(gameObject);
         playerTransform = GameObject.FindWithTag("Player").GetComponent<Transform>();
         questManager = gameObject.GetComponent<QuestManager>();
-        audioAmbience = gameObject.AddComponent<AudioSource>();
-        audioAmbience.clip = ambienceClip;
-        audioAmbience.loop = true;
-        audioAmbience.volume = 0.25f;
     }
 
 	void Start ()
@@ -86,12 +80,10 @@ public class GameManager : MonoBehaviour
             // Lock player controls until after intro dialogue
             player = playerTransform.GetComponent<Player>();
             player.LockControls(true);
+            player.LockMovement(true);
             StartCoroutine(player.LockControlsDelayed(false, 26.5f));
-            //player.LockControls(false);
 
             //player.Dock(playerStartingTransform);
-
-            audioAmbience.Play();
 
             // Add quest after intro dialogue
             Invoke("InitializeTargetPracticeQuest", 24f);
@@ -235,8 +227,9 @@ public class GameManager : MonoBehaviour
 
     private void StartTest()
     {
+        Invoke("InitializeTargetPracticeQuest", 1f);
         //SpawnHazardsAroundSphere(deimosTransform, 9000, 5800, deimosAsteroidCount);
-        //SpawnPrefabs(enemyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
-        //SpawnPrefabs(friendlyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
+        SpawnPrefabs(enemyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
+        SpawnPrefabs(friendlyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
     }
 }

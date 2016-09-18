@@ -7,15 +7,15 @@ public class AIWeaponController : MonoBehaviour
     public Transform shotSpawn;
     public float fireRate;
     public AudioClip shootingClip;
+    public float minShotVolume = 0.5f;
+    public float maxShotVolume = 1f;
 
     private float nextFire;
     private AudioSource audioSource;
 
     void Start()
     {
-        audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.clip = shootingClip;
-        audioSource.playOnAwake = false;
+        audioSource = GetComponent<AudioSource>();
     }
 
     public void Fire()
@@ -24,7 +24,8 @@ public class AIWeaponController : MonoBehaviour
         {
             nextFire = Time.time + fireRate;
             Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
-            audioSource.Play();
+            float volume = Random.Range(minShotVolume, maxShotVolume);
+            audioSource.PlayOneShot(shootingClip, volume);
         }
     }
 }

@@ -1,25 +1,41 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Audio;
 
 public class Player : MonoBehaviour
 {
     public float idleSpeed = 100.0f;
     public float moveSpeed = 200.0f;
     public float strafeSpeed = 100.0f;
+    public float strafeRotation = 5f;
     public float combatBoostSpeed = 400.0f;
     public float boostSpeed = 1000.0f;
     public float lookSpeed = 0.1f;
     public int verticalLookLimit = 60;
     public float tilt = 5.0f;
     public CameraController cameraController;
+    public Camera cam;
+    public Transform cameraTarget;
     public ParticleSystem[] thrusters;
+    public float mouseDelta = 100;
+    public float lookDamping = 0.1f;
+    public float rotationDamping = 20f;
+    public float rotationSpeed = 5f;
+    public AudioMixerSnapshot thrusterOnAudio;
+    public AudioMixerSnapshot thrusterOffAudio;
 
     private Rigidbody rb;
     private WarpDrive warpDrive;
+    private float rotationz;
+    private Vector3 screenPosition;
     private bool movementLocked = false;
     private bool controlsLocked = false;
     private State currentState = State.Default;
-    
+    private AudioSource _audioSource;
+
+    private float startingBoostSpeed;
+    private float startingCombatBoostSpeed;
+
     private enum State
     {
         Default,
@@ -28,10 +44,23 @@ public class Player : MonoBehaviour
         Boosting
     }
 
+    public bool IsMovementLocked
+    {
+        get
+        {
+            return movementLocked;
+        }
+    }
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         warpDrive = GetComponent<WarpDrive>();
+        _audioSource = GetComponent<AudioSource>();
+        startingBoostSpeed = boostSpeed;
+        startingCombatBoostSpeed = combatBoostSpeed;
+        boostSpeed = 0f;
+        combatBoostSpeed = 0f;
     }
 
     void Update()
@@ -125,13 +154,13 @@ public class Player : MonoBehaviour
             float inputHorizontal = Input.GetAxis("Horizontal");
             Vector3 mousePosition = Input.mousePosition;
 
-            #region Velocity Logic
             // Add base force
             forwardForce += transform.forward * idleSpeed;
 
             // Add forward or backward force
             if (inputVertical > 0)
             {
+                //thrusterOnAudio.TransitionTo(0.5f);
                 forwardForce += transform.forward * moveSpeed * inputVertical;
 
                 // Add boost speed force
@@ -139,80 +168,88 @@ public class Player : MonoBehaviour
                 {
                     if(currentState != State.Boosting)
                     {
+                        StartCoroutine(LerpBoost(1f, 0f, GameManager.instance.isInCombat ? startingCombatBoostSpeed : startingBoostSpeed, GameManager.instance.isInCombat));
                         cameraController.EnterBoost();
-                        lookSpeed /= 5f;
                     }
                     currentState = State.Boosting;
                     GameManager.instance.isShootingEnabled = false;
 
-                    if (GameManager.instance.isInCombat)
-                    {
-                        forwardForce += transform.forward * combatBoostSpeed;
-                    }
-                    else
-                    {
-                        forwardForce += transform.forward * boostSpeed;
-                    }
+
                 }
                 else
                 {
                     if(currentState == State.Boosting)
                     {
+                        StartCoroutine(LerpBoost(1f, GameManager.instance.isInCombat ? startingCombatBoostSpeed : startingBoostSpeed, 0f, GameManager.instance.isInCombat));
                         cameraController.ExitBoost();
-                        lookSpeed *= 5f;
+
+                        currentState = State.Default;
+                        GameManager.instance.isShootingEnabled = true;
                     }
-                    currentState = State.Default;
-                    GameManager.instance.isShootingEnabled = true;
+
                 }
             }
             else
             {
+                //thrusterOffAudio.TransitionTo(1f);
                 forwardForce += transform.forward * idleSpeed * inputVertical;
+
+                if (currentState == State.Boosting)
+                {
+                    StartCoroutine(LerpBoost(1f, GameManager.instance.isInCombat ? startingCombatBoostSpeed : startingBoostSpeed, 0f, GameManager.instance.isInCombat));
+                    cameraController.ExitBoost();
+
+                    currentState = State.Default;
+                    GameManager.instance.isShootingEnabled = true;
+                }
             }
 
+            if (GameManager.instance.isInCombat)
+            {
+                forwardForce += transform.forward * combatBoostSpeed;
+            }
+            else
+            {
+                forwardForce += transform.forward * boostSpeed;
+            }
+
+            Rotation(inputHorizontal);
             rb.AddForce(forwardForce);
             rb.AddForce(transform.right * strafeSpeed * inputHorizontal);
-            #endregion
-
-            #region Rotation Logic
-            // Get the direction the mouse is pointing
-            Ray ray = Camera.main.ScreenPointToRay(mousePosition);
-            Quaternion rayDirection = Quaternion.LookRotation(ray.direction);
-            //rb.AddTorque(ray.direction.x * lookSpeed, ray.direction.y * lookSpeed, 0f);
-
-            // Clamp the direction on the x-axis (up/down) to prevent spiraling camera
-            Vector3 directionEuler = rayDirection.eulerAngles;
-            Quaternion modifiedDirection = Quaternion.Euler(Mathf.Clamp(directionEuler.x > 180 ? directionEuler.x - 360 : directionEuler.x, -verticalLookLimit, verticalLookLimit), directionEuler.y, directionEuler.z);
-
-            // Rotate along the z-axis to counteract x movement
-            directionEuler = modifiedDirection.eulerAngles;
-            modifiedDirection = Quaternion.Euler(directionEuler.x, directionEuler.y, transform.InverseTransformDirection(rb.velocity).x * tilt);
-
-            // Rotate back to 0 if it has been knocked out of rotation
-            float distanceFromCenterX = Mathf.Abs((Screen.width / 2) - mousePosition.x);
-            float distanceFromCenterY = Mathf.Abs((Screen.height / 2) - mousePosition.y);
-
-            if (inputHorizontal == 0 && distanceFromCenterX < 32 && distanceFromCenterY < 32)
-            {
-                modifiedDirection = Quaternion.Euler(modifiedDirection.eulerAngles.x, modifiedDirection.eulerAngles.y, 0f);
-            }
-
-            // Apply the rotation
-            rb.rotation = Quaternion.Slerp(rb.rotation, modifiedDirection, lookSpeed);
-            //rb.AddTorque(modifiedDirection.eulerAngles * lookSpeed);
-            #endregion
+            _audioSource.volume = Mathf.Clamp(Vector3.SqrMagnitude(forwardForce) / 882000f, 0f, 0.15f);
+            //Debug.Log(Vector3.SqrMagnitude(forwardForce));
         }
 
         
         foreach(var thruster in thrusters)
         {
             // For moving speed we want lifetime at 0.5, for idle speed we want lifetime at 0.4
-            //thruster.startLifetime = Mathf.Clamp(Mathf.Log10(forwardForce.sqrMagnitude / 0.16f) / Mathf.Log10(76000000000), 0.2f, 0.8f);
-
-            // For moving speed we want lifetime at 0.5, for idle speed we want lifetime at 0.4
             thruster.startLifetime = Mathf.Clamp(Mathf.Log10(forwardForce.sqrMagnitude / 83.965f) / Mathf.Log10(275855), 0.1f, 0.7f);
-            Debug.Log(string.Format("Forward Force: {0}", thruster.startLifetime));
         }
+    }
+
+    private void Rotation(float inputHorizontal)
+    {
+        screenPosition = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 1900));
+        Vector3 direction = screenPosition - transform.position;
+        rotationz = Screen.width * 0.5f;
+
+        //rb.isKinematic = true;
+        rb.transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction, transform.up), lookDamping);
+        
+        // Rotate player around z-axis when turning with the mouse. Compensate the camera by rotating the camera target in the opposite direction
+        rb.transform.rotation = Quaternion.Euler(rb.transform.rotation.eulerAngles.x, rb.transform.rotation.eulerAngles.y, (-inputHorizontal * strafeRotation) + (((Screen.width * 0.5f) - Input.mousePosition.x) / rotationSpeed));
+        cameraTarget.localRotation = Quaternion.Euler(0f, 0f, (inputHorizontal * strafeRotation) - ((Screen.width * 0.5f) - Input.mousePosition.x) / (rotationSpeed));
+        //rb.isKinematic = false;
+
+        //if (Input.GetKey(KeyCode.Q))
+        //{
+        //    transform.Rotate(Vector3.forward * Time.deltaTime * rotationDamping);
+        //}
+        //if (Input.GetKey(KeyCode.E))
+        //{
+        //    transform.Rotate(Vector3.back * Time.deltaTime * rotationDamping);
+        //}
     }
 
     public void LockMovement(bool isLocked)
@@ -254,6 +291,32 @@ public class Player : MonoBehaviour
         yield return null;
     }
 
+    IEnumerator LerpBoost(float time, float startValue, float endValue, bool isInCombat)
+    {
+        float startSpeed = startValue;
+        float endSpeed = endValue;
+
+        float timeSinceStarted = 0f;
+        float percentageComplete = 0f;
+        float startTime = Time.time;
+
+        while (percentageComplete < 1f)
+        {
+            timeSinceStarted = Time.time - startTime;
+            percentageComplete = timeSinceStarted / time;
+            if (isInCombat)
+            {
+                combatBoostSpeed = Mathf.Lerp(startSpeed, endSpeed, percentageComplete);
+            }
+            else
+            {
+                boostSpeed = Mathf.Lerp(startSpeed, endSpeed, percentageComplete);
+            }
+            yield return null;
+        }
+    }
+
+    #region Docking coroutines
     IEnumerator PerformDock(Transform dockingTransform, float time)
     {
         Debug.Log("Player docking coroutine");
@@ -332,4 +395,5 @@ public class Player : MonoBehaviour
         GameManager.instance.isShootingEnabled = true;
         GameManager.instance.isCursorVisible = true;
     }
+    #endregion
 }

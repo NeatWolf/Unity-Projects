@@ -9,7 +9,7 @@ public class IndicatorController : MonoBehaviour
     public Image arrowIndicatorPrefab;
     public DestinationIndicator warpIndicatorPrefab;
     public Image objectiveArrowPrefab;
-    public Image objectiveIconPrefab;
+    public ObjectiveIndicator objectiveIconPrefab;
     public float projectileSpeed;
 
     private List<TargetIndicator> boxIndicatorPool = new List<TargetIndicator>();
@@ -18,7 +18,7 @@ public class IndicatorController : MonoBehaviour
     private int arrowPoolUsedCount = 0;
     private List<Image> objectiveArrowPool = new List<Image>();
     private int objectiveArrowPoolUsedCount = 0;
-    private List<Image> objectiveIconPool = new List<Image>();
+    private List<ObjectiveIndicator> objectiveIconPool = new List<ObjectiveIndicator>();
     private int objectiveIconPoolUsedCount = 0;
     private Vector3 screenCenter;
     private DestinationIndicator warpIndicatorInstance;
@@ -58,10 +58,11 @@ public class IndicatorController : MonoBehaviour
                     // If the target is onscreen show the onscreen indicator
                     if (targetPosition.z > 0f && targetPosition.x >= 0f && targetPosition.x <= Screen.width && targetPosition.y >= 0f && targetPosition.y <= Screen.height)
                     {
-                        if (targetPosition.z > 200f)
+                        if (targetPosition.z > 500f)
                         {
-                            Image indicatorImage = getObjectiveIcon();
-                            indicatorImage.rectTransform.anchoredPosition = new Vector3(targetPosition.x, targetPosition.y, 0f);
+                            ObjectiveIndicator indicatorImage = getObjectiveIcon();
+                            indicatorImage.GetComponent<RectTransform>().anchoredPosition = new Vector3(targetPosition.x, targetPosition.y, 0f);
+                            indicatorImage.SetDistance(Vector3.Distance(waypoint, GameManager.playerTransform.position));
                         }
                     }
                     else
@@ -99,7 +100,6 @@ public class IndicatorController : MonoBehaviour
                             }
                             
                             box.boxAlpha = currentAlpha / 255f;
-                            Debug.Log(string.Format("currentAlpha: {0}, alpha: {1}", currentAlpha, box.boxAlpha));
 
                             //Vector3 lead = CalculateLead(player.transform.position, obj.transform.position, projectileSpeed * 1.5f, obj.gameObject.GetComponent<Rigidbody>().velocity, player.GetComponent<Rigidbody>().velocity);
                             //box.trajectory.rectTransform.anchoredPosition = Camera.main.WorldToScreenPoint(lead) - screenCenter;
@@ -122,7 +122,9 @@ public class IndicatorController : MonoBehaviour
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
-                if (Physics.Raycast(ray, out hit))
+                int layerMask = 1 << 2;
+                layerMask = ~layerMask;
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
                 {
                     WarpTarget target = hit.collider.gameObject.GetComponent<WarpTarget>();
                     if (target != null)
@@ -131,7 +133,11 @@ public class IndicatorController : MonoBehaviour
                         warpIndicatorInstance.SetDestinationName(target.targetName);
 
                         // Works with sphere colliders
-                        Vector3 topPosition = target.targetBoundary.bounds.center + new Vector3(0f, target.targetBoundary.bounds.extents.y * 0.75f, 0f);
+                        Vector3 centerPosition = Camera.main.WorldToScreenPoint(target.targetBoundary.bounds.center);
+                        float diffPosition = Camera.main.WorldToScreenPoint(target.targetBoundary.bounds.max).y - centerPosition.y;
+                        Vector3 topPosition = centerPosition + new Vector3(0f, diffPosition * 0.8f, 0f);
+                        //Vector3 topPosition = centerPosition + new Vector3(0f, target.targetBoundary.bounds.extents.y * 0.75f, 0f);
+
                         warpIndicatorInstance.SetNamePosition(topPosition);
 
                         // Disable entry point indicator if it is currently overlapping an objective marker
@@ -212,9 +218,9 @@ public class IndicatorController : MonoBehaviour
         return arrow;
     }
 
-    private Image getObjectiveIcon()
+    private ObjectiveIndicator getObjectiveIcon()
     {
-        Image icon;
+        ObjectiveIndicator icon;
         if (objectiveIconPoolUsedCount < objectiveIconPool.Count)
         {
             icon = objectiveIconPool[objectiveIconPoolUsedCount];
@@ -257,7 +263,7 @@ public class IndicatorController : MonoBehaviour
         // Objective waypoint onscreen indicator
         while (objectiveIconPool.Count > objectiveIconPoolUsedCount)
         {
-            Image lastIcon = objectiveIconPool[objectiveIconPool.Count - 1];
+            ObjectiveIndicator lastIcon = objectiveIconPool[objectiveIconPool.Count - 1];
             objectiveIconPool.Remove(lastIcon);
             Destroy(lastIcon.gameObject);
         }

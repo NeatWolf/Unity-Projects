@@ -21,11 +21,6 @@ public class QuestDisplay : MonoBehaviour {
             Initialize(quest);
         }
 	}
-	
-	void Update ()
-    {
-	
-	}
 
     public void Initialize(Quest quest)
     {
@@ -40,6 +35,9 @@ public class QuestDisplay : MonoBehaviour {
             Debug.Log(string.Format("Set quest as active ({0})", quest.questName));
             sprite.color = new Color(255f, 255f, 255f, 255f);
             sprite.sprite = activeMarker;
+            Color activeColor = new Color();
+            ColorUtility.TryParseHtmlString("#7E0092FF", out activeColor);
+            sprite.color = activeColor;
         }
         else if(quest.state == Objective.ObjectiveState.inactive)
         {

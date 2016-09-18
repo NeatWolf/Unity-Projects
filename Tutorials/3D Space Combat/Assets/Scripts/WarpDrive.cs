@@ -10,11 +10,20 @@ public class WarpDrive : MonoBehaviour {
     public Timer timer;
     public int chargeUpTime = 10;
     public float warpSpeed;
+    public AudioClip warpChargingSound;
+    public AudioClip warpBoomSound;
+    public AudioClip warpStartingSound;
+    public AudioSource audioSource;
 
     private Vector3 _targetPosition = Vector3.zero;
     private Enums.WarpDriveState _state;
     private bool _countingDown = false;
     private bool _miniGameStarted = false;
+    private bool _chargingSoundPlayed = false;
+    private bool _boomSoundPlayed = false;
+    private bool _goSoundPlayed = false;
+    private bool _startingSoundPlayed = false;
+    private AudioSource playAudioSource;
 
     void Start()
     {
@@ -22,6 +31,7 @@ public class WarpDrive : MonoBehaviour {
         timer = Instantiate(timer);
         countdownText.text = "";
         miniGame.ResultReady += ProcessResult;
+        playAudioSource = audioSource.gameObject.AddComponent<AudioSource>();
     }
 
     void Update()
@@ -30,6 +40,31 @@ public class WarpDrive : MonoBehaviour {
         {
             if (timer.currentTime > 0)
             {
+                if (!_startingSoundPlayed)
+                {
+                    playAudioSource.clip = warpStartingSound;
+                    playAudioSource.Play();
+                    _startingSoundPlayed = true;
+                }
+                if (!_chargingSoundPlayed && timer.currentTime < 6.4f && timer.currentTime > 6.2f)
+                {
+                    if (playAudioSource.isPlaying)
+                    {
+                        StartCoroutine(FadeOut(playAudioSource, 4f));
+                    }
+                    audioSource.PlayOneShot(warpChargingSound, 1f);
+                    _chargingSoundPlayed = true;
+                }
+                if (!_boomSoundPlayed && timer.currentTime < 2.5f && timer.currentTime > 2.3f)
+                {
+                    if (playAudioSource.isPlaying)
+                    {
+                        StartCoroutine(FadeOut(playAudioSource, 3f));
+                    }
+                    audioSource.PlayOneShot(warpBoomSound, 1f);
+                    _boomSoundPlayed = true;
+                    _goSoundPlayed = true;
+                }
                 countdownText.text = string.Format("FTL in {0} . . .", ((int)timer.currentTime + 1).ToString());
                 if (!_miniGameStarted)
                 {
@@ -39,11 +74,26 @@ public class WarpDrive : MonoBehaviour {
             }
             else
             {
+                if (!_goSoundPlayed)
+                {
+                    if (playAudioSource.isPlaying)
+                    {
+                        StartCoroutine(FadeOut(playAudioSource, 1.5f));
+                    }
+                    audioSource.clip = warpBoomSound;
+                    audioSource.time = 2.55f;
+                    audioSource.Play();
+                }
                 countdownText.text = "";
+                miniGame.Close();
 
                 // Perform warp
-                StartCoroutine(PerformWarpMove(5f, 0.5f, 0.25f, 200f));
+                StartCoroutine(PerformWarpMove(5f, 0.5f, 0.15f, 200f));
                 _countingDown = false;
+                _chargingSoundPlayed = false;
+                _boomSoundPlayed = false;
+                _goSoundPlayed = false;
+                _startingSoundPlayed = false;
             }
         }
     }
@@ -81,6 +131,7 @@ public class WarpDrive : MonoBehaviour {
     IEnumerator PerformWarpMove(float time, float effectsStartTime, float effectsEndTime, float speedLinesSpeed)
     {
         cameraController.EnterWarp(effectsStartTime, speedLinesSpeed);
+        GameManager.instance.cameraController.ShakeCamera(2f, 40f, 0.4f);
         _state = Enums.WarpDriveState.on;
         GameObject startPosition = new GameObject();
         startPosition.transform.position = transform.position;
@@ -129,5 +180,20 @@ public class WarpDrive : MonoBehaviour {
             default:
                 break;
         }
+    }
+
+    public static IEnumerator FadeOut(AudioSource audioSource, float FadeTime)
+    {
+        float startVolume = audioSource.volume;
+
+        while (audioSource.volume > 0)
+        {
+            audioSource.volume -= startVolume * Time.deltaTime / FadeTime;
+
+            yield return null;
+        }
+
+        audioSource.Stop();
+        audioSource.volume = startVolume;
     }
 }

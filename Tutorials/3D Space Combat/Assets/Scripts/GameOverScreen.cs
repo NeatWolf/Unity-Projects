@@ -15,11 +15,12 @@ public class GameOverScreen : MonoBehaviour {
 
     public void CloseMenu()
     {
-        anim.SetTrigger("FadeOutTrigger");
+        //anim.SetTrigger("FadeOutTrigger");
         Time.timeScale = 1f;
         GameManager.instance.isMenuOpen = false;
         GameManager.instance.pauseType = GameManager.PauseType.none;
         GameManager.instance.CloseWinScreen();
+        gameObject.SetActive(false);
     }
 
     public void Display()

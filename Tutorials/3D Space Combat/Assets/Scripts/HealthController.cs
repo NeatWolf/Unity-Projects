@@ -13,6 +13,7 @@ public class HealthController : MonoBehaviour
 
     private int health;
     private LevelUpSystem levelUpSystem;
+    private AudioSource audioSource;
 
     void Start()
     {
@@ -26,6 +27,7 @@ public class HealthController : MonoBehaviour
         {
             Debug.LogError("Player is missing from the scene");
         }
+        audioSource = GetComponent<AudioSource>();
     }
 
     public int Health
@@ -40,20 +42,20 @@ public class HealthController : MonoBehaviour
     {
         if (CompareTag("Player"))
         {
-            GameManager.instance.cameraController.ShakeForSeconds(0.6f, 0.6f);
+            GameManager.instance.cameraController.ShakeCamera(0.5f, 10f, 0.2f);
         }
         health -= damageInfo.Damage;
 
         if(healthBar != null)
         {
-            healthBar.fillAmount = health / maxHealth;
+            healthBar.fillAmount = (float)health / (float)maxHealth;
         }
 
         if (health <= 0)
         {
             GameObject explosion = Instantiate(destroyExplosion, transform.position, transform.rotation) as GameObject;
-            Detonator explosionDetonator = explosion.GetComponent<Detonator>();
-            explosionDetonator.size = transform.localScale.x * 2;
+            //Detonator explosionDetonator = explosion.GetComponent<Detonator>();
+            //explosionDetonator.size = transform.localScale.x * 2;
 
             if (levelUpSystem != null && damageInfo.Sender.CompareTag("PlayerWeapon"))
             {

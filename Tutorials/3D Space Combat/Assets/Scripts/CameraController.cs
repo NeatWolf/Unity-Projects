@@ -4,65 +4,60 @@ using UnityStandardAssets.ImageEffects;
 
 public class CameraController : MonoBehaviour
 {
-    public float offset;
-    public Transform player;
     public Transform cam;
     public ParticleSystem warpSpeedLines;
     public ParticleSystem boostSpeedLines;
-    public float moveSpeed;
-    public float rotationSpeed;
     public float fieldOfViewChange;
-    public float shakeIntensity = 0f;
-    public bool isShaking = false;
+    public Transform target;
+    public float distance = 50;
+    public float height = 5;
+    public float damping = 5;
+    public float rotationDamping = 20;
 
-    private bool isLocked = false;
-    private bool isWarping = false;
-    private Animator anim;
-    private TiltShift tiltShift;
-    private float startingMoveSpeed;
-    private Vector3 velocity = Vector3.zero;
+    private bool _isWarping = false;
+    private Animator _anim;
+    private TiltShift _tiltShift;
+    private float _startingDamping;
+    private Vector3 _wantedPosition;
+    private Quaternion _wantedRotation;
+    private CameraShake _cameraShake;
+    private Player _player;
+    private Camera _camera;
 
     public bool IsWarping
     {
         get
         {
-            return isWarping;
+            return _isWarping;
         }
     }
 
     void Start()
     {
-        anim = GetComponent<Animator>();
-        tiltShift = cam.GetComponent<TiltShift>();
-        startingMoveSpeed = moveSpeed;
+        _anim = GetComponent<Animator>();
+        _tiltShift = cam.GetComponent<TiltShift>();
+        _cameraShake = GetComponent<CameraShake>();
+        _player = GameManager.playerTransform.GetComponent<Player>();
+        _camera = cam.GetComponent<Camera>();
+        _startingDamping = damping;
     }
 
     void LateUpdate()
     {
-        if (player != null)
+        _wantedPosition = target.TransformPoint(0, height, -distance);
+        transform.localPosition = Vector3.Lerp(transform.position, _wantedPosition, damping * Time.deltaTime);
+        //wantedRotation = Quaternion.LookRotation(target.position - transform.position, target.up);
+        if (!_player.IsMovementLocked)
         {
-            if (!isLocked)
-            {
-                // Set the position behind the player by a given offset
-                Vector3 wantedPosition = player.transform.position - player.transform.forward * offset;
-
-                // Remove z-axis rotation
-                Quaternion rotationXY = Quaternion.Euler(player.transform.rotation.eulerAngles.x, player.transform.rotation.eulerAngles.y, 0f);
-
-                // Set the position and rotation
-                transform.position = Vector3.Lerp(transform.position, wantedPosition, moveSpeed * Time.deltaTime);
-                //transform.position = Vector3.SmoothDamp(transform.position, wantedPosition, ref velocity, moveSpeed);
-                transform.rotation = Quaternion.Slerp(transform.rotation, rotationXY, rotationSpeed * Time.deltaTime);
-            }
-
-            if (isShaking)
-            {
-                if (shakeIntensity > 0)
-                {
-                    transform.position = transform.position + Random.insideUnitSphere * shakeIntensity;
-                }
-            }
+            Vector3 screenPosition = _camera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 1900));
+            Vector3 direction = screenPosition - transform.position;
+            _wantedRotation = Quaternion.LookRotation(direction, target.up);
         }
+        else
+        {
+            _wantedRotation = Quaternion.LookRotation(target.position - transform.position, target.up);
+        }
+        transform.localRotation = Quaternion.Slerp(transform.rotation, _wantedRotation, rotationDamping * Time.deltaTime);
     }
 
     public void PerformDock()
@@ -85,52 +80,27 @@ public class CameraController : MonoBehaviour
     //    isLocked = false;
     //}
 
-    public void ShakeForSeconds(float time, float intensity)
+    public void ShakeCamera(float duration, float speed, float magnitude)
     {
-        StartCoroutine(PerformShakeForSeconds(time, intensity));
-    }
-
-    IEnumerator PerformShakeForSeconds(float time, float intensity)
-    {
-        if (intensity > 0)
-        {
-            float originalIntensity = shakeIntensity;
-            shakeIntensity = intensity;
-            isShaking = true;
-            float timeSinceStarted = 0f;
-            float percentageComplete = 0f;
-            float startTime = Time.time;
-
-            while (percentageComplete < 1f)
-            {
-                timeSinceStarted = Time.time - startTime;
-                percentageComplete = timeSinceStarted / time;
-                shakeIntensity = Mathf.Lerp(intensity, 0f, percentageComplete);
-                yield return null;
-            }
-            isShaking = false;
-            shakeIntensity = originalIntensity;
-        }
-        else
-        {
-            Debug.LogWarning("Shake intensity was set to zero or negative");
-        }
+        _cameraShake.duration = duration;
+        _cameraShake.speed = speed;
+        _cameraShake.magnitude = magnitude;
+        _cameraShake.PlayShake();
     }
 
     #region Warp
     public void EnterWarp(float effectsTime, float speedLinesSpeed)
     {
-        isShaking = true;
-        isWarping = true;
+        _isWarping = true;
+        //ShakeCamera(2f, 40f, 200f);
         StartCoroutine(PerformEnterWarp(effectsTime, speedLinesSpeed));
-        moveSpeed = 500f;
+        damping = 500f;
     }
 
     public void ExitWarp(float time)
     {
-        isShaking = false;
-        isWarping = false;
-        moveSpeed = startingMoveSpeed;
+        _isWarping = false;
+        damping = _startingDamping;
         StartCoroutine(PerformExitWarp(time));
     }
 
@@ -154,7 +124,7 @@ public class CameraController : MonoBehaviour
         {
             timeSinceStarted = Time.time - startTime;
             percentageComplete = timeSinceStarted / time;
-            tiltShift.maxBlurSize = Mathf.Lerp(0f, 5f, percentageComplete);
+            _tiltShift.maxBlurSize = Mathf.Lerp(0f, 5f, percentageComplete);
             cameraGO.fieldOfView = Mathf.Lerp(startFoV, endFoV, percentageComplete);
             warpSpeedLines.startSpeed = Mathf.Lerp(startLinesSpeed, endLinesSpeed, percentageComplete);
             yield return null;
@@ -180,7 +150,7 @@ public class CameraController : MonoBehaviour
         {
             timeSinceStarted = Time.time - startTime;
             percentageComplete = timeSinceStarted / time;
-            tiltShift.maxBlurSize = Mathf.Lerp(5f, 0f, percentageComplete);
+            _tiltShift.maxBlurSize = Mathf.Lerp(5f, 0f, percentageComplete);
             cameraGO.fieldOfView = Mathf.Lerp(startFoV, endFoV, percentageComplete);
             warpSpeedLines.startSpeed = Mathf.Lerp(startLinesSpeed, endLinesSpeed, percentageComplete);
             yield return null;
@@ -192,32 +162,38 @@ public class CameraController : MonoBehaviour
     #region Boost
     public void EnterBoost()
     {
-        isShaking = true;
+        ShakeCamera(2f, 40f, 0.1f);
         if (GameManager.instance.isInCombat)
         {
-            moveSpeed *= 1.5f;
-            boostSpeedLines.startSpeed = 150f;
+            //damping *= 1.85f;
+            StartCoroutine(PerformFollowSpeedUp(1f, 1.85f));
+            boostSpeedLines.startSpeed = 250f;
+            //var emission = boostSpeedLines.emission;
+            //var rate = new ParticleSystem.MinMaxCurve();
+            //rate.constantMax = 25f;
+            //emission.rate = rate;
             boostSpeedLines.Play();
         }
         else
         {
-            moveSpeed *= 3.5f;
-            boostSpeedLines.startSpeed = 300f;
+            //damping *= 3f;
+            StartCoroutine(PerformFollowSpeedUp(1f, 3f));
+            boostSpeedLines.startSpeed = 400f;
             boostSpeedLines.Play();
         }
     }
 
     public void ExitBoost()
     {
-        isShaking = false;
-        moveSpeed = startingMoveSpeed;
+        StartCoroutine(PerformFollowSpeedDown(1f, _startingDamping));
+        damping = _startingDamping;
         boostSpeedLines.Stop();
     }
 
     IEnumerator PerformFollowSpeedUp(float time, float scale)
     {
-        float startSpeed = moveSpeed;
-        float endSpeed = moveSpeed * scale;
+        float startSpeed = damping;
+        float endSpeed = damping * scale;
 
         float timeSinceStarted = 0f;
         float percentageComplete = 0f;
@@ -227,15 +203,15 @@ public class CameraController : MonoBehaviour
         {
             timeSinceStarted = Time.time - startTime;
             percentageComplete = timeSinceStarted / time;
-            moveSpeed = Mathf.Lerp(startSpeed, endSpeed, percentageComplete);
+            damping = Mathf.Lerp(startSpeed, endSpeed, percentageComplete);
             yield return null;
         }
     }
 
-    IEnumerator PerformFollowSpeedDown(float time, float scale)
+    IEnumerator PerformFollowSpeedDown(float time, float endValue)
     {
-        float startSpeed = moveSpeed;
-        float endSpeed = moveSpeed / scale;
+        float startSpeed = damping;
+        float endSpeed = endValue;
 
         float timeSinceStarted = 0f;
         float percentageComplete = 0f;
@@ -245,7 +221,7 @@ public class CameraController : MonoBehaviour
         {
             timeSinceStarted = Time.time - startTime;
             percentageComplete = timeSinceStarted / time;
-            moveSpeed = Mathf.Lerp(startSpeed, endSpeed, percentageComplete);
+            damping = Mathf.Lerp(startSpeed, endSpeed, percentageComplete);
             yield return null;
         }
     }

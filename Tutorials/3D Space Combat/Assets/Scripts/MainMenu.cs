@@ -6,7 +6,6 @@ public class MainMenu : MonoBehaviour {
 
     public Camera cam;
     public GameObject controlsGameObject;
-    public GameObject titleGameObject;
     public GameObject menuGameObject;
     public GameObject backButton;
 
@@ -35,7 +34,6 @@ public class MainMenu : MonoBehaviour {
     {
         camAnim.SetTrigger("EnterControls");
         controlsGameObject.SetActive(true);
-        titleGameObject.SetActive(false);
         menuGameObject.SetActive(false);
         backButton.SetActive(true);
     }
@@ -44,7 +42,6 @@ public class MainMenu : MonoBehaviour {
     {
         camAnim.SetTrigger("Back");
         controlsGameObject.SetActive(false);
-        titleGameObject.SetActive(true);
         menuGameObject.SetActive(true);
         backButton.SetActive(false);
     }

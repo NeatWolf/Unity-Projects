@@ -28,6 +28,18 @@ public class QuestManager : MonoBehaviour {
         }
     }
 
+    public string ActiveObjective
+    {
+        get
+        {
+            if(_activeQuest == null || _activeQuest.currentObjective == null)
+            {
+                return null;
+            }
+            return _activeQuest.currentObjective.description;
+        }
+    }
+
     void Start()
     {
 

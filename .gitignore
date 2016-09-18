@@ -1,34 +1,71 @@
-# Windows image file caches
-Thumbs.db
+# =============== #
+# Unity generated #
+# =============== #
+Temp/
+Library/
+Builds/
+obj/
+Dumping Project/
+_Third Party/
+
+# ===================================== #
+# Visual Studio / MonoDevelop generated #
+# ===================================== #
+ExportedObj/
+obj/
+*.svd
+*.userprefs
+/*.csproj
+*.pidb
+*.suo
+/*.sln
+*.user
+*.unityproj
+*.booproj
+
+# ============ #
+# OS generated #
+# ============ #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
 ehthumbs.db
+Thumbs.db
+
+# ======= #
+# Windows #
+# ======= #
 
 # Folder config file
+# ==================
 Desktop.ini
 
 # Recycle Bin used on file shares
+# ===============================
 $RECYCLE.BIN/
 
-# Windows Installer files
+# Installer files
+# ===============
 *.cab
 *.msi
 *.msm
 *.msp
 
-# Windows shortcuts
+# Shortcuts
+# =========
 *.lnk
 
-# =========================
-# Operating System Files
-# =========================
-
-# OSX
-# =========================
-
+# === #
+# OSX #
+# === #
 .DS_Store
 .AppleDouble
 .LSOverride
 
 # Thumbnails
+# ==========
 ._*
 
 # Files that might appear in the root of a volume
@@ -46,17 +83,5 @@ Network Trash Folder
 Temporary Items
 .apdisk
 Builds
-Tutorials/Roll a Ball/Library/
-Tutorials/Roll a Ball/obj/
-Tutorials/Roll a Ball/Temp/
-Tutorials/Roll a Ball/Builds/
 Tutorials/Standard Assets Example Project/
-Tutorials/Space Shooter/Library/
-Tutorials/Space Shooter/obj/
-Tutorials/Space Shooter/Temp/
-Tutorials/Space Shooter/Builds/
-Tutorials/3D Space Combat/Library/
-Tutorials/3D Space Combat/Temp/
-Tutorials/3D Space Combat/Builds/
-Tutorials/3D Space Combat/obj/
 Tutorials/3D Space Combat/Assets/3rd Party/

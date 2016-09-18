@@ -5,6 +5,7 @@ Shader "Atmosphere"
 		_Color ("Color", Color) = (0.1, 0.35, 1.0, 1.0)
 		_Intensity("Intensity", float) = 200
 		_LightDir("Light Dir", Vector) = (-1,0,0,1)
+		_Brightness("Brightness", Range(0, 3)) = 3
 	}
 
 	SubShader 
@@ -25,6 +26,7 @@ Shader "Atmosphere"
 
 			float4 _Color;
 			float _Intensity;
+			float _Brightness;
 
 			float4 _LightDir;
 
@@ -49,7 +51,7 @@ Shader "Atmosphere"
 				output.normal = input.normal;
 				output.viewDir = ObjSpaceViewDir(input.pos);
 
-				float d = saturate(dot(input.normal, _LightDir) * 3);
+				float d = saturate(dot(input.normal, _LightDir) * _Brightness);
 				output.diffuse = d;//pow(d, 15);
 				return output;
 			}

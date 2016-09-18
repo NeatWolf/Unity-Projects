@@ -19,11 +19,6 @@ public class ObjectiveDisplay : MonoBehaviour {
             Initialize(objective);
         }
     }
-	
-	void Update ()
-    {
-	
-	}
 
     public void Initialize(Objective objective)
     {
@@ -41,6 +36,9 @@ public class ObjectiveDisplay : MonoBehaviour {
                     break;
                 case Objective.ObjectiveState.active:
                     statusImage.sprite = inProgressSprite;
+                    Color currentColor = new Color();
+                    ColorUtility.TryParseHtmlString("#7E0092FF", out currentColor);
+                    statusImage.color = currentColor;
                     break;
                 case Objective.ObjectiveState.complete:
                     statusImage.sprite = completedSprite;

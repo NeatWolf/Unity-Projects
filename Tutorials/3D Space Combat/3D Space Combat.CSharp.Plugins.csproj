@@ -87,6 +87,7 @@
     <None Include="Assets\_Third Party\Detonator Explosion Framework\Resources\Detonator\Textures\HeatDistort.shader" />
     <None Include="Assets\_Third Party\EarthRendering Free\Atmosphere.shader" />
     <None Include="Assets\_Third Party\EarthRendering Free\Earth.shader" />
+    <None Include="Assets\_Third Party\GalaxyBox1\instructions.txt" />
     <None Include="Assets\_Third Party\RAIN\Editor\ScriptTemplates\BehaviorTreeTemplate.xml" />
     <None Include="Assets\_Third Party\RAIN\Editor\Shaders\AspectRingShader.shader" />
     <None Include="Assets\_Third Party\RAIN\Editor\Shaders\AspectSphereShader.shader" />

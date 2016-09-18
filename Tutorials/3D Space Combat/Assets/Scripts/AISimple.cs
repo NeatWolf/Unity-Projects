@@ -10,17 +10,25 @@ public class AISimple : MonoBehaviour {
     public float combatBoostSpeed;
     public float strafeSpeed;
     public float lookSpeed;
+    public float rotationDamping;
 
     private TargetableObject targetableObject;
     private Transform target;
     private float distance;
     private float maneuverTimer;
     private float chooseTargetTimer;
+    private float evadeDirectionTimer;
+    private float evadeDirectionWait;
+    private float attackRunTimer;
+    private float attackRunWait;
     private Rigidbody rb;
     private AIWeaponController weaponController;
     private Maneuver currentManeuver;
     private bool isStrafingRight;
     private TargetableObject.Allegiance allegiance;
+
+    private Quaternion rotationChange = Quaternion.identity;
+    private bool attackInitialized;
 
     private enum Maneuver
     {
@@ -34,25 +42,53 @@ public class AISimple : MonoBehaviour {
         weaponController = GetComponent<AIWeaponController>();
         allegiance = GetComponent<TargetableObject>().allegiance;
     }
+
+    void Start()
+    {
+        evadeDirectionWait = Random.Range(1f, 3f);
+        attackRunWait = Random.Range(5f, 15f);
+        ChooseTarget();
+    }
 	
 	void FixedUpdate ()
     {
-        if (Vector3.Distance(GameManager.playerTransform.position, transform.position) < 2000f)
+        if(target != null)// && Vector3.Distance(GameManager.playerTransform.position, transform.position) < 2000f)
         {
-            ChooseTarget();
-
-            if (target != null)
+            // Evading
+            if (attackRunTimer < attackRunWait)
             {
-                distance = Vector3.Distance(target.position, transform.position);
-                if (distance < 500f)
-                {
-                    Shooting();
-                }
+                attackRunTimer += Time.deltaTime;
+
+                EvadeManeuver();
             }
+            // Attack run
             else
             {
-                // Fight is finished
+                if (!attackInitialized)
+                {
+                    ChooseTarget();
+                    attackInitialized = true;
+                    if (target == null)
+                    {
+                        Debug.Log("Could not find a suitable target");
+                    }
+                }
+                else
+                {
+                    if (target != null)
+                    {
+                        AttackManeuver();
+                    }
+                    else
+                    {
+                        attackInitialized = false;
+                    }
+                }
             }
+        }
+        else
+        {
+            ChooseTarget();
         }
 	}
 
@@ -113,6 +149,45 @@ public class AISimple : MonoBehaviour {
                     PerformSnipingManeuver(isStrafingRight);
                     break;
             }
+        }
+    }
+
+    private void EvadeManeuver()
+    {
+        // Perform evade
+        if(evadeDirectionTimer < evadeDirectionWait)
+        {
+            evadeDirectionTimer += Time.deltaTime;
+
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotationChange, rotationDamping);
+            //Debug.Log(string.Format("Rotation: ", transform.rotation));
+            rb.AddForce(transform.forward * moveSpeed);
+        }
+        // Choose new direction
+        else
+        {
+            evadeDirectionWait = Random.Range(1f, 3f);
+            evadeDirectionTimer = 0;
+
+            rotationChange = transform.rotation * Quaternion.Euler(Random.Range(-90, 90), Random.Range(-90, 90), Random.Range(-90, 90));
+        }
+    }
+
+    private void AttackManeuver()
+    {
+        // Charge towards target until you're close
+        if(Vector3.Distance(transform.position, target.position) > 30)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(target.position - transform.position), rotationDamping * 2f);
+            weaponController.Fire();
+            rb.AddForce(transform.forward * moveSpeed);
+        }
+        // Switch back to evade
+        else
+        {
+            attackRunWait = Random.Range(5f, 15f);
+            attackRunTimer = 0;
+            attackInitialized = false;
         }
     }
 

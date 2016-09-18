@@ -8,28 +8,15 @@ public class MenuButtonAudio : MonoBehaviour, IPointerEnterHandler, IPointerClic
     public AudioClip highlightClip;
     public AudioClip clickClip;
 
-    private AudioSource highlightSource;
-    private AudioSource clickSource;
-
-	void Awake ()
-    {
-        highlightSource = gameObject.AddComponent<AudioSource>();
-        highlightSource.playOnAwake = false;
-        highlightSource.clip = highlightClip;
-        clickSource = gameObject.AddComponent<AudioSource>();
-        clickSource.playOnAwake = false;
-        clickSource.clip = clickClip;
-	}
-
     public void OnPointerEnter(PointerEventData eventData)
     {
         Debug.Log("Enter sound");
-        highlightSource.Play();
+        SoundManager.instance.PlaySingle(highlightClip, 0.1f);
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
         Debug.Log("Click sound");
-        clickSource.Play();
+        SoundManager.instance.PlaySingle(clickClip, 0.5f);
     }
 }

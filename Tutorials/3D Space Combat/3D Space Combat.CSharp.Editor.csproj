@@ -87,6 +87,9 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>Library\UnityAssemblies\SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
+    <Reference Include="Cloudstoyv5">
+      <HintPath>Assets\_Third Party\CloudsToy\DLL\Cloudstoyv5.dll</HintPath>
+    </Reference>
     <Reference Include="RAIN">
       <HintPath>Assets\_Third Party\RAIN\RAIN.dll</HintPath>
     </Reference>
@@ -98,9 +101,6 @@
     </Reference>
     <Reference Include="RAINMetaformEditor">
       <HintPath>Assets\_Third Party\RAIN\Editor\RAINMetaformEditor.dll</HintPath>
-    </Reference>
-    <Reference Include="Cloudstoyv5">
-      <HintPath>Assets\_Third Party\CloudsToy\DLL\Cloudstoyv5.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-UnityScript-firstpass">
       <HintPath>Library\ScriptAssemblies\Assembly-UnityScript-firstpass.dll</HintPath>
@@ -148,6 +148,7 @@
     <None Include="Assets\_Third Party\Detonator Explosion Framework\Resources\Detonator\Textures\HeatDistort.shader" />
     <None Include="Assets\_Third Party\EarthRendering Free\Atmosphere.shader" />
     <None Include="Assets\_Third Party\EarthRendering Free\Earth.shader" />
+    <None Include="Assets\_Third Party\GalaxyBox1\instructions.txt" />
     <None Include="Assets\_Third Party\RAIN\Editor\ScriptTemplates\BehaviorTreeTemplate.xml" />
     <None Include="Assets\_Third Party\RAIN\Editor\Shaders\AspectRingShader.shader" />
     <None Include="Assets\_Third Party\RAIN\Editor\Shaders\AspectSphereShader.shader" />

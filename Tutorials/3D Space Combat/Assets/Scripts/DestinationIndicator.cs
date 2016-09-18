@@ -28,8 +28,8 @@ public class DestinationIndicator : MonoBehaviour {
 
     public void SetNamePosition(Vector3 namePosition)
     {
-        Vector3 screenPosition = Camera.main.WorldToScreenPoint(namePosition);
-        destinationName.rectTransform.anchoredPosition = screenPosition;
+        //Vector3 screenPosition = Camera.main.WorldToScreenPoint(namePosition);
+        destinationName.rectTransform.anchoredPosition = namePosition;
     }
 
     public void SetDestinationName(string destName)

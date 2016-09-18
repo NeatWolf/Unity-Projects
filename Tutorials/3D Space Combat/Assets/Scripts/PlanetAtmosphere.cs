@@ -5,15 +5,20 @@ using Assets.Scripts;
 
 public class PlanetAtmosphere : MonoBehaviour
 {
+    public Text warningText;
     public Text countdownText;
-    public Timer timer;
+    public GameObject timerPrefab;
     public int destroyTime = 5;
 
+    private Timer timer;
+
     private bool _countingDown = false;
+    private bool _justFinished = false;
 
     void Start()
     {
-        timer = Instantiate(timer);
+        timer = Instantiate(timerPrefab).GetComponent<Timer>();
+        warningText.text = "";
         countdownText.text = "";
     }
 
@@ -21,19 +26,22 @@ public class PlanetAtmosphere : MonoBehaviour
     {
         if (_countingDown)
         {
-            if(timer.currentTime > 0)
+            warningText.text = string.Format("Entering Atmosphere. Destruction Imminent.");
+            if (timer.currentTime > 0)
             {
-                countdownText.text = string.Format("Entering atmosphere. You're hull will disintegrate in {0} . . .", ((int)timer.currentTime + 1).ToString());
+                countdownText.text = string.Format("{0}", ((int)timer.currentTime + 1).ToString());
             }
             else
             {
                 _countingDown = false;
-                DamageInfo damageInfo = new DamageInfo(gameObject, 100000);
+                DamageInfo damageInfo = new DamageInfo(gameObject, int.MaxValue);
                 GameObject.FindGameObjectWithTag("Player").transform.SendMessage("Damage", damageInfo);
             }
         }
-        else
+        else if (_justFinished)
         {
+            _justFinished = false;
+            warningText.text = "";
             countdownText.text = "";
         }
     }
@@ -42,15 +50,18 @@ public class PlanetAtmosphere : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            print("Entering atmosphere. Destruction imminent");
+            Debug.Log("Entering atmosphere. Destruction imminent");
             Countdown(destroyTime);
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        print("Leaving atmosphere");
-        CancelCountdown();
+        if (other.CompareTag("Player"))
+        {
+            print("Leaving atmosphere");
+            CancelCountdown();
+        }
     }
 
     private void Countdown(int startTime)
@@ -64,5 +75,6 @@ public class PlanetAtmosphere : MonoBehaviour
     private void CancelCountdown()
     {
         _countingDown = false;
+        _justFinished = true;
     }
 }

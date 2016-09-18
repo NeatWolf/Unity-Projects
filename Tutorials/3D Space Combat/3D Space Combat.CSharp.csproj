@@ -60,14 +60,14 @@
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
+    <Reference Include="Cloudstoyv5">
+      <HintPath>Assets\_Third Party\CloudsToy\DLL\Cloudstoyv5.dll</HintPath>
+    </Reference>
     <Reference Include="RAIN">
       <HintPath>Assets\_Third Party\RAIN\RAIN.dll</HintPath>
     </Reference>
     <Reference Include="RAINMetaform">
       <HintPath>Assets\_Third Party\RAIN\RAINMetaform.dll</HintPath>
-    </Reference>
-    <Reference Include="Cloudstoyv5">
-      <HintPath>Assets\_Third Party\CloudsToy\DLL\Cloudstoyv5.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-UnityScript-firstpass">
       <HintPath>Library\ScriptAssemblies\Assembly-UnityScript-firstpass.dll</HintPath>
@@ -84,9 +84,12 @@
     <Compile Include="Assets\Scripts\AIWeaponController.cs" />
     <Compile Include="Assets\Scripts\AsteroidCluster.cs" />
     <Compile Include="Assets\Scripts\BarTimingMiniGame.cs" />
+    <Compile Include="Assets\Scripts\BlurCamera.cs" />
     <Compile Include="Assets\Scripts\BoltDamager.cs" />
     <Compile Include="Assets\Scripts\BoltMover.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
+    <Compile Include="Assets\Scripts\CameraShake.cs" />
+    <Compile Include="Assets\Scripts\CurrentObjectiveDisplay.cs" />
     <Compile Include="Assets\Scripts\DamageInfo.cs" />
     <Compile Include="Assets\Scripts\DestinationIndicator.cs" />
     <Compile Include="Assets\Scripts\DialogueManager.cs" />
@@ -106,8 +109,12 @@
     <Compile Include="Assets\Scripts\ListItemResponder.cs" />
     <Compile Include="Assets\Scripts\Loader.cs" />
     <Compile Include="Assets\Scripts\MainMenu.cs" />
+    <Compile Include="Assets\Scripts\MainMenuManager.cs" />
     <Compile Include="Assets\Scripts\MenuButtonAudio.cs" />
+    <Compile Include="Assets\Scripts\MusicManager.cs" />
+    <Compile Include="Assets\Scripts\ObjectiveIndicator.cs" />
     <Compile Include="Assets\Scripts\PauseMenu.cs" />
+    <Compile Include="Assets\Scripts\Planet.cs" />
     <Compile Include="Assets\Scripts\PlanetAtmosphere.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\PrimaryWeapon.cs" />
@@ -126,6 +133,7 @@
     <Compile Include="Assets\Scripts\RandomRotator.cs" />
     <Compile Include="Assets\Scripts\ReticleController.cs" />
     <Compile Include="Assets\Scripts\RotateToCursor.cs" />
+    <Compile Include="Assets\Scripts\SoundManager.cs" />
     <Compile Include="Assets\Scripts\SpaceDust.cs" />
     <Compile Include="Assets\Scripts\SpaceFog.cs" />
     <Compile Include="Assets\Scripts\SpawnPoint.cs" />
@@ -136,6 +144,7 @@
     <Compile Include="Assets\Scripts\UIProgressBarController.cs" />
     <Compile Include="Assets\Scripts\UpdateListItem.cs" />
     <Compile Include="Assets\Scripts\UpdatesDisplay.cs" />
+    <Compile Include="Assets\Scripts\UtilityHelper.cs" />
     <Compile Include="Assets\Scripts\WarpDrive.cs" />
     <Compile Include="Assets\Scripts\WarpTarget.cs" />
     <Compile Include="Assets\_Third Party\CloudsToy\FPS Basics\FPS Scripts\FPSFlyerMouse.cs" />
@@ -158,6 +167,7 @@
     <Compile Include="Assets\_Third Party\Detonator Explosion Framework\TestScene\DetonatorTest.cs" />
     <Compile Include="Assets\_Third Party\Detonator Explosion Framework\TestScene\TouchToMouse.cs" />
     <Compile Include="Assets\_Third Party\EarthRendering Free\CameraCtrl.cs" />
+    <Compile Include="Assets\_Third Party\GalaxyBox1\examplescene.cs" />
     <Compile Include="Assets\_Third Party\Planet Earth Free\SpinFree.cs" />
     <Compile Include="Assets\_Third Party\Standard Assets\CrossPlatformInput\Scripts\AxisTouchButton.cs" />
     <Compile Include="Assets\_Third Party\Standard Assets\CrossPlatformInput\Scripts\ButtonHandler.cs" />
@@ -229,6 +239,7 @@
     <None Include="Assets\_Third Party\Detonator Explosion Framework\Resources\Detonator\Textures\HeatDistort.shader" />
     <None Include="Assets\_Third Party\EarthRendering Free\Atmosphere.shader" />
     <None Include="Assets\_Third Party\EarthRendering Free\Earth.shader" />
+    <None Include="Assets\_Third Party\GalaxyBox1\instructions.txt" />
     <None Include="Assets\_Third Party\RAIN\Editor\ScriptTemplates\BehaviorTreeTemplate.xml" />
     <None Include="Assets\_Third Party\RAIN\Editor\Shaders\AspectRingShader.shader" />
     <None Include="Assets\_Third Party\RAIN\Editor\Shaders\AspectSphereShader.shader" />
