@@ -100,7 +100,11 @@ public class GameManager : MonoBehaviour
 
     private void KillPlayer()
     {
-        playerTransform.SendMessage("Damage", new DamageInfo(gameObject, 50));
+        HealthController health = playerTransform.GetComponent<HealthController>();
+        if (health != null)
+        {
+            health.Damage(new DamageInfo(gameObject, 50));
+        }
     }
 
     public void GameOver()

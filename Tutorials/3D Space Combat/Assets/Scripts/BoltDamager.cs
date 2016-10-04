@@ -25,8 +25,12 @@ public class BoltDamager : MonoBehaviour {
                 if (otherTarget.allegiance == targetAllegiance)
                 {
                     DamageInfo damageInfo = new DamageInfo(gameObject, damage);
-                    other.transform.SendMessage("Damage", damageInfo);
-                    other.transform.SendMessage("ImpactExplosion", transform.position);
+                    HealthController health = other.GetComponent<HealthController>();
+                    if (health != null)
+                    {
+                        health.Damage(damageInfo);
+                        health.ImpactExplosion(transform.position);
+                    }
                     Destroy(gameObject);
                 }
             }

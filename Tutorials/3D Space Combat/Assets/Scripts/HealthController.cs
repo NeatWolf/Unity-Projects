@@ -38,7 +38,7 @@ public class HealthController : MonoBehaviour
         }
     }
 
-    void Damage(DamageInfo damageInfo)
+    public void Damage(DamageInfo damageInfo)
     {
         if (CompareTag("Player"))
         {
@@ -54,8 +54,6 @@ public class HealthController : MonoBehaviour
         if (health <= 0)
         {
             GameObject explosion = Instantiate(destroyExplosion, transform.position, transform.rotation) as GameObject;
-            //Detonator explosionDetonator = explosion.GetComponent<Detonator>();
-            //explosionDetonator.size = transform.localScale.x * 2;
 
             if (levelUpSystem != null && damageInfo.Sender.CompareTag("PlayerWeapon"))
             {
@@ -71,7 +69,7 @@ public class HealthController : MonoBehaviour
         }
     }
 
-    void ImpactExplosion(Vector3 position)
+    public void ImpactExplosion(Vector3 position)
     {
         Instantiate(impactExplosion, position, transform.rotation);
     }

@@ -35,7 +35,11 @@ public class PlanetAtmosphere : MonoBehaviour
             {
                 _countingDown = false;
                 DamageInfo damageInfo = new DamageInfo(gameObject, int.MaxValue);
-                GameObject.FindGameObjectWithTag("Player").transform.SendMessage("Damage", damageInfo);
+                HealthController health = GameObject.FindGameObjectWithTag("Player").GetComponent<HealthController>();
+                if (health != null)
+                {
+                    health.Damage(damageInfo);
+                }
             }
         }
         else if (_justFinished)
