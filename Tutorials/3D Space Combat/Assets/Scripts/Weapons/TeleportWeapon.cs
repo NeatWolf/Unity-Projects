@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets.Scripts;
 
 public class TeleportWeapon : MonoBehaviour {
 
@@ -11,16 +12,15 @@ public class TeleportWeapon : MonoBehaviour {
     public float maxShotVolume = 1f;
 
     private GameObject currentShot;
-    private float nextFire;
 
-    void Start ()
+    void Start()
     {
-        
+
     }
-	
-	void Update ()
+
+    void Update()
     {
-        if (GameManager.instance.isShootingEnabled && CompareTag("Player") && !GameManager.instance.isMenuOpen)
+        if (GameManager.instance.isShootingEnabled && CompareTag("PlayerWeapon") && !GameManager.instance.isMenuOpen)
         {
             if (Input.GetMouseButtonDown(1))
             {
@@ -50,7 +50,7 @@ public class TeleportWeapon : MonoBehaviour {
 
     private void Teleport(Vector3 position)
     {
-        transform.position = position;
+        GameManager.playerTransform.position = position;
         Destroy(currentShot);
     }
 }

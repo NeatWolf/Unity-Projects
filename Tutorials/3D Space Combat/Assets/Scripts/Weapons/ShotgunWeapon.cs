@@ -13,7 +13,6 @@ public class ShotgunWeapon : MonoBehaviour {
     public float minShotVolume = 0.5f;
     public float maxShotVolume = 1f;
 
-    private GameObject _currentShot;
     private float _nextFire;
 
     void Start()
@@ -23,7 +22,7 @@ public class ShotgunWeapon : MonoBehaviour {
 
     void Update()
     {
-        if (GameManager.instance.isShootingEnabled && CompareTag("Player") && !GameManager.instance.isMenuOpen)
+        if (GameManager.instance.isShootingEnabled && CompareTag("PlayerWeapon") && !GameManager.instance.isMenuOpen)
         {
             if (Input.GetMouseButtonDown(1) && Time.time > _nextFire)
             {
