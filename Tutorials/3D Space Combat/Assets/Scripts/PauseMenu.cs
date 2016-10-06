@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityStandardAssets.ImageEffects;
 
 public class PauseMenu : MonoBehaviour {
 
@@ -11,6 +12,7 @@ public class PauseMenu : MonoBehaviour {
     public RectTransform menuActualSize;
     public GameObject controlsPanelPrefab;
     public GameObject menuButtonPrefab;
+    public BlurOptimized cameraBlur;
 
     private GameObject controlsPanelGO;
     private GameObject menuButtonGO;
@@ -20,11 +22,13 @@ public class PauseMenu : MonoBehaviour {
         if (GameManager.instance.isMenuOpen && GameManager.instance.pauseType == GameManager.PauseType.pauseMenu)
         {
             container.SetActive(true);
+            cameraBlur.enabled = true;
             Time.timeScale = 0f;
         }
         else if (!GameManager.instance.isMenuOpen)
         {
             container.SetActive(false);
+            cameraBlur.enabled = false;
             Time.timeScale = 1f;
         }
 

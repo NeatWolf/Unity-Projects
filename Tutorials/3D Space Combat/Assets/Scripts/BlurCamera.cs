@@ -11,16 +11,12 @@ public class BlurCamera : MonoBehaviour {
         Rect position = GetScreenRect(referenceRect, parent);
         float width = referenceRect.rect.width;
         float height = referenceRect.rect.height;
-        //Vector2 origin = (Screen.width / 2f) - worldRect
-        //Debug.Log(string.Format("Center: {0}", center));
 
-        //gameObject.GetComponent<Camera>().pixelRect = new Rect(center.x - width / 2f, center.y - height / 2f, referenceRect.rect.width, referenceRect.rect.height);
         gameObject.GetComponent<Camera>().pixelRect = position;
     }
 
     private Rect GetScreenRect(RectTransform rectTransform, Canvas canvas)
     {
-
         Vector3[] corners = new Vector3[4];
         Vector3[] screenCorners = new Vector3[2];
 
