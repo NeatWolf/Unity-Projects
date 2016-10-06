@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class LevelUpSystem : MonoBehaviour {
 
-    public Text addXPText;
+    public GameObject addXPTextPrefab;
+    public RectTransform mainCanvas;
     public Text levelUpText;
     public UIProgressBarController experienceBar;
     public int nextLevelUp;
@@ -15,7 +16,6 @@ public class LevelUpSystem : MonoBehaviour {
 
     void Start()
     {
-        addXPText.canvasRenderer.SetAlpha(0f);
         levelUpText.canvasRenderer.SetAlpha(0f);
         experienceBar.barEmptyImage.canvasRenderer.SetAlpha(0f);
         experienceBar.barFullImage.canvasRenderer.SetAlpha(0f);
@@ -24,7 +24,7 @@ public class LevelUpSystem : MonoBehaviour {
     public void GainExperience(int amount)
     {
         currentXP += amount;
-        StartCoroutine(ShowXPPopup(amount));
+        ShowXPPopup(amount);
         StartCoroutine(ShowExperienceBarIncrease());
         print(string.Format("Current XP: {0}", currentXP));
         if (currentXP >= nextLevelUp)
@@ -43,12 +43,19 @@ public class LevelUpSystem : MonoBehaviour {
         StartCoroutine(ShowLevelUpPopup(level));
     }
 
-    private IEnumerator ShowXPPopup(int amount)
+    private void ShowXPPopup(int amount)
     {
-        addXPText.text = string.Format("+{0}", amount.ToString());
-        addXPText.CrossFadeAlpha(1, 0.25f, false);
-        yield return new WaitForSeconds(1.5f);
-        addXPText.CrossFadeAlpha(0, 0.25f, false);
+        GameObject addXP = Instantiate(addXPTextPrefab);
+        addXP.transform.SetParent(mainCanvas);
+        var xpTransform = addXP.GetComponent<RectTransform>();
+        xpTransform.anchoredPosition = new Vector2(0f, 0f);
+        xpTransform.anchorMax = new Vector2(0.5f, 0.5f);
+        xpTransform.anchorMin = new Vector2(0.5f, 0.5f);
+        Text addXPText = addXP.GetComponent<Text>();
+        if (addXPText != null)
+        {
+            addXPText.text = string.Format("+{0}", amount.ToString());
+        }
     }
 
     private IEnumerator ShowExperienceBarIncrease()
