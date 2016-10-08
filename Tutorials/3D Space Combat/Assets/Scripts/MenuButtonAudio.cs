@@ -11,12 +11,26 @@ public class MenuButtonAudio : MonoBehaviour, IPointerEnterHandler, IPointerClic
     public void OnPointerEnter(PointerEventData eventData)
     {
         Debug.Log("Enter sound");
-        SoundManager.instance.PlaySingle(highlightClip, 0.1f);
+        if(SoundManager.instance != null)
+        {
+            SoundManager.instance.PlaySingle(highlightClip, 0.1f);
+        }
+        else
+        {
+            Debug.LogWarning("No SoundManager instance in scene.");
+        }
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
         Debug.Log("Click sound");
-        SoundManager.instance.PlaySingle(clickClip, 0.5f);
+        if (SoundManager.instance != null)
+        {
+            SoundManager.instance.PlaySingle(clickClip, 0.5f);
+        }
+        else
+        {
+            Debug.LogWarning("No SoundManager instance in scene.");
+        }
     }
 }

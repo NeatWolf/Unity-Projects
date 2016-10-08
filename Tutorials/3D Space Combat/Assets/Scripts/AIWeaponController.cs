@@ -25,7 +25,14 @@ public class AIWeaponController : MonoBehaviour
             nextFire = Time.time + fireRate;
             Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
             float volume = Random.Range(minShotVolume, maxShotVolume);
-            audioSource.PlayOneShot(shootingClip, volume);
+            if (audioSource != null)
+            {
+                audioSource.PlayOneShot(shootingClip, volume);
+            }
+            else
+            {
+                Debug.LogWarning("No AudioSource attached to gameObject, so no audio will play from here.");
+            }
         }
     }
 }
