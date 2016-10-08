@@ -3,7 +3,8 @@ using System.Collections;
 
 public class ShotgunWeapon : MonoBehaviour {
 
-    public float fireRate;
+    public CooldownBar cooldownBar;
+    public float fireRate = 2f;
     public int boltsPerShot = 10;
     public float bulletSpread = 15f;
     public Transform shotSpawn;
@@ -12,8 +13,6 @@ public class ShotgunWeapon : MonoBehaviour {
     public AudioSource[] shotAudioSources;
     public float minShotVolume = 0.5f;
     public float maxShotVolume = 1f;
-
-    private float _nextFire;
 
     void Start()
     {
@@ -24,10 +23,10 @@ public class ShotgunWeapon : MonoBehaviour {
     {
         if (GameManager.instance.isShootingEnabled && CompareTag("PlayerWeapon") && !GameManager.instance.isMenuOpen)
         {
-            if (Input.GetMouseButtonDown(1) && Time.time > _nextFire)
+            if (Input.GetMouseButtonDown(1) && !cooldownBar.CoolingDown)
             {
-                _nextFire = Time.time + fireRate;
                 Fire();
+                cooldownBar.Cooldown(fireRate);
             }
         }
     }

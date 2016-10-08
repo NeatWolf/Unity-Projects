@@ -33,9 +33,9 @@ public class BlurCamera : MonoBehaviour {
             screenCorners[1] = RectTransformUtility.WorldToScreenPoint(null, corners[3]);
         }
 
-        screenCorners[0].y = Screen.height - screenCorners[0].y;
-        screenCorners[1].y = Screen.height - screenCorners[1].y;
+        screenCorners[0].y = screenCorners[0].y - referenceRect.rect.height;
+        screenCorners[1].y = screenCorners[1].y - referenceRect.rect.height;
 
-        return new Rect(screenCorners[0], screenCorners[1] - screenCorners[0]);
+        return new Rect(screenCorners[0], new Vector2(referenceRect.rect.width, referenceRect.rect.height));
     }
 }

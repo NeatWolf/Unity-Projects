@@ -4,6 +4,8 @@ using Assets.Scripts;
 
 public class TeleportWeapon : MonoBehaviour {
 
+    public CooldownBar cooldownBar;
+    public float fireRate = 5f;
     public Transform shotSpawn;
     public GameObject shotPrefab;
     public AudioClip shootingClip;
@@ -29,11 +31,12 @@ public class TeleportWeapon : MonoBehaviour {
                     // Perform teleport
                     Teleport(currentShot.transform.position);
                 }
-                else
+                else if (!cooldownBar.CoolingDown)
                 {
                     // Fire shot
                     currentShot = Instantiate(shotPrefab, shotSpawn.position, shotSpawn.rotation) as GameObject;
                     PlayAudioSources();
+                    cooldownBar.Cooldown(fireRate);
                 }
             }
         }
