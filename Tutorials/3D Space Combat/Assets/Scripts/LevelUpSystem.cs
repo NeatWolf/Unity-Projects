@@ -46,16 +46,16 @@ public class LevelUpSystem : MonoBehaviour {
     private void ShowXPPopup(int amount)
     {
         GameObject addXP = Instantiate(addXPTextPrefab);
+        Text addXPText = addXP.GetComponentInChildren<Text>();
+        if (addXPText != null)
+        {
+            addXPText.text = string.Format("+{0}", amount.ToString());
+        }
         addXP.transform.SetParent(mainCanvas);
         var xpTransform = addXP.GetComponent<RectTransform>();
         xpTransform.anchoredPosition = new Vector2(0f, 0f);
         xpTransform.anchorMax = new Vector2(0.5f, 0.5f);
         xpTransform.anchorMin = new Vector2(0.5f, 0.5f);
-        Text addXPText = addXP.GetComponent<Text>();
-        if (addXPText != null)
-        {
-            addXPText.text = string.Format("+{0}", amount.ToString());
-        }
     }
 
     private IEnumerator ShowExperienceBarIncrease()
