@@ -26,7 +26,12 @@ public class BoltDamager : MonoBehaviour {
                 {
                     DamageInfo damageInfo = new DamageInfo(gameObject, damage);
                     HealthController health = other.GetComponent<HealthController>();
-                    if (health != null)
+                    Shield shield = other.GetComponent<Shield>();
+                    if(shield != null && shield.Charge > 0f)
+                    {
+                        shield.Damage(damageInfo);
+                    }
+                    else if (health != null)
                     {
                         health.Damage(damageInfo);
                         health.ImpactExplosion(transform.position);
