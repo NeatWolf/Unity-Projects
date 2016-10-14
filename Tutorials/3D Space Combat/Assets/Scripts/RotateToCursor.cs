@@ -13,7 +13,7 @@ public class RotateToCursor : MonoBehaviour {
     {
         // Adjust the distance to shoot towards based on the collider we're looking at
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if(Physics.Raycast(ray, out hit) && !hit.collider.CompareTag("Player"))
+        if (Physics.Raycast(ray, out hit) && !hit.collider.CompareTag("Player") && !hit.collider.CompareTag("PlayerChild"))
         {
             distance = hit.distance;
         }

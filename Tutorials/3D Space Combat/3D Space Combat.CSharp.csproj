@@ -136,6 +136,7 @@
     <Compile Include="Assets\Scripts\RandomRotator.cs" />
     <Compile Include="Assets\Scripts\ReticleController.cs" />
     <Compile Include="Assets\Scripts\RotateToCursor.cs" />
+    <Compile Include="Assets\Scripts\Shield.cs" />
     <Compile Include="Assets\Scripts\SpaceDust.cs" />
     <Compile Include="Assets\Scripts\SpaceFog.cs" />
     <Compile Include="Assets\Scripts\SpawnPoint.cs" />
@@ -143,6 +144,7 @@
     <Compile Include="Assets\Scripts\TargetableObject.cs" />
     <Compile Include="Assets\Scripts\TestGameManager.cs" />
     <Compile Include="Assets\Scripts\Timer.cs" />
+    <Compile Include="Assets\Scripts\UI\CooldownBar.cs" />
     <Compile Include="Assets\Scripts\UIProgressBarController.cs" />
     <Compile Include="Assets\Scripts\UpdateListItem.cs" />
     <Compile Include="Assets\Scripts\UpdatesDisplay.cs" />
