@@ -10,6 +10,7 @@ public class HealthController : MonoBehaviour
     public int maxHealth;
     public int xp;
     public UIProgressBarController healthBar;
+    public Shield shield;
 
     private int health;
     private LevelUpSystem levelUpSystem;
@@ -28,6 +29,7 @@ public class HealthController : MonoBehaviour
             Debug.LogError("Player is missing from the scene");
         }
         audioSource = GetComponent<AudioSource>();
+
     }
 
     public int Health
@@ -42,8 +44,14 @@ public class HealthController : MonoBehaviour
     {
         if (CompareTag("Player"))
         {
-            GameManager.instance.cameraController.ShakeCamera(0.5f, 10f, 0.2f);
+            GameManager.instance.cameraController.ShakeCamera(0.3f, 10f, 0.3f);
         }
+
+        if (shield != null && shield.Charge > 0f)
+        {
+            return;
+        }
+
         health -= damageInfo.Damage;
 
         if(healthBar != null)
@@ -71,6 +79,11 @@ public class HealthController : MonoBehaviour
 
     public void ImpactExplosion(Vector3 position)
     {
+        if (shield != null && shield.Charge > 0f)
+        {
+            return;
+        }
+
         Instantiate(impactExplosion, position, transform.rotation);
     }
 }

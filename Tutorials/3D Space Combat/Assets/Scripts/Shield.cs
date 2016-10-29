@@ -9,11 +9,13 @@ public class Shield : MonoBehaviour {
     public float maxCharge;
     public UIProgressBarController healthBar;
 
+    private Renderer _renderer;
     private float _charge;
     private float _wait;
 
     void Start ()
     {
+        _renderer = GetComponent<Renderer>();
         _charge = maxCharge;
 	}
 	
@@ -39,9 +41,17 @@ public class Shield : MonoBehaviour {
 
         if (healthBar != null)
         {
-            healthBar.fillAmount = (float)_charge / (float)maxCharge;
+            healthBar.fillAmount = _charge / maxCharge;
         }
 
         _wait = Time.time + waitBeforeRecharge;
+        StartCoroutine(ShowShieldRenderer(0.2f));
+    }
+
+    private IEnumerator ShowShieldRenderer(float time)
+    {
+        _renderer.enabled = true;
+        yield return new WaitForSeconds(time);
+        _renderer.enabled = false;
     }
 }

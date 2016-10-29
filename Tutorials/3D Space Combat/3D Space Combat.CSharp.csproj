@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.3.2f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -80,8 +82,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\AISimple.cs" />
-    <Compile Include="Assets\Scripts\AIWeaponController.cs" />
+    <Compile Include="Assets\Scripts\AI\AISimple.cs" />
+    <Compile Include="Assets\Scripts\AI\AIWarpDrive.cs" />
+    <Compile Include="Assets\Scripts\AI\AIWeaponController.cs" />
     <Compile Include="Assets\Scripts\AsteroidCluster.cs" />
     <Compile Include="Assets\Scripts\Audio\DialogueManager.cs" />
     <Compile Include="Assets\Scripts\Audio\SoundManager.cs" />
@@ -115,6 +118,15 @@
     <Compile Include="Assets\Scripts\MainMenuManager.cs" />
     <Compile Include="Assets\Scripts\MenuButtonAudio.cs" />
     <Compile Include="Assets\Scripts\MusicManager.cs" />
+    <Compile Include="Assets\Scripts\NPC\AccessPointAvailableEventArgs.cs" />
+    <Compile Include="Assets\Scripts\NPC\AINavigator.cs" />
+    <Compile Include="Assets\Scripts\NPC\NpcAccessPoint.cs" />
+    <Compile Include="Assets\Scripts\NPC\NpcSpawnManager.cs" />
+    <Compile Include="Assets\Scripts\NPC\NpcSpawner.cs" />
+    <Compile Include="Assets\Scripts\NPC\NpcType.cs" />
+    <Compile Include="Assets\Scripts\NPCGroup.cs" />
+    <Compile Include="Assets\Scripts\NPCManager.cs" />
+    <Compile Include="Assets\Scripts\NPCSpawnPoint.cs" />
     <Compile Include="Assets\Scripts\ObjectiveIndicator.cs" />
     <Compile Include="Assets\Scripts\PauseMenu.cs" />
     <Compile Include="Assets\Scripts\Planet.cs" />

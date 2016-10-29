@@ -24,12 +24,7 @@ public class AsteroidCluster : MonoBehaviour {
         for (int i = 0; i < fogAmount; i++)
         {
             Vector3 spawnPosition = Random.onUnitSphere * Random.Range(innerRadius, outerRadius) + transform.position;
-            CloudsToy instance = Instantiate(cloudsPrefab.gameObject, spawnPosition, Quaternion.identity) as CloudsToy;
+            //CloudsToy instance = Instantiate(cloudsPrefab.gameObject, spawnPosition, Quaternion.identity) as CloudsToy;
         }
-    }
-	
-	void Update ()
-    {
-
     }
 }

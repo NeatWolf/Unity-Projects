@@ -136,7 +136,6 @@ public class IndicatorController : MonoBehaviour
                         Vector3 centerPosition = Camera.main.WorldToScreenPoint(target.targetBoundary.bounds.center);
                         float diffPosition = Camera.main.WorldToScreenPoint(target.targetBoundary.bounds.max).y - centerPosition.y;
                         Vector3 topPosition = centerPosition + new Vector3(0f, diffPosition * 0.8f, 0f);
-                        //Vector3 topPosition = centerPosition + new Vector3(0f, target.targetBoundary.bounds.extents.y * 0.75f, 0f);
 
                         warpIndicatorInstance.SetNamePosition(topPosition);
 

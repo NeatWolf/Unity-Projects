@@ -6,13 +6,12 @@ public class BoltMover : MonoBehaviour {
     public float speed;
     public float timeoutToDestroy;
 
+    private Rigidbody rb;
+
 	void Start()
     {
+        rb = GetComponent<Rigidbody>();
         Destroy(gameObject, timeoutToDestroy);
-	}
-
-    void Update()
-    {
-        transform.Translate(0f, 0f, speed * Time.deltaTime);
+        rb.AddForce(transform.forward * speed * 30f);
     }
 }

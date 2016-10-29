@@ -8,11 +8,32 @@ public class BoltDamager : MonoBehaviour {
     public TargetableObject.Allegiance targetAllegiance;
 
     private Collider thisCollider;
+    private Rigidbody rb;
     private TargetableObject otherTarget;
+    private float speed;
 
     void Start()
     {
         thisCollider = GetComponent<Collider>();
+        rb = GetComponent<Rigidbody>();
+        speed = GetComponent<BoltMover>().speed;
+    }
+
+    void Update()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.rotation.eulerAngles, out hit))
+        {
+            // distance = velocity * time
+            float distanceForHit = rb.velocity.magnitude * Time.deltaTime;
+            if (distanceForHit > 0f)
+            {
+                if (hit.distance < distanceForHit)
+                {
+                    OnTriggerEnter(hit.collider);
+                }
+            }
+        }
     }
 
     void OnTriggerEnter(Collider other)
