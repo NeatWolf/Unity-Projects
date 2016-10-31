@@ -15,7 +15,7 @@ public class NpcType : MonoBehaviour {
         Carrier
     }
 
-    void Start()
+    void Awake()
     {
         _warpDrive = GetComponent<AIWarpDrive>();
     }
@@ -43,7 +43,7 @@ public class NpcType : MonoBehaviour {
                 Destroy(gameObject);
                 break;
             case NpcAccessPoint.AccessPointType.Warp:
-                //_warpDrive.ExitToWarp();
+                _warpDrive.ExitToWarp();
                 break;
         }
     }
@@ -57,7 +57,7 @@ public class NpcType : MonoBehaviour {
                 {
                     _warpDrive = GetComponent<AIWarpDrive>();
                 }
-                //_warpDrive.EnterFromWarp(transform.position, transform.rotation);
+                _warpDrive.EnterFromWarp(transform.position, transform.rotation);
                 break;
             default:
                 break;

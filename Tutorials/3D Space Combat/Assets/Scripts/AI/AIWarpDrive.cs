@@ -6,49 +6,61 @@ using System.Collections;
 /// </summary>
 public class AIWarpDrive : MonoBehaviour {
 
-    public float enterDistance = 1000f;
-    public float warpSpeed = 1000f;
-    public float enterSpeed = 10f;
+    public float distance = 1000f;
+    public float time = 0.5f;
 
     private bool _isEntering;
     private Vector3 _enterPosition;
     private Rigidbody rb;
 
-	void Start ()
+	void Awake ()
     {
         rb = GetComponent<Rigidbody>();
-	}
-	
-	void Update ()
-    {
-	    if (_isEntering)
-        {
-            if (Vector3.Distance(transform.position, _enterPosition) < 50f)
-            {
-                _isEntering = false;
-                rb.velocity = Vector3.forward * enterSpeed;
-            }
-        }
 	}
 
     public void EnterFromWarp(Vector3 position, Quaternion rotation)
     {
-        Quaternion inverseQuaternion = Quaternion.Inverse(rotation);
-        _enterPosition = transform.position;
-        transform.position = transform.position + (transform.forward * enterDistance);
-        rb.velocity = Vector3.forward * warpSpeed;
-        _isEntering = true;
+        StartCoroutine(PerformEnterFromWarp(distance, time));
     }
 
     public void ExitToWarp()
     {
-        PerformExitToWarp();
+        PerformExitToWarp(distance, time);
     }
 
-    IEnumerator PerformExitToWarp()
+    IEnumerator PerformEnterFromWarp(float distance, float time)
     {
-        rb.velocity = Vector3.forward * warpSpeed;
-        yield return new WaitForSeconds(0.5f);
+        Vector3 startPosition = transform.position - (transform.forward * distance);
+        Vector3 endPosition = transform.position;
+        float timeSinceStarted = 0f;
+        float percentageComplete = 0f;
+        float startTime = Time.time;
+
+        while (percentageComplete < 1f)
+        {
+            timeSinceStarted = Time.time - startTime;
+            percentageComplete = timeSinceStarted / time;
+            transform.position = Vector3.Lerp(startPosition, endPosition, percentageComplete);
+            yield return null;
+        }
+    }
+
+    IEnumerator PerformExitToWarp(float distance, float time)
+    {
+        Vector3 startPosition = transform.position;
+        Vector3 endPosition = transform.position + (transform.forward * distance);
+        float timeSinceStarted = 0f;
+        float percentageComplete = 0f;
+        float startTime = Time.time;
+
+        while (percentageComplete < 1f)
+        {
+            timeSinceStarted = Time.time - startTime;
+            percentageComplete = timeSinceStarted / time;
+            transform.position = Vector3.Lerp(startPosition, endPosition, percentageComplete);
+            yield return null;
+        }
+
         Destroy(gameObject);
     }
 }

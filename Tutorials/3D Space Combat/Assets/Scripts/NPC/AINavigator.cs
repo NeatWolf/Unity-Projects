@@ -58,6 +58,11 @@ public class AINavigator : MonoBehaviour {
         //Debug.DrawLine(transform.position, transform.position + Quaternion.AngleAxis(HARD_AVOIDANCE_SPREAD * avoidanceSpread, Vector3.up) * transform.forward * (avoidanceRange / HARD_AVOIDANCE_RANGE));
         //Debug.DrawLine(transform.position, transform.position + Quaternion.AngleAxis(HARD_AVOIDANCE_SPREAD * -avoidanceSpread, Vector3.up) * transform.forward * (avoidanceRange / HARD_AVOIDANCE_RANGE));
 
+        if (forwardObstacle)
+        {
+            Debug.Log("Npc collider hit: " + forwardHit.transform.gameObject.name);
+        }
+
         if (_avoidanceDirection != 0f ||
             (forwardObstacle && !forwardHit.collider.CompareTag("NpcAccessPoint"))
             || (rightObstacle && !rightHit.collider.CompareTag("NpcAccessPoint"))
@@ -86,7 +91,6 @@ public class AINavigator : MonoBehaviour {
                 _avoidanceDirection = 0f;
                 _rb.AddTorque(0f, avoidanceSpeed, 0f);
             }
-
         }
         else
         {

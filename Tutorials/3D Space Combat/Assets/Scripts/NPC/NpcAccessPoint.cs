@@ -29,13 +29,17 @@ public class NpcAccessPoint : MonoBehaviour {
         if (!_isNpcSpawning && other.CompareTag("NPC"))
         {
             var otherNpcType = other.GetComponent<NpcType>();
-            if (otherNpcType != null)
+            if (otherNpcType == null)
             {
-                otherNpcType.Dock(type);
+                Debug.LogError("NPC is missing NpcType component");
+            }
+            else if (!otherNpcType.IsAccessPointCompatible(type))
+            {
+                Debug.Log("NPC collided with access point that is incompatible");
             }
             else
             {
-                Debug.LogError("NPC is missing NpcType component");
+                otherNpcType.Dock(type);
             }
 
             AccessPointAvailableEventArgs args = new AccessPointAvailableEventArgs();

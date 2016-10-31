@@ -351,7 +351,7 @@ public class Player : MonoBehaviour
         percentageComplete = 0f;
         startTime = Time.time;
 
-        while(transform.position != endPosition)
+        while(percentageComplete < 1f)
         {
             timeSinceStarted = Time.time - startTime;
             percentageComplete = timeSinceStarted / time;
