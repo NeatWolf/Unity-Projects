@@ -7,6 +7,6 @@ namespace Assets.Scripts.NPC
 {
     public class AccessPointAvailableEventArgs : EventArgs
     {
-        public bool removedNpc { get; set; }
+        public NpcType removedNpc { get; set; }
     }
 }

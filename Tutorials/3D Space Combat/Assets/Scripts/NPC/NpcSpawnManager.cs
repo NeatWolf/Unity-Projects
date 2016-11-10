@@ -5,39 +5,81 @@ using Assets.Scripts.NPC;
 
 public class NpcSpawnManager : MonoBehaviour {
 
-    public List<GameObject> npcPrefabs;
-    public int maxNpcCount;
+    [System.Serializable]
+    public class CompleteNpc
+    {
+        public GameObject prefab;
+        public int maxCount;
 
-    private int _currentNpcCount = 0;
-    private List<CompleteNpc> _npcs = new List<CompleteNpc>();
-    private List<NpcAccessPoint> _accessPoints;
-    private List<NpcAccessPoint> _availableAccessPoints;
+        public int Count { get; set; }
+
+        public NpcType Type
+        {
+            get
+            {
+                return prefab.GetComponent<NpcType>();
+            }
+        }
+    }
+
+    public List<CompleteNpc> npcs;
+
+    public static NpcSpawnManager instance;
+
+    private List<NpcAccessPoint> _accessPoints = new List<NpcAccessPoint>();
+    private List<NpcAccessPoint> _availableAccessPoints = new List<NpcAccessPoint>();
 
     void Awake()
     {
-        foreach (var npc in npcPrefabs)
+        if (instance == null)
         {
-            _npcs.Add(new CompleteNpc(npc, npc.GetComponent<NpcType>()));
+            instance = this;
         }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
+        //DontDestroyOnLoad(gameObject);
     }
 
     void Start()
     {
-        _accessPoints = new List<NpcAccessPoint>(FindObjectsOfType<NpcAccessPoint>());
-        _availableAccessPoints = new List<NpcAccessPoint>(_accessPoints);
+        //_accessPoints = new List<NpcAccessPoint>(FindObjectsOfType<NpcAccessPoint>());
+        //_availableAccessPoints = new List<NpcAccessPoint>(_accessPoints);
 
-        for (int i = 0; i < _accessPoints.Count; i++)
-        {
-            _accessPoints[i].AccessPointAvailable += AccessPoint_AccessPointAvailable;
-            SpawnNpc(_accessPoints[i]);
-        }
+        //for (int i = 0; i < _accessPoints.Count; i++)
+        //{
+        //    _accessPoints[i].AccessPointAvailable += AccessPoint_AccessPointAvailable;
+        //    SpawnNpc(_accessPoints[i]);
+        //}
+    }
+
+    public void AddAccessPoint(NpcAccessPoint accessPoint)
+    {
+        accessPoint.AccessPointAvailable += AccessPoint_AccessPointAvailable;
+        _accessPoints.Add(accessPoint);
+        _availableAccessPoints.Add(accessPoint);
+        AccessPoint_AccessPointAvailable(accessPoint, null);
+    }
+
+    public void RemoveAccessPoint(NpcAccessPoint accessPoint)
+    {
+        _accessPoints.Remove(accessPoint);
+        _availableAccessPoints.Remove(accessPoint);
     }
 
     private void AccessPoint_AccessPointAvailable(object sender, AccessPointAvailableEventArgs e)
     {
-        if (e != null && e.removedNpc)
+        if (e != null && e.removedNpc != null)
         {
-            _currentNpcCount--;
+            foreach(var npc in npcs)
+            {
+                if (npc.Type == e.removedNpc)
+                {
+                    npc.Count--;
+                    break;
+                }
+            }
         }
 
         NpcAccessPoint accessPoint = sender as NpcAccessPoint;
@@ -47,80 +89,86 @@ public class NpcSpawnManager : MonoBehaviour {
             {
                 _availableAccessPoints.Add(accessPoint);
             }
-            if (_currentNpcCount < maxNpcCount)
-            {
-                SpawnNpc(_availableAccessPoints[Random.Range(0, _availableAccessPoints.Count - 1)]);
-            }
+
+            SpawnNpc(_availableAccessPoints[Random.Range(0, _availableAccessPoints.Count - 1)]);
         }
     }
 
-    private List<NpcAccessPoint> GetAccessPointsForNpcType(NpcType type, NpcAccessPoint excluded)
+    public List<NpcAccessPoint> GetDestinationsForNpcType(NpcType type, NpcAccessPoint excluded)
     {
         List<NpcAccessPoint> compatibleAPs = new List<NpcAccessPoint>();
 
         foreach(var ap in _accessPoints)
         {
-            if (ap != excluded && type.IsAccessPointCompatible(ap.type))
+            if (ap != null)
             {
-                compatibleAPs.Add(ap);
+                // Make sure we are not using destinations from the same ship/planet that the NPC was spawned
+                if (ap.transform.parent != null && excluded != null && excluded.transform.parent != null)
+                {
+                    if (ap.transform.parent == excluded.transform.parent)
+                    {
+                        continue;
+                    }
+                }
+                if (ap != excluded && type.IsAccessPointCompatible(ap.type))
+                {
+                    compatibleAPs.Add(ap);
+                }
             }
         }
 
         return compatibleAPs;
     }
 
-    private List<GameObject> GetPrefabsForAccessPointType(NpcAccessPoint.AccessPointType type)
+    private List<CompleteNpc> GetPrefabsForAccessPointType(NpcAccessPoint.AccessPointType type)
     {
-        List<GameObject> compatiblePrefabs = new List<GameObject>();
+        List<CompleteNpc> compatibleNPCs = new List<CompleteNpc>();
 
-        foreach(var npc in _npcs)
+        foreach(var npc in npcs)
         {
-            if (npc.type.IsAccessPointCompatible(type))
+            if (npc.Type.IsAccessPointCompatible(type))
             {
-                compatiblePrefabs.Add(npc.prefab);
+                if (npc.Count < npc.maxCount)
+                {
+                    compatibleNPCs.Add(npc);
+                }
             }
         }
 
-        return compatiblePrefabs;
+        return compatibleNPCs;
     }
 
     private void SpawnNpc(NpcAccessPoint accessPoint)
     {
-        List<GameObject> compatiblePrefabs = GetPrefabsForAccessPointType(accessPoint.type);
-        
-        GameObject randomPrefab = compatiblePrefabs[Random.Range(0, compatiblePrefabs.Count - 1)];
+        List<CompleteNpc> compatiblePrefabs = GetPrefabsForAccessPointType(accessPoint.type);
 
-        NpcType randomNpc = randomPrefab.GetComponent<NpcType>();
-        if (randomNpc != null)
+        if (compatiblePrefabs != null && compatiblePrefabs.Count > 0)
         {
-            List<NpcAccessPoint> compatibleDestinations = GetAccessPointsForNpcType(randomNpc, accessPoint);
+            CompleteNpc randomNpc = compatiblePrefabs[Random.Range(0, compatiblePrefabs.Count - 1)];
 
-            if (randomPrefab != null && compatibleDestinations != null && compatibleDestinations.Count > 0)
+            if (randomNpc != null)
             {
-                accessPoint.SpawnNpc(randomPrefab, compatibleDestinations);
-                _availableAccessPoints.Remove(accessPoint);
-                _currentNpcCount++;
+                List<NpcAccessPoint> compatibleDestinations = GetDestinationsForNpcType(randomNpc.Type, accessPoint);
+
+                if (randomNpc != null && compatibleDestinations != null && compatibleDestinations.Count > 0)
+                {
+                    accessPoint.SpawnNpc(randomNpc.prefab, compatibleDestinations);
+                    _availableAccessPoints.Remove(accessPoint);
+                    randomNpc.Count++;
+                }
+                else
+                {
+                    Debug.LogError("Failed to spawn an NPC");
+                }
             }
             else
             {
-                Debug.LogError("Failed to spawn an NPC");
+                Debug.LogError("An NPC is missing its NpcType component");
             }
         }
         else
         {
-            Debug.LogError("An NPC is missing its NpcType component");
+            Debug.Log("All NPCs types have been maxed out");
         }
-    }
-
-    private class CompleteNpc
-    {
-        public CompleteNpc(GameObject prefab, NpcType type)
-        {
-            this.prefab = prefab;
-            this.type = type;
-        }
-
-        public GameObject prefab { get; set; }
-        public NpcType type { get; set; }
     }
 }

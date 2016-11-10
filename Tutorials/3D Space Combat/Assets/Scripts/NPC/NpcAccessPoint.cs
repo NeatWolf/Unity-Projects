@@ -16,35 +16,44 @@ public class NpcAccessPoint : MonoBehaviour {
     public AccessPointType type;
     public event System.EventHandler<AccessPointAvailableEventArgs> AccessPointAvailable;
 
-    private bool _isNpcSpawning = false;
     private Collider _collider;
+    private AINavigator _dockingNpcNav;
 
     void Start()
     {
         _collider = GetComponent<Collider>();
+        NpcSpawnManager.instance.AddAccessPoint(this);
+    }
+
+    void OnDestroy()
+    {
+        NpcSpawnManager.instance.RemoveAccessPoint(this);
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (!_isNpcSpawning && other.CompareTag("NPC"))
+        _dockingNpcNav = other.gameObject.GetComponentInParent<AINavigator>();
+        if (_dockingNpcNav != null && _dockingNpcNav.Destination == this.gameObject)
         {
-            var otherNpcType = other.GetComponent<NpcType>();
-            if (otherNpcType == null)
-            {
-                Debug.LogError("NPC is missing NpcType component");
-            }
-            else if (!otherNpcType.IsAccessPointCompatible(type))
-            {
-                Debug.Log("NPC collided with access point that is incompatible");
-            }
-            else
-            {
-                otherNpcType.Dock(type);
-            }
+            _dockingNpcNav.DestinationReached += OtherNav_DestinationReached;
+        }
+    }
 
-            AccessPointAvailableEventArgs args = new AccessPointAvailableEventArgs();
-            args.removedNpc = true;
-            OnAccessPointAvailable(args);
+    private void OtherNav_DestinationReached(object sender, System.EventArgs e)
+    {
+        AINavigator senderNav = sender as AINavigator;
+        if (senderNav == _dockingNpcNav)
+        {
+            _dockingNpcNav.DestinationReached -= OtherNav_DestinationReached;
+        }
+
+        if (senderNav != null)
+        {
+            NpcType senderType = senderNav.GetComponent<NpcType>();
+            if (senderType != null)
+            {
+                senderType.Dock(type);
+            }
         }
     }
 
@@ -52,7 +61,6 @@ public class NpcAccessPoint : MonoBehaviour {
     {
         if (other.CompareTag("NPC"))
         {
-            _isNpcSpawning = false;
             OnAccessPointAvailable(null);
         }
     }
@@ -77,7 +85,7 @@ public class NpcAccessPoint : MonoBehaviour {
             throw new System.ArgumentNullException("compatibleDestinations");
         }
 
-        _isNpcSpawning = true;
+        Debug.Log(string.Format("Spawned an NPC at: {0}", Time.time));
         GameObject npc = Instantiate(randomPrefab, transform.position, transform.rotation) as GameObject;
         NpcType npcType = npc.GetComponent<NpcType>();
         if (npcType != null)
@@ -92,8 +100,8 @@ public class NpcAccessPoint : MonoBehaviour {
         AINavigator npcNav = npc.GetComponent<AINavigator>();
         if (npcNav != null)
         {
-            Transform destination = compatibleDestinations[Random.Range(0, compatibleDestinations.Count - 1)].transform;
-            npcNav.Start(destination.position);
+            GameObject destination = compatibleDestinations[Random.Range(0, compatibleDestinations.Count - 1)].gameObject;
+            npcNav.Start(destination);
         }
         else
         {

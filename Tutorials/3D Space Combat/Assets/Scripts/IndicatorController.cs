@@ -38,7 +38,7 @@ public class IndicatorController : MonoBehaviour
     {
         screenCenter = new Vector3(Screen.width, Screen.height, 0) / 2;
         warpIndicatorInstance = Instantiate(warpIndicatorPrefab);
-        warpIndicatorInstance.transform.parent = transform;
+        warpIndicatorInstance.transform.SetParent(transform);
     }
 
     void LateUpdate()

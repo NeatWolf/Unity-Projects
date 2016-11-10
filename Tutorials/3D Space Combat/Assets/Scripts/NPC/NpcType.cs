@@ -34,6 +34,7 @@ public class NpcType : MonoBehaviour {
 
     public void Dock(NpcAccessPoint.AccessPointType dockingType)
     {
+        Debug.Log("Ship is ready to dock");
         switch (dockingType)
         {
             case NpcAccessPoint.AccessPointType.Planet:

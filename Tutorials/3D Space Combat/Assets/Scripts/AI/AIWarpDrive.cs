@@ -9,8 +9,6 @@ public class AIWarpDrive : MonoBehaviour {
     public float distance = 1000f;
     public float time = 0.5f;
 
-    private bool _isEntering;
-    private Vector3 _enterPosition;
     private Rigidbody rb;
 
 	void Awake ()
@@ -25,7 +23,7 @@ public class AIWarpDrive : MonoBehaviour {
 
     public void ExitToWarp()
     {
-        PerformExitToWarp(distance, time);
+        StartCoroutine(PerformExitToWarp(distance, time));
     }
 
     IEnumerator PerformEnterFromWarp(float distance, float time)
