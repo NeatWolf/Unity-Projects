@@ -5,7 +5,7 @@ using Assets.Scripts;
 public class BoltDamager : MonoBehaviour {
 
     public int damage;
-    public TargetableObject.Allegiance targetAllegiance;
+    public TargetableObject.Allegiance Allegiance;
 
     private Collider thisCollider;
     private Rigidbody rb;
@@ -41,24 +41,21 @@ public class BoltDamager : MonoBehaviour {
         otherTarget = other.GetComponent<TargetableObject>();
         if (thisCollider != null && otherTarget != null)
         {
-            if (other != thisCollider)
+            if (otherTarget.allegiance != Allegiance)
             {
-                if (otherTarget.allegiance == targetAllegiance)
+                DamageInfo damageInfo = new DamageInfo(gameObject, damage);
+                HealthController health = other.GetComponent<HealthController>();
+                Shield shield = other.GetComponent<Shield>();
+                if(shield != null && shield.Charge > 0f)
                 {
-                    DamageInfo damageInfo = new DamageInfo(gameObject, damage);
-                    HealthController health = other.GetComponent<HealthController>();
-                    Shield shield = other.GetComponent<Shield>();
-                    if(shield != null && shield.Charge > 0f)
-                    {
-                        shield.Damage(damageInfo);
-                    }
-                    else if (health != null)
-                    {
-                        health.Damage(damageInfo);
-                        health.ImpactExplosion(transform.position);
-                    }
-                    Destroy(gameObject);
+                    shield.Damage(damageInfo);
                 }
+                else if (health != null)
+                {
+                    health.Damage(damageInfo);
+                    health.ImpactExplosion(transform.position);
+                }
+                Destroy(gameObject);
             }
         }
     }

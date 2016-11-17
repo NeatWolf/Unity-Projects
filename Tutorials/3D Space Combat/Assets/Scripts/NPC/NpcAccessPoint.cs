@@ -18,6 +18,7 @@ public class NpcAccessPoint : MonoBehaviour {
 
     private Collider _collider;
     private AINavigator _dockingNpcNav;
+    private NpcType _spawningNpc;
 
     void Start()
     {
@@ -32,30 +33,38 @@ public class NpcAccessPoint : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        _dockingNpcNav = other.gameObject.GetComponentInParent<AINavigator>();
-        if (_dockingNpcNav != null && _dockingNpcNav.Destination == this.gameObject)
+        if (other.gameObject.GetComponentInParent<NpcType>() != _spawningNpc)
         {
-            _dockingNpcNav.DestinationReached += OtherNav_DestinationReached;
-        }
-    }
-
-    private void OtherNav_DestinationReached(object sender, System.EventArgs e)
-    {
-        AINavigator senderNav = sender as AINavigator;
-        if (senderNav == _dockingNpcNav)
-        {
-            _dockingNpcNav.DestinationReached -= OtherNav_DestinationReached;
-        }
-
-        if (senderNav != null)
-        {
-            NpcType senderType = senderNav.GetComponent<NpcType>();
-            if (senderType != null)
+            _dockingNpcNav = other.gameObject.GetComponentInParent<AINavigator>();
+            if (_dockingNpcNav != null)
             {
-                senderType.Dock(type);
+                _dockingNpcNav.Dock(type);
             }
         }
+
+        //if (_dockingNpcNav != null && _dockingNpcNav.Destination == this.gameObject)
+        //{
+        //    _dockingNpcNav.DestinationReached += OtherNav_DestinationReached;
+        //}
     }
+
+    //private void OtherNav_DestinationReached(object sender, System.EventArgs e)
+    //{
+    //    AINavigator senderNav = sender as AINavigator;
+    //    if (senderNav == _dockingNpcNav)
+    //    {
+    //        _dockingNpcNav.DestinationReached -= OtherNav_DestinationReached;
+    //    }
+
+    //    if (senderNav != null)
+    //    {
+    //        NpcType senderType = senderNav.GetComponent<NpcType>();
+    //        if (senderType != null)
+    //        {
+    //            senderType.Dock(type);
+    //        }
+    //    }
+    //}
 
     void OnTriggerExit(Collider other)
     {
@@ -87,10 +96,10 @@ public class NpcAccessPoint : MonoBehaviour {
 
         Debug.Log(string.Format("Spawned an NPC at: {0}", Time.time));
         GameObject npc = Instantiate(randomPrefab, transform.position, transform.rotation) as GameObject;
-        NpcType npcType = npc.GetComponent<NpcType>();
-        if (npcType != null)
+        _spawningNpc = npc.GetComponent<NpcType>();
+        if (_spawningNpc != null)
         {
-            npcType.Spawn(this);
+            _spawningNpc.Spawn(this);
         }
         else
         {

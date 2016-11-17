@@ -77,7 +77,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Dialogues\dialogue1.txt" />
+    <None Include="Assets\Shaders\CombineTex.shader" />
+    <None Include="Assets\Shaders\CombineTexBump.shader" />
+    <None Include="Assets\Shaders\CombineTexBumpShadows.shader" />
     <None Include="Assets\Shaders\InverseVignetting.shader" />
+    <None Include="Assets\Shaders\My Shadows.cginc" />
     <None Include="Assets\Shaders\PlanetGlow.shader" />
     <None Include="Assets\Shaders\RadialBlur.shader" />
     <None Include="Assets\Shaders\Shield.shader" />

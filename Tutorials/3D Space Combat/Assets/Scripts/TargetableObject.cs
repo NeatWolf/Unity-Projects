@@ -8,6 +8,7 @@ public class TargetableObject : MonoBehaviour {
     public enum Allegiance
     {
         Friendly,
-        Enemy
+        Enemy,
+        Inanimate
     }
 }

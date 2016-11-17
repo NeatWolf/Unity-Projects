@@ -118,8 +118,8 @@
     <Compile Include="Assets\Scripts\MainMenuManager.cs" />
     <Compile Include="Assets\Scripts\MenuButtonAudio.cs" />
     <Compile Include="Assets\Scripts\MusicManager.cs" />
-    <Compile Include="Assets\Scripts\NPC\AccessPointAvailableEventArgs.cs" />
     <Compile Include="Assets\Scripts\NPC\AINavigator.cs" />
+    <Compile Include="Assets\Scripts\NPC\AccessPointAvailableEventArgs.cs" />
     <Compile Include="Assets\Scripts\NPC\NpcAccessPoint.cs" />
     <Compile Include="Assets\Scripts\NPC\NpcSpawnManager.cs" />
     <Compile Include="Assets\Scripts\NPC\NpcSpawner.cs" />
@@ -166,6 +166,7 @@
     <Compile Include="Assets\Scripts\Weapons\ShotgunWeapon.cs" />
     <Compile Include="Assets\Scripts\Weapons\TeleportWeapon.cs" />
     <Compile Include="Assets\Scripts\Weapons\WeaponSelector.cs" />
+    <None Include="Assets\Shaders\My Shadows.cginc" />
     <Compile Include="Assets\_Third Party\CloudsToy\FPS Basics\FPS Scripts\FPSFlyerMouse.cs" />
     <Compile Include="Assets\_Third Party\CloudsToy\FPS Basics\FPS Scripts\FPSFlyerMousePhysics.cs" />
     <Compile Include="Assets\_Third Party\Detonator Explosion Framework\Sample Supporting Emitters\DetonatorSprayHelper.cs" />
@@ -248,6 +249,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Dialogues\dialogue1.txt" />
+    <None Include="Assets\Shaders\CombineTex.shader" />
+    <None Include="Assets\Shaders\CombineTexBump.shader" />
+    <None Include="Assets\Shaders\CombineTexBumpShadows.shader" />
     <None Include="Assets\Shaders\InverseVignetting.shader" />
     <None Include="Assets\Shaders\PlanetGlow.shader" />
     <None Include="Assets\Shaders\RadialBlur.shader" />

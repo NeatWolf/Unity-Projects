@@ -77,7 +77,7 @@ public class IndicatorController : MonoBehaviour
 
             foreach (TargetableObject obj in objects)
             {
-                if (!obj.CompareTag("Player") && obj.allegiance != TargetableObject.Allegiance.Friendly && GameManager.playerTransform != null)
+                if (!obj.CompareTag("Player") && obj.allegiance == TargetableObject.Allegiance.Enemy && GameManager.playerTransform != null)
                 {
                     if (Vector3.Distance(obj.transform.position, GameManager.playerTransform.position) < 500f)
                     {

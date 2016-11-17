@@ -70,8 +70,8 @@ public class AINavigator : MonoBehaviour {
 
     private void PerformRotation()
     {
-        if (Vector3.Distance(_destination.position, transform.position) > 10f)
-        {
+        //if (Vector3.Distance(_destination.position, transform.position) > 10f)
+        //{
             RaycastHit forwardHit, rightHit, leftHit, topHit, bottomHit; //, hardRightHit, hardLeftHit;
             bool forwardObstacle = Physics.Raycast(transform.position, transform.forward, out forwardHit, avoidanceRange);
             bool rightObstacle = Physics.Raycast(transform.position, Quaternion.AngleAxis(avoidanceSpread, transform.up) * transform.forward, out rightHit, avoidanceRange);
@@ -146,12 +146,12 @@ public class AINavigator : MonoBehaviour {
                 Vector3 targetDir = _destination.position - transform.position;
                 _rb.MoveRotation(Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetDir), rotateSpeed * Time.deltaTime));
             }
-        }
-        else
-        {
-            StartCoroutine(RotateToDestination(1f / rotateSpeed));
-            _isActive = false;
-        }
+        //}
+        //else
+        //{
+        //    StartCoroutine(RotateToDestination(1f / rotateSpeed));
+        //    _isActive = false;
+        //}
     }
 
     private void ChooseNewDestination()
@@ -166,7 +166,13 @@ public class AINavigator : MonoBehaviour {
         }
     }
 
-    IEnumerator RotateToDestination(float time)
+    public void Dock(NpcAccessPoint.AccessPointType type)
+    {
+        _isActive = false;
+        StartCoroutine(PerformDock(1f / rotateSpeed, type));
+    }
+
+    IEnumerator PerformDock(float time, NpcAccessPoint.AccessPointType type)
     {
         Vector3 startPosition = _destination.position;
         Vector3 endPosition = transform.position;
@@ -185,6 +191,12 @@ public class AINavigator : MonoBehaviour {
             yield return null;
         }
         OnDestinationReached();
+
+        NpcType npcType = GetComponent<NpcType>();
+        if (npcType != null)
+        {
+            npcType.Dock(type);
+        }
     }
 
     private void OnDestinationReached()
