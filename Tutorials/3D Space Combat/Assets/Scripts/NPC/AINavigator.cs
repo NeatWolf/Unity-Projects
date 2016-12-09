@@ -70,88 +70,80 @@ public class AINavigator : MonoBehaviour {
 
     private void PerformRotation()
     {
-        //if (Vector3.Distance(_destination.position, transform.position) > 10f)
-        //{
-            RaycastHit forwardHit, rightHit, leftHit, topHit, bottomHit; //, hardRightHit, hardLeftHit;
-            bool forwardObstacle = Physics.Raycast(transform.position, transform.forward, out forwardHit, avoidanceRange);
-            bool rightObstacle = Physics.Raycast(transform.position, Quaternion.AngleAxis(avoidanceSpread, transform.up) * transform.forward, out rightHit, avoidanceRange);
-            bool leftObstacle = Physics.Raycast(transform.position, Quaternion.AngleAxis(-avoidanceSpread, transform.up) * transform.forward, out leftHit, avoidanceRange);
-            bool topObstacle = Physics.Raycast(transform.position, Quaternion.AngleAxis(avoidanceSpread, transform.right) * transform.forward, out topHit, avoidanceRange);
-            bool bottomObstacle = Physics.Raycast(transform.position, Quaternion.AngleAxis(-avoidanceSpread, transform.right) * transform.forward, out bottomHit, avoidanceRange);
-            //bool hardRightObstacle = Physics.Raycast(transform.position, Quaternion.AngleAxis(HARD_AVOIDANCE_SPREAD * avoidanceSpread, Vector3.up) * transform.forward, out hardRightHit, avoidanceRange);
-            //bool hardLeftObstacle = Physics.Raycast(transform.position, Quaternion.AngleAxis(HARD_AVOIDANCE_SPREAD * -avoidanceSpread, Vector3.up) * transform.forward, out hardLeftHit, avoidanceRange);
+        RaycastHit forwardHit, rightHit, leftHit, topHit, bottomHit; //, hardRightHit, hardLeftHit;
+        bool forwardObstacle = Physics.Raycast(transform.position, transform.forward, out forwardHit, avoidanceRange);
+        bool rightObstacle = Physics.Raycast(transform.position, Quaternion.AngleAxis(avoidanceSpread, transform.up) * transform.forward, out rightHit, avoidanceRange);
+        bool leftObstacle = Physics.Raycast(transform.position, Quaternion.AngleAxis(-avoidanceSpread, transform.up) * transform.forward, out leftHit, avoidanceRange);
+        bool topObstacle = Physics.Raycast(transform.position, Quaternion.AngleAxis(avoidanceSpread, transform.right) * transform.forward, out topHit, avoidanceRange);
+        bool bottomObstacle = Physics.Raycast(transform.position, Quaternion.AngleAxis(-avoidanceSpread, transform.right) * transform.forward, out bottomHit, avoidanceRange);
+        //bool hardRightObstacle = Physics.Raycast(transform.position, Quaternion.AngleAxis(HARD_AVOIDANCE_SPREAD * avoidanceSpread, Vector3.up) * transform.forward, out hardRightHit, avoidanceRange);
+        //bool hardLeftObstacle = Physics.Raycast(transform.position, Quaternion.AngleAxis(HARD_AVOIDANCE_SPREAD * -avoidanceSpread, Vector3.up) * transform.forward, out hardLeftHit, avoidanceRange);
 
-            Debug.DrawLine(transform.position, transform.position + transform.forward * avoidanceRange);
-            Debug.DrawLine(transform.position, transform.position + Quaternion.AngleAxis(avoidanceSpread, transform.up) * transform.forward * avoidanceRange);
-            Debug.DrawLine(transform.position, transform.position + Quaternion.AngleAxis(-avoidanceSpread, transform.up) * transform.forward * avoidanceRange);
-            Debug.DrawLine(transform.position, transform.position + Quaternion.AngleAxis(avoidanceSpread, transform.right) * transform.forward * avoidanceRange);
-            Debug.DrawLine(transform.position, transform.position + Quaternion.AngleAxis(-avoidanceSpread, transform.right) * transform.forward * avoidanceRange);
-            //Debug.DrawLine(transform.position, transform.position + Quaternion.AngleAxis(HARD_AVOIDANCE_SPREAD * avoidanceSpread, Vector3.up) * transform.forward * (avoidanceRange / HARD_AVOIDANCE_RANGE));
-            //Debug.DrawLine(transform.position, transform.position + Quaternion.AngleAxis(HARD_AVOIDANCE_SPREAD * -avoidanceSpread, Vector3.up) * transform.forward * (avoidanceRange / HARD_AVOIDANCE_RANGE));
+        Debug.DrawLine(transform.position, transform.position + transform.forward * avoidanceRange);
+        Debug.DrawLine(transform.position, transform.position + Quaternion.AngleAxis(avoidanceSpread, transform.up) * transform.forward * avoidanceRange);
+        Debug.DrawLine(transform.position, transform.position + Quaternion.AngleAxis(-avoidanceSpread, transform.up) * transform.forward * avoidanceRange);
+        Debug.DrawLine(transform.position, transform.position + Quaternion.AngleAxis(avoidanceSpread, transform.right) * transform.forward * avoidanceRange);
+        Debug.DrawLine(transform.position, transform.position + Quaternion.AngleAxis(-avoidanceSpread, transform.right) * transform.forward * avoidanceRange);
+        //Debug.DrawLine(transform.position, transform.position + Quaternion.AngleAxis(HARD_AVOIDANCE_SPREAD * avoidanceSpread, Vector3.up) * transform.forward * (avoidanceRange / HARD_AVOIDANCE_RANGE));
+        //Debug.DrawLine(transform.position, transform.position + Quaternion.AngleAxis(HARD_AVOIDANCE_SPREAD * -avoidanceSpread, Vector3.up) * transform.forward * (avoidanceRange / HARD_AVOIDANCE_RANGE));
 
-            if (_avoidanceDirection != null ||
-                (forwardObstacle && !forwardHit.collider.CompareTag("NpcAccessPoint"))
-                || (rightObstacle && !rightHit.collider.CompareTag("NpcAccessPoint"))
-                || (leftObstacle && !leftHit.collider.CompareTag("NpcAccessPoint"))
-                || (topObstacle && !topHit.collider.CompareTag("NpcAccessPoint"))
-                || (bottomObstacle && !bottomHit.collider.CompareTag("NpcAccessPoint")))
-            {
-                if (rightObstacle || leftObstacle || topObstacle || bottomObstacle)
-                {
-                    _avoidanceDirection = null;
-                    if ((rightObstacle && !rightHit.collider.CompareTag("NpcAccessPoint")) && !(leftObstacle && !leftHit.collider.CompareTag("NpcAccessPoint")))
-                    {
-                        _rb.AddRelativeTorque(0f, -avoidanceSpeed, 0f);
-                    }
-                    if ((leftObstacle && !leftHit.collider.CompareTag("NpcAccessPoint")) && !(rightObstacle && !rightHit.collider.CompareTag("NpcAccessPoint")))
-                    {
-                        _rb.AddRelativeTorque(0f, avoidanceSpeed, 0f);
-                    }
-                    if ((topObstacle && !topHit.collider.CompareTag("NpcAccessPoint")) && !(bottomObstacle && !bottomHit.collider.CompareTag("NpcAccessPoint")))
-                    {
-                        _rb.AddRelativeTorque(-avoidanceSpeed, 0f, 0f);
-                    }
-                    if ((bottomObstacle && !bottomHit.collider.CompareTag("NpcAccessPoint")) && !(topObstacle && !topHit.collider.CompareTag("NpcAccessPoint")))
-                    {
-                        _rb.AddRelativeTorque(avoidanceSpeed, 0f, 0f);
-                    }
-                }
-                else if ((forwardObstacle && !forwardHit.collider.CompareTag("NpcAccessPoint")) || _avoidanceDirection != null)
-                {
-                    if (_avoidanceDirection == null)
-                    {
-                        _avoidanceDirection = (Direction)Random.Range(0, 3);
-                    }
-                    switch (_avoidanceDirection)
-                    {
-                        case Direction.right:
-                            _rb.AddRelativeTorque(0f, -avoidanceSpeed, 0f);
-                            break;
-                        case Direction.left:
-                            _rb.AddRelativeTorque(0f, avoidanceSpeed, 0f);
-                            break;
-                        case Direction.up:
-                            _rb.AddRelativeTorque(avoidanceSpeed, 0f, 0f);
-                            break;
-                        case Direction.down:
-                            _rb.AddRelativeTorque(-avoidanceSpeed, 0f, 0f);
-                            break;
-                    }
-                }
-            }
-            else
+        if (_avoidanceDirection != null ||
+            (forwardObstacle && !forwardHit.collider.CompareTag("NpcAccessPoint"))
+            || (rightObstacle && !rightHit.collider.CompareTag("NpcAccessPoint"))
+            || (leftObstacle && !leftHit.collider.CompareTag("NpcAccessPoint"))
+            || (topObstacle && !topHit.collider.CompareTag("NpcAccessPoint"))
+            || (bottomObstacle && !bottomHit.collider.CompareTag("NpcAccessPoint")))
+        {
+            if (rightObstacle || leftObstacle || topObstacle || bottomObstacle)
             {
                 _avoidanceDirection = null;
-
-                Vector3 targetDir = _destination.position - transform.position;
-                _rb.MoveRotation(Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetDir), rotateSpeed * Time.deltaTime));
+                if ((rightObstacle && !rightHit.collider.CompareTag("NpcAccessPoint")) && !(leftObstacle && !leftHit.collider.CompareTag("NpcAccessPoint")))
+                {
+                    _rb.AddRelativeTorque(0f, -avoidanceSpeed, 0f);
+                }
+                if ((leftObstacle && !leftHit.collider.CompareTag("NpcAccessPoint")) && !(rightObstacle && !rightHit.collider.CompareTag("NpcAccessPoint")))
+                {
+                    _rb.AddRelativeTorque(0f, avoidanceSpeed, 0f);
+                }
+                if ((topObstacle && !topHit.collider.CompareTag("NpcAccessPoint")) && !(bottomObstacle && !bottomHit.collider.CompareTag("NpcAccessPoint")))
+                {
+                    _rb.AddRelativeTorque(-avoidanceSpeed, 0f, 0f);
+                }
+                if ((bottomObstacle && !bottomHit.collider.CompareTag("NpcAccessPoint")) && !(topObstacle && !topHit.collider.CompareTag("NpcAccessPoint")))
+                {
+                    _rb.AddRelativeTorque(avoidanceSpeed, 0f, 0f);
+                }
             }
-        //}
-        //else
-        //{
-        //    StartCoroutine(RotateToDestination(1f / rotateSpeed));
-        //    _isActive = false;
-        //}
+            else if ((forwardObstacle && !forwardHit.collider.CompareTag("NpcAccessPoint")) || _avoidanceDirection != null)
+            {
+                if (_avoidanceDirection == null)
+                {
+                    _avoidanceDirection = (Direction)Random.Range(0, 3);
+                }
+                switch (_avoidanceDirection)
+                {
+                    case Direction.right:
+                        _rb.AddRelativeTorque(0f, avoidanceSpeed, 0f);
+                        break;
+                    case Direction.left:
+                        _rb.AddRelativeTorque(0f, -avoidanceSpeed, 0f);
+                        break;
+                    case Direction.up:
+                        _rb.AddRelativeTorque(avoidanceSpeed, 0f, 0f);
+                        break;
+                    case Direction.down:
+                        _rb.AddRelativeTorque(-avoidanceSpeed, 0f, 0f);
+                        break;
+                }
+            }
+        }
+        else
+        {
+            _avoidanceDirection = null;
+
+            Vector3 targetDir = _destination.position - transform.position;
+            _rb.MoveRotation(Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetDir), rotateSpeed * Time.deltaTime));
+        }
     }
 
     private void ChooseNewDestination()
@@ -169,13 +161,13 @@ public class AINavigator : MonoBehaviour {
     public void Dock(NpcAccessPoint.AccessPointType type)
     {
         _isActive = false;
-        StartCoroutine(PerformDock(1f / rotateSpeed, type));
+        StartCoroutine(PerformDock(2f / rotateSpeed, type));
     }
 
     IEnumerator PerformDock(float time, NpcAccessPoint.AccessPointType type)
     {
-        Vector3 startPosition = _destination.position;
-        Vector3 endPosition = transform.position;
+        Vector3 startPosition = transform.position;
+        Vector3 endPosition = _destination.position;
         Quaternion startRotation = transform.rotation;
         Quaternion endRotation = Quaternion.LookRotation(-_destination.forward);
         float timeSinceStarted = 0f;

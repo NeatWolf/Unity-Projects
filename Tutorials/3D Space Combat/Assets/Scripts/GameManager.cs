@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public GameOverScreen gameOverScreen;
     public GameOverScreen winScreen;
     public CameraController cameraController;
-    public Transform playerStartingTransform;
+    public Player player;
     public GameObject[] asteroidPrefabs;
     public Vector2 asteroidSizeRange;
     public Quest firstQuest;
@@ -23,7 +23,6 @@ public class GameManager : MonoBehaviour
     public GameObject friendlyShipPrefab;
     public AudioClip dialogue1;
     public GameObject warpShipPrefab;
-
     public float testSpawnRadius;
     public int testCount;
 
@@ -42,7 +41,7 @@ public class GameManager : MonoBehaviour
     public static Transform playerTransform;
     public static QuestManager questManager;
 
-    private Player player;
+    private Transform playerStartingTransform;
 
     public enum PauseType
     {
@@ -75,6 +74,7 @@ public class GameManager : MonoBehaviour
             //SpawnHazardsAroundSphere(deimosTransform, 9000, 5800, deimosAsteroidCount);
 
             // Position player at start transform
+            playerStartingTransform = player.transform;
             playerTransform.position = playerStartingTransform.position;
             playerTransform.rotation = playerStartingTransform.rotation;
 
@@ -233,10 +233,16 @@ public class GameManager : MonoBehaviour
     private void StartTest()
     {
         Invoke("InitializeTargetPracticeQuest", 1f);
-        Invoke("WarpTest", 5f);
+        Invoke("LevelUpTest", 10f);
+        //Invoke("WarpTest", 5f);
         //SpawnHazardsAroundSphere(deimosTransform, 9000, 5800, deimosAsteroidCount);
         //SpawnPrefabs(enemyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
         //SpawnPrefabs(friendlyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
+    }
+
+    private void LevelUpTest()
+    {
+        player.GetComponent<LevelUpSystem>().GainExperience(50);
     }
 
     private void WarpTest()

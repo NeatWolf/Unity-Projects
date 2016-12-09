@@ -70,7 +70,9 @@ public class NpcAccessPoint : MonoBehaviour {
     {
         if (other.CompareTag("NPC"))
         {
-            OnAccessPointAvailable(null);
+            var args = new AccessPointAvailableEventArgs();
+            args.removedNpc = other.GetComponent<NpcType>();
+            OnAccessPointAvailable(args);
         }
     }
 

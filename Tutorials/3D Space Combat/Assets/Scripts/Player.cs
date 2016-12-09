@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.Audio;
+using System.Linq;
 
 public class Player : MonoBehaviour
 {
@@ -118,29 +119,18 @@ public class Player : MonoBehaviour
         }
 
         // Check for enemies that are near
-        TargetableObject[] objects = GameObject.FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[];
+        var objects = (GameObject.FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[]).Where(
+            t => t.allegiance == TargetableObject.Allegiance.Enemy &&
+            Vector3.Distance(t.transform.position, transform.position) < 500)
+            .ToList();
 
-        if(objects.Length <= 0)
+        if(objects == null || objects.Count < 1)
         {
             GameManager.instance.isInCombat = false;
         }
         else
         {
-            foreach (TargetableObject obj in objects)
-            {
-                if (obj.allegiance != TargetableObject.Allegiance.Friendly)
-                {
-                    if (Vector3.Distance(obj.transform.position, transform.position) < 500)
-                    {
-                        GameManager.instance.isInCombat = true;
-                        break;
-                    }
-                }
-                else
-                {
-                    GameManager.instance.isInCombat = false;
-                }
-            }
+            GameManager.instance.isInCombat = true;
         }
     }
 

@@ -44,7 +44,8 @@ public class NpcType : MonoBehaviour {
                 Destroy(gameObject);
                 break;
             case NpcAccessPoint.AccessPointType.Warp:
-                _warpDrive.ExitToWarp();
+                if (_warpDrive != null) _warpDrive.ExitToWarp();
+                else Debug.LogError("NPC could not enter warp because the Warp Drive was null");
                 break;
         }
     }

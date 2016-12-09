@@ -1,54 +1,46 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class SpaceFog : MonoBehaviour
 {
-
-    public int particleCount;
-    public float particleSize;
+    public GameObject cloudPrefab;
+    public int cloudCount;
     public float clusterSize;
-    public Color[] colors;
 
     private Transform location;
-    private ParticleSystem ps;
-    private ParticleSystem.Particle[] points;
+    private List<GameObject> clouds;
     private float clusterSizeSqr;
 
     void Start()
     {
-        ps = GetComponent<ParticleSystem>();
         location = transform;
         clusterSizeSqr = clusterSize * clusterSize;
     }
 
     void Update()
     {
-        if (points == null)
+        if (clouds == null)
         {
-            CreateParticles();
+            clouds = new List<GameObject>();
+            CreateClouds();
         }
 
-        for (int i = 0; i < particleCount; i++)
+        foreach (var cloud in clouds)
         {
-            if ((points[i].position - location.position).sqrMagnitude > clusterSizeSqr)
+            if ((cloud.transform.position - location.position).sqrMagnitude > clusterSizeSqr)
             {
-                points[i].position = Random.insideUnitSphere * clusterSize + location.position;
+                cloud.transform.position = Random.insideUnitSphere * clusterSize + location.position;
             }
         }
-
-        ps.SetParticles(points, points.Length);
     }
 
-    private void CreateParticles()
+    private void CreateClouds()
     {
-        points = new ParticleSystem.Particle[particleCount];
-
-        for (int i = 0; i < particleCount; i++)
+        for (int i = 0; i < cloudCount; i++)
         {
-            points[i].position = Random.insideUnitSphere * clusterSize + location.position;
-            points[i].startColor = colors[Random.Range(0, colors.Length - 1)];
-            //points[i].startColor = new Color(1, 1, 1, 1);
-            points[i].startSize = particleSize;
+            var position = Random.insideUnitSphere * clusterSize + location.position;
+            clouds.Add(Instantiate(cloudPrefab, position, Quaternion.identity) as GameObject);
         }
     }
 }

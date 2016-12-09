@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using System.Linq;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(TargetableObject))]
 public class AISimple : MonoBehaviour {
@@ -98,26 +100,13 @@ public class AISimple : MonoBehaviour {
         {
             chooseTargetTimer = Time.time + Random.Range(5, 30);
 
-            bool possibleTarget = false;
-            TargetableObject[] objects = FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[];
+            var objects = (FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[]).Where(t => t.allegiance == TargetableObject.Allegiance.Friendly).ToList();
 
             // Check if there is an appropriate target
-            foreach(var obj in objects)
+            if (objects != null && objects.Count > 0)
             {
-                if(obj.allegiance != allegiance)
-                {
-                    possibleTarget = true;
-                }
-            }
-
-            // Choose a random target
-            if(possibleTarget)
-            {
-                do
-                {
-                    targetableObject = objects[Random.Range(0, objects.Length)];
-                    target = targetableObject.transform;
-                } while (target == null || targetableObject.allegiance == allegiance);
+                targetableObject = objects[Random.Range(0, objects.Count)];
+                target = targetableObject.transform;
             }
             else
             {

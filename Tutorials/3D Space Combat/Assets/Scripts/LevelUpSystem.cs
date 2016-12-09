@@ -2,12 +2,13 @@
 using System.Collections;
 using System;
 using UnityEngine.UI;
+using System.Linq;
 
 public class LevelUpSystem : MonoBehaviour {
 
     public GameObject addXPTextPrefab;
+    public GameObject levelUpTextPrefab;
     public RectTransform mainCanvas;
-    public Text levelUpText;
     public UIProgressBarController experienceBar;
     public int nextLevelUp;
 
@@ -16,7 +17,6 @@ public class LevelUpSystem : MonoBehaviour {
 
     void Start()
     {
-        levelUpText.canvasRenderer.SetAlpha(0f);
         experienceBar.barEmptyImage.canvasRenderer.SetAlpha(0f);
         experienceBar.barFullImage.canvasRenderer.SetAlpha(0f);
     }
@@ -35,12 +35,12 @@ public class LevelUpSystem : MonoBehaviour {
 
     void LevelUp()
     {
-        print("Level Up!");
+        Debug.Log("Level Up!");
         currentXP = 0;
         experienceBar.fillAmount = 0;
         nextLevelUp += nextLevelUp / 2;
         level += 1;
-        StartCoroutine(ShowLevelUpPopup(level));
+        ShowLevelUpPopup(level);
     }
 
     private void ShowXPPopup(int amount)
@@ -75,11 +75,15 @@ public class LevelUpSystem : MonoBehaviour {
         experienceBar.barFullImage.CrossFadeAlpha(0, 0.5f, false);
     }
 
-    private IEnumerator ShowLevelUpPopup(int level)
+    private void ShowLevelUpPopup(int level)
     {
-        levelUpText.text = string.Format("YOU REACHED LEVEL {0}", level.ToString());
-        levelUpText.CrossFadeAlpha(1, 0.5f, false);
-        yield return new WaitForSeconds(5);
-        levelUpText.CrossFadeAlpha(0, 0.5f, false);
+        var levelUp = Instantiate(levelUpTextPrefab);
+        var text = levelUp.GetComponentsInChildren<Text>().Where(t => t.name.Equals("LevelNumber"));
+        text.FirstOrDefault().text = string.Format("LEVEL {0}", level.ToString());
+        levelUp.transform.SetParent(mainCanvas);
+        var rectTransform = levelUp.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = new Vector2(0f, 0f);
+        rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+        rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
     }
 }

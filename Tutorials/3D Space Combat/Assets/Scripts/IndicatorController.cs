@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Linq;
 
 public class IndicatorController : MonoBehaviour
 {
@@ -73,11 +74,11 @@ public class IndicatorController : MonoBehaviour
             }
 
             // POSITION ENEMY ARROWS AND BOXES
-            TargetableObject[] objects = GameObject.FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[];
+            var objects = (GameObject.FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[]).Where(t => t.allegiance == TargetableObject.Allegiance.Enemy);
 
             foreach (TargetableObject obj in objects)
             {
-                if (!obj.CompareTag("Player") && obj.allegiance == TargetableObject.Allegiance.Enemy && GameManager.playerTransform != null)
+                if (GameManager.playerTransform != null)
                 {
                     if (Vector3.Distance(obj.transform.position, GameManager.playerTransform.position) < 500f)
                     {
