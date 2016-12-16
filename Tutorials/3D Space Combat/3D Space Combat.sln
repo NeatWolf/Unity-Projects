@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2015
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3D Space Combat.CSharp.Plugins", "3D Space Combat.CSharp.Plugins.csproj", "{0C2FAA24-27BA-21E1-0529-EEFBF408101D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3D Space Combat.Plugins", "3D Space Combat.Plugins.csproj", "{AC0851DF-7153-D744-7D3D-52AA13F120FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3D Space Combat.CSharp", "3D Space Combat.CSharp.csproj", "{58571586-FB85-281B-0681-758220CEF17C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3D Space Combat", "3D Space Combat.csproj", "{0B546E7A-7EBF-64C3-453F-7ED6D4104D3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3D Space Combat.CSharp.Editor", "3D Space Combat.CSharp.Editor.csproj", "{147CD416-D76D-F1A7-1E43-92D9A08585D2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3D Space Combat.Editor.Plugins", "3D Space Combat.Editor.Plugins.csproj", "{3C95145F-0277-A88F-53DC-6F14E0063367}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3D Space Combat.Editor", "3D Space Combat.Editor.csproj", "{D8F058DD-F13F-9BF1-8540-EC6AA455C941}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,18 +15,22 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0C2FAA24-27BA-21E1-0529-EEFBF408101D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0C2FAA24-27BA-21E1-0529-EEFBF408101D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0C2FAA24-27BA-21E1-0529-EEFBF408101D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0C2FAA24-27BA-21E1-0529-EEFBF408101D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{58571586-FB85-281B-0681-758220CEF17C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{58571586-FB85-281B-0681-758220CEF17C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{58571586-FB85-281B-0681-758220CEF17C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{58571586-FB85-281B-0681-758220CEF17C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{147CD416-D76D-F1A7-1E43-92D9A08585D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{147CD416-D76D-F1A7-1E43-92D9A08585D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{147CD416-D76D-F1A7-1E43-92D9A08585D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{147CD416-D76D-F1A7-1E43-92D9A08585D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC0851DF-7153-D744-7D3D-52AA13F120FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC0851DF-7153-D744-7D3D-52AA13F120FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC0851DF-7153-D744-7D3D-52AA13F120FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC0851DF-7153-D744-7D3D-52AA13F120FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B546E7A-7EBF-64C3-453F-7ED6D4104D3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B546E7A-7EBF-64C3-453F-7ED6D4104D3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B546E7A-7EBF-64C3-453F-7ED6D4104D3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B546E7A-7EBF-64C3-453F-7ED6D4104D3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C95145F-0277-A88F-53DC-6F14E0063367}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C95145F-0277-A88F-53DC-6F14E0063367}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C95145F-0277-A88F-53DC-6F14E0063367}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C95145F-0277-A88F-53DC-6F14E0063367}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8F058DD-F13F-9BF1-8540-EC6AA455C941}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8F058DD-F13F-9BF1-8540-EC6AA455C941}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8F058DD-F13F-9BF1-8540-EC6AA455C941}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8F058DD-F13F-9BF1-8540-EC6AA455C941}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

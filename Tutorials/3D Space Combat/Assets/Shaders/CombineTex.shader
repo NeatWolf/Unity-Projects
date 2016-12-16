@@ -1,4 +1,6 @@
-﻿Shader "Custom/My First Shader" {
+﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+
+Shader "Custom/My First Shader" {
 
 	Properties{
 		_Tint("Tint", Color) = (1, 1, 1, 1)
@@ -47,7 +49,7 @@
 			Interpolators MyVertexProgram(VertexData v) {
 				Interpolators i;
 				i.position = mul(UNITY_MATRIX_MVP, v.position);
-				i.worldPos = mul(_Object2World, v.position);
+				i.worldPos = mul(unity_ObjectToWorld, v.position);
 				i.uv = TRANSFORM_TEX(v.uv, _MainTex);
 				i.uvDetail = TRANSFORM_TEX(v.uv, _DetailTex);
 				i.normal = UnityObjectToWorldNormal(v.normal);

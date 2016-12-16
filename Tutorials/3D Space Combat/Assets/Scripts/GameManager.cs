@@ -236,8 +236,8 @@ public class GameManager : MonoBehaviour
         Invoke("LevelUpTest", 10f);
         //Invoke("WarpTest", 5f);
         //SpawnHazardsAroundSphere(deimosTransform, 9000, 5800, deimosAsteroidCount);
-        //SpawnPrefabs(enemyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
-        //SpawnPrefabs(friendlyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
+        SpawnPrefabs(enemyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
+        SpawnPrefabs(friendlyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
     }
 
     private void LevelUpTest()

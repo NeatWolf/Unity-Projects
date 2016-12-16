@@ -1,4 +1,6 @@
-﻿Shader "Custom/My Third Shader" {
+﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+
+Shader "Custom/My Third Shader" {
 
 	Properties{
 		_Tint("Tint", Color) = (1, 1, 1, 1)
@@ -73,7 +75,7 @@
 			Interpolators MyVertexProgram(VertexData v) {
 				Interpolators i;
 				i.position = mul(UNITY_MATRIX_MVP, v.position);
-				i.worldPos = mul(_Object2World, v.position);
+				i.worldPos = mul(unity_ObjectToWorld, v.position);
 				i.normal = UnityObjectToWorldNormal(v.normal);
 
 #if defined(BINORMAL_PER_FRAGMENT)
