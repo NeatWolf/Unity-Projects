@@ -2,6 +2,8 @@
 using System.Collections;
 using UnityEngine.UI;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 public class Quest : MonoBehaviour
 {
@@ -22,37 +24,21 @@ public class Quest : MonoBehaviour
         currentObjective.state = Objective.ObjectiveState.active;
         //currentObjective.InvokeOnStartedEvent();
         GameObject objectiveParentGameObject = currentObjective.transform.parent.gameObject;
-        if(objectiveParentGameObject != null)
+        if (objectiveParentGameObject == null) return;
+
+        objectives = objectiveParentGameObject.GetComponentsInChildren<Objective>();
+        if(objectives == null)
         {
-            objectives = objectiveParentGameObject.GetComponentsInChildren<Objective>();
-            if(objectives != null)
-            {
-                Debug.Log("Successfully found all mission objectives");
-                foreach(var obj in objectives)
-                {
-                    if(obj != null)
-                    {
-                        obj.ParentScript = this;
-                    }
-                }
-            }
-            else
-            {
-                Debug.Log("Failed to find mission objectives");
-            }
+            Debug.Log("Failed to find mission objectives");
         }
+
+        Debug.Log("Successfully found all mission objectives");
+        objectives.Where(t => t != null).Select(t => { t.ParentScript = this; return t; }).ToList();
 	}
 
     public Objective GetObjectiveAtIndex(int index)
     {
-        foreach(var obj in objectives)
-        {
-            if(obj.index == index)
-            {
-                return obj;
-            }
-        }
-        return null;
+        return objectives.Where(t => t.index == index).FirstOrDefault();
     }
 
     public void OnObjectivesCompleted()

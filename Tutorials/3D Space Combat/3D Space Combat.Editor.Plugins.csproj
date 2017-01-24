@@ -55,6 +55,9 @@
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Advertisements">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Advertisements.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.Advertisements">
       <HintPath>Library\UnityAssemblies\UnityEditor.Advertisements.dll</HintPath>
     </Reference>
@@ -97,6 +100,9 @@
     <Reference Include="UnityEngine.HoloLens">
       <HintPath>Library\UnityAssemblies\UnityEngine.HoloLens.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Purchasing">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Purchasing.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.VR">
       <HintPath>Library\UnityAssemblies\UnityEditor.VR.dll</HintPath>
     </Reference>
@@ -124,18 +130,6 @@
     <Reference Include="Cloudstoyv5">
       <HintPath>Assets\_Third Party\CloudsToy\DLL\Cloudstoyv5.dll</HintPath>
     </Reference>
-    <Reference Include="RAIN">
-      <HintPath>Assets\_Third Party\RAIN\RAIN.dll</HintPath>
-    </Reference>
-    <Reference Include="RAINMetaform">
-      <HintPath>Assets\_Third Party\RAIN\RAINMetaform.dll</HintPath>
-    </Reference>
-    <Reference Include="RAINEditor">
-      <HintPath>Assets\_Third Party\RAIN\Editor\RAINEditor.dll</HintPath>
-    </Reference>
-    <Reference Include="RAINMetaformEditor">
-      <HintPath>Assets\_Third Party\RAIN\Editor\RAINMetaformEditor.dll</HintPath>
-    </Reference>
     <Reference Include="Assembly-UnityScript-firstpass">
       <HintPath>Library\ScriptAssemblies\Assembly-UnityScript-firstpass.dll</HintPath>
     </Reference>
@@ -151,12 +145,20 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Standard Assets\Effects\AmbientOcclusion\Editor\AmbientOcclusionEditor.cs" />
+    <Compile Include="Assets\Standard Assets\Effects\AntiAliasing\Editor\AntiAliasingEditor.cs" />
+    <Compile Include="Assets\Standard Assets\Effects\AntiAliasing\Editor\IAntiAliasingEditor.cs" />
+    <Compile Include="Assets\Standard Assets\Effects\AntiAliasing\FXAA\Editor\FXAAEditor.cs" />
+    <Compile Include="Assets\Standard Assets\Effects\AntiAliasing\SMAA\Editor\SMAAEditor.cs" />
     <Compile Include="Assets\Standard Assets\Effects\Bloom\Editor\BloomEditor.cs" />
     <Compile Include="Assets\Standard Assets\Effects\Bloom\Editor\BloomGraphDrawer.cs" />
     <Compile Include="Assets\Standard Assets\Effects\Common\Editor\EditorGUIHelper.cs" />
     <Compile Include="Assets\Standard Assets\Effects\Common\Editor\FieldFinder.cs" />
     <Compile Include="Assets\Standard Assets\Effects\Common\Editor\MinDrawer.cs" />
+    <Compile Include="Assets\Standard Assets\Effects\DepthOfField\Editor\DepthOfFieldEditor.cs" />
     <Compile Include="Assets\Standard Assets\Effects\LensAberrations\Editor\LensAberrationsEditor.cs" />
+    <Compile Include="Assets\Standard Assets\Effects\ScreenSpaceReflection\Editor\ScreenSpaceReflectionEditor.cs" />
+    <Compile Include="Assets\Standard Assets\Effects\TonemappingColorGrading\Editor\TonemappingColorGradingEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Dialogues\dialogue1.txt" />
@@ -169,9 +171,24 @@
     <None Include="Assets\Shaders\RadialBlur.shader" />
     <None Include="Assets\Shaders\Shield.shader" />
     <None Include="Assets\Shaders\SkyboxHDR.shader" />
+    <None Include="Assets\Standard Assets\Effects\AmbientOcclusion\Resources\AmbientOcclusion.cginc" />
+    <None Include="Assets\Standard Assets\Effects\AmbientOcclusion\Resources\AmbientOcclusion.shader" />
+    <None Include="Assets\Standard Assets\Effects\AntiAliasing\FXAA\Resources\FXAA.shader" />
+    <None Include="Assets\Standard Assets\Effects\AntiAliasing\FXAA\Resources\FXAA3.cginc" />
+    <None Include="Assets\Standard Assets\Effects\AntiAliasing\SMAA\Resources\SMAA.cginc" />
+    <None Include="Assets\Standard Assets\Effects\AntiAliasing\SMAA\Resources\SMAA.shader" />
     <None Include="Assets\Standard Assets\Effects\Bloom\Resources\Bloom.cginc" />
     <None Include="Assets\Standard Assets\Effects\Bloom\Resources\Bloom.shader" />
+    <None Include="Assets\Standard Assets\Effects\DepthOfField\Resources\BokehSplatting.shader" />
+    <None Include="Assets\Standard Assets\Effects\DepthOfField\Resources\DepthOfField.shader" />
+    <None Include="Assets\Standard Assets\Effects\DepthOfField\Resources\MedianFilter.shader" />
     <None Include="Assets\Standard Assets\Effects\LensAberrations\Resources\LensAberrations.shader" />
+    <None Include="Assets\Standard Assets\Effects\ScreenSpaceReflection\Resources\ScreenSpaceRaytrace.cginc" />
+    <None Include="Assets\Standard Assets\Effects\ScreenSpaceReflection\Resources\ScreenSpaceReflection.shader" />
+    <None Include="Assets\Standard Assets\Effects\TonemappingColorGrading\Resources\HistogramCompute.compute" />
+    <None Include="Assets\Standard Assets\Effects\TonemappingColorGrading\Resources\HistogramRender.shader" />
+    <None Include="Assets\Standard Assets\Effects\TonemappingColorGrading\Resources\TonemappingColorGrading.cginc" />
+    <None Include="Assets\Standard Assets\Effects\TonemappingColorGrading\Resources\TonemappingColorGrading.shader" />
     <None Include="Assets\_Third Party\CloudsToy\ChangeLog.txt" />
     <None Include="Assets\_Third Party\CloudsToy\Shaders\CloudBright.shader" />
     <None Include="Assets\_Third Party\CloudsToy\Shaders\CloudRealistic.shader" />
@@ -180,15 +197,6 @@
     <None Include="Assets\_Third Party\EarthRendering Free\Earth.shader" />
     <None Include="Assets\_Third Party\EffectExamples\Shared\Shaders\SurfaceShader_VC.shader" />
     <None Include="Assets\_Third Party\GalaxyBox1\instructions.txt" />
-    <None Include="Assets\_Third Party\RAIN\Editor\ScriptTemplates\BehaviorTreeTemplate.xml" />
-    <None Include="Assets\_Third Party\RAIN\Editor\Shaders\AspectRingShader.shader" />
-    <None Include="Assets\_Third Party\RAIN\Editor\Shaders\AspectSphereShader.shader" />
-    <None Include="Assets\_Third Party\RAIN\Editor\Shaders\NavMeshColliderShader.shader" />
-    <None Include="Assets\_Third Party\RAIN\Editor\Shaders\NavMeshContourShader.shader" />
-    <None Include="Assets\_Third Party\RAIN\Editor\Shaders\VisualSensorLineShader.shader" />
-    <None Include="Assets\_Third Party\RAIN\Editor\Shaders\VisualSensorRingShader.shader" />
-    <None Include="Assets\_Third Party\RAIN\Editor\Shaders\WaypointShader.shader" />
-    <None Include="Assets\_Third Party\RAIN\ReleaseNotes.txt" />
     <None Include="Assets\_Third Party\Standard Assets\Cameras\CameraGuidelines.txt" />
     <None Include="Assets\_Third Party\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
     <None Include="Assets\_Third Party\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />

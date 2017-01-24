@@ -25,13 +25,13 @@ public class Player : MonoBehaviour
     public AudioMixerSnapshot thrusterOnAudio;
     public AudioMixerSnapshot thrusterOffAudio;
 
-    private Rigidbody rb;
-    private WarpDrive warpDrive;
-    private float rotationz;
-    private Vector3 screenPosition;
-    private bool movementLocked = false;
-    private bool controlsLocked = false;
-    private State currentState = State.Default;
+    private Rigidbody _rb;
+    private WarpDrive _warpDrive;
+    private float _rotationZ;
+    private Vector3 _screenPosition;
+    private bool _movementLocked = false;
+    private bool _controlsLocked = false;
+    private State _currentState = State.Default;
     private AudioSource _audioSource;
 
     private float startingBoostSpeed;
@@ -49,14 +49,14 @@ public class Player : MonoBehaviour
     {
         get
         {
-            return movementLocked;
+            return _movementLocked;
         }
     }
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        warpDrive = GetComponent<WarpDrive>();
+        _rb = GetComponent<Rigidbody>();
+        _warpDrive = GetComponent<WarpDrive>();
         _audioSource = GetComponent<AudioSource>();
         startingBoostSpeed = boostSpeed;
         startingCombatBoostSpeed = combatBoostSpeed;
@@ -66,26 +66,21 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if(currentState == State.Docked)
+        if(_currentState == State.Docked)
         {
-            if (!controlsLocked && Input.GetKeyDown(KeyCode.Space))
-            {
-                GameManager.instance.UndockPlayer();
-            }
-            else
-            {
-                return;
-            }
+            if (_controlsLocked || Input.GetKeyDown(KeyCode.Space)) return;
+
+            GameManager.instance.UndockPlayer();
         }
 
         // Lock onto warp target
-        if (!controlsLocked && Input.GetKeyDown(KeyCode.Tab))
+        if (!_controlsLocked && Input.GetKeyDown(KeyCode.Tab))
         {
             // Cancel lock
-            if(currentState == State.WarpStandby)
+            if(_currentState == State.WarpStandby)
             {
                 LockMovement(false);
-                currentState = State.Default;
+                _currentState = State.Default;
             }
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -95,26 +90,26 @@ public class Player : MonoBehaviour
                 if(target != null)
                 {
                     LockMovement(true);
-                    warpDrive.SetTarget(target.targetTransform.position);
+                    _warpDrive.SetTarget(target.targetTransform.position);
                     StartCoroutine(RotateTowards(target.targetTransform.position));
-                    currentState = State.WarpStandby;
+                    _currentState = State.WarpStandby;
                 }
             }
         }
 
         // Engage warp
-        if(currentState == State.WarpStandby)
+        if(_currentState == State.WarpStandby)
         {
-            if (!controlsLocked && Input.GetKeyDown(KeyCode.Space))
+            if (!_controlsLocked && Input.GetKeyDown(KeyCode.Space))
             {
-                warpDrive.Engage();
+                _warpDrive.Engage();
             }
 
-            if (warpDrive.State == Enums.WarpDriveState.waitingForCommand)
+            if (_warpDrive.State == Enums.WarpDriveState.waitingForCommand)
             {
-                warpDrive.PowerDown();
+                _warpDrive.PowerDown();
                 LockMovement(false);
-                currentState = State.Default;
+                _currentState = State.Default;
             }
         }
 
@@ -124,132 +119,114 @@ public class Player : MonoBehaviour
             Vector3.Distance(t.transform.position, transform.position) < 500)
             .ToList();
 
-        if(objects == null || objects.Count < 1)
-        {
-            GameManager.instance.isInCombat = false;
-        }
-        else
-        {
-            GameManager.instance.isInCombat = true;
-        }
+        GameManager.instance.isInCombat = (objects != null && objects.Count >= 0);
     }
 
     void FixedUpdate()
     {
         Vector3 forwardForce = Vector3.zero;
 
-        if (!movementLocked)
+        if (!_movementLocked)
         {
-            float inputVertical = Input.GetAxis("Vertical");
-            float inputHorizontal = Input.GetAxis("Horizontal");
-            Vector3 mousePosition = Input.mousePosition;
-
-            // Add base force
-            forwardForce += transform.forward * idleSpeed;
-
-            // Add forward or backward force
-            if (inputVertical > 0)
-            {
-                //thrusterOnAudio.TransitionTo(0.5f);
-                forwardForce += transform.forward * moveSpeed * inputVertical;
-
-                // Add boost speed force
-                if (Input.GetKey(KeyCode.LeftShift))
-                {
-                    if(currentState != State.Boosting)
-                    {
-                        StartCoroutine(LerpBoost(1f, 0f, GameManager.instance.isInCombat ? startingCombatBoostSpeed : startingBoostSpeed, GameManager.instance.isInCombat));
-                        cameraController.EnterBoost();
-                    }
-                    currentState = State.Boosting;
-                    GameManager.instance.isShootingEnabled = false;
-
-
-                }
-                else
-                {
-                    if(currentState == State.Boosting)
-                    {
-                        StartCoroutine(LerpBoost(1f, GameManager.instance.isInCombat ? startingCombatBoostSpeed : startingBoostSpeed, 0f, GameManager.instance.isInCombat));
-                        cameraController.ExitBoost();
-
-                        currentState = State.Default;
-                        GameManager.instance.isShootingEnabled = true;
-                    }
-
-                }
-            }
-            else
-            {
-                //thrusterOffAudio.TransitionTo(1f);
-                forwardForce += transform.forward * idleSpeed * inputVertical;
-
-                if (currentState == State.Boosting)
-                {
-                    StartCoroutine(LerpBoost(1f, GameManager.instance.isInCombat ? startingCombatBoostSpeed : startingBoostSpeed, 0f, GameManager.instance.isInCombat));
-                    cameraController.ExitBoost();
-
-                    currentState = State.Default;
-                    GameManager.instance.isShootingEnabled = true;
-                }
-            }
-
-            if (GameManager.instance.isInCombat)
-            {
-                forwardForce += transform.forward * combatBoostSpeed;
-            }
-            else
-            {
-                forwardForce += transform.forward * boostSpeed;
-            }
-
-            Rotation(inputHorizontal);
-            rb.AddForce(forwardForce);
-            rb.AddForce(transform.right * strafeSpeed * inputHorizontal);
+            forwardForce = Move(forwardForce);
             _audioSource.volume = Mathf.Clamp(Vector3.SqrMagnitude(forwardForce) / 882000f, 0f, 0.15f);
-            //Debug.Log(Vector3.SqrMagnitude(forwardForce));
         }
 
-        
-        foreach(var thruster in thrusters)
+        foreach (var thruster in thrusters)
         {
             // For moving speed we want lifetime at 0.5, for idle speed we want lifetime at 0.4
             thruster.startLifetime = Mathf.Clamp(Mathf.Log10(forwardForce.sqrMagnitude / 83.965f) / Mathf.Log10(275855), 0.1f, 0.7f);
         }
     }
 
-    private void Rotation(float inputHorizontal)
+    private Vector3 Move(Vector3 forwardForce)
     {
-        screenPosition = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 1900));
-        Vector3 direction = screenPosition - transform.position;
-        rotationz = Screen.width * 0.5f;
+        float inputVertical = Input.GetAxis("Vertical");
+        float inputHorizontal = Input.GetAxis("Horizontal");
+        Vector3 mousePosition = Input.mousePosition;
 
-        //rb.isKinematic = true;
-        rb.transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction, transform.up), lookDamping);
+        // Add base force
+        forwardForce += transform.forward * idleSpeed;
+
+        forwardForce = AddForwardForce(forwardForce, inputVertical);
+
+        forwardForce += transform.forward * (GameManager.instance.isInCombat ? combatBoostSpeed : boostSpeed);
+
+        Rotate(inputHorizontal);
+        _rb.AddForce(forwardForce);
+        _rb.AddForce(transform.right * strafeSpeed * inputHorizontal);
+        return forwardForce;
+    }
+
+    private Vector3 AddForwardForce(Vector3 forwardForce, float inputVertical)
+    {
+        if (inputVertical <= 0)
+        {
+            //thrusterOffAudio.TransitionTo(1f);
+            forwardForce += transform.forward * idleSpeed * inputVertical;
+
+            if (_currentState == State.Boosting)
+            {
+                StartCoroutine(LerpBoost(1f, GameManager.instance.isInCombat ? startingCombatBoostSpeed : startingBoostSpeed, 0f, GameManager.instance.isInCombat));
+                cameraController.ExitBoost();
+
+                _currentState = State.Default;
+                GameManager.instance.isShootingEnabled = true;
+            }
+            return forwardForce;
+        }
+
+        //thrusterOnAudio.TransitionTo(0.5f);
+        forwardForce += transform.forward * moveSpeed * inputVertical;
+
+        Boost();
+
+        return forwardForce;
+    }
+
+    private void Boost()
+    {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            if (_currentState != State.Boosting)
+            {
+                StartCoroutine(LerpBoost(1f, 0f, GameManager.instance.isInCombat ? startingCombatBoostSpeed : startingBoostSpeed, GameManager.instance.isInCombat));
+                cameraController.EnterBoost();
+            }
+            _currentState = State.Boosting;
+            GameManager.instance.isShootingEnabled = false;
+        }
+        else if (_currentState == State.Boosting)
+        {
+            StartCoroutine(LerpBoost(1f, GameManager.instance.isInCombat ? startingCombatBoostSpeed : startingBoostSpeed, 0f, GameManager.instance.isInCombat));
+            cameraController.ExitBoost();
+
+            _currentState = State.Default;
+            GameManager.instance.isShootingEnabled = true;
+        }
+    }
+
+    private void Rotate(float inputHorizontal)
+    {
+        _screenPosition = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 1900));
+        Vector3 direction = _screenPosition - transform.position;
+        _rotationZ = Screen.width * 0.5f;
+
+        _rb.transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction, transform.up), lookDamping);
         
         // Rotate player around z-axis when turning with the mouse. Compensate the camera by rotating the camera target in the opposite direction
-        rb.transform.rotation = Quaternion.Euler(rb.transform.rotation.eulerAngles.x, rb.transform.rotation.eulerAngles.y, (-inputHorizontal * strafeRotation) + (((Screen.width * 0.5f) - Input.mousePosition.x) / rotationSpeed));
+        _rb.transform.rotation = Quaternion.Euler(_rb.transform.rotation.eulerAngles.x, _rb.transform.rotation.eulerAngles.y, (-inputHorizontal * strafeRotation) + (((Screen.width * 0.5f) - Input.mousePosition.x) / rotationSpeed));
         cameraTarget.localRotation = Quaternion.Euler(0f, 0f, (inputHorizontal * strafeRotation) - ((Screen.width * 0.5f) - Input.mousePosition.x) / (rotationSpeed));
-        //rb.isKinematic = false;
-
-        //if (Input.GetKey(KeyCode.Q))
-        //{
-        //    transform.Rotate(Vector3.forward * Time.deltaTime * rotationDamping);
-        //}
-        //if (Input.GetKey(KeyCode.E))
-        //{
-        //    transform.Rotate(Vector3.back * Time.deltaTime * rotationDamping);
-        //}
     }
 
     public void LockMovement(bool isLocked)
     {
-        movementLocked = isLocked;
+        _movementLocked = isLocked;
     }
 
     public void LockControls(bool isLocked)
     {
-        controlsLocked = isLocked;
+        _controlsLocked = isLocked;
     }
 
     public IEnumerator LockControlsDelayed(bool isLocked, float waitTime)
@@ -270,13 +247,10 @@ public class Player : MonoBehaviour
 
     IEnumerator RotateTowards(Vector3 lookAtPosition)
     {
-        //Vector3 direction = (lookAtPosition - transform.position).normalized;
-        //Quaternion directionQuaternion = Quaternion.Euler(direction.x, direction.y, direction.z);
         Quaternion direction = Quaternion.LookRotation(lookAtPosition);
-        while (Quaternion.Angle(rb.rotation, direction) > 0.1)
+        while (Quaternion.Angle(_rb.rotation, direction) > 0.1)
         {
-            //print(string.Format("rotation: {0}", rb.rotation));
-            rb.rotation = Quaternion.Slerp(rb.rotation, direction, lookSpeed);
+            _rb.rotation = Quaternion.Slerp(_rb.rotation, direction, lookSpeed);
         }
         yield return null;
     }
@@ -310,7 +284,7 @@ public class Player : MonoBehaviour
     IEnumerator PerformDock(Transform dockingTransform, float time)
     {
         Debug.Log("Player docking coroutine");
-        currentState = State.Docked;
+        _currentState = State.Docked;
         LockMovement(true);
         GameManager.instance.isShootingEnabled = false;
         GameManager.instance.isCursorVisible = false;
@@ -380,7 +354,7 @@ public class Player : MonoBehaviour
             transform.position = Vector3.Lerp(startPosition, endPosition, percentageComplete);
             yield return null;
         }
-        currentState = State.Default;
+        _currentState = State.Default;
         LockMovement(false);
         GameManager.instance.isShootingEnabled = true;
         GameManager.instance.isCursorVisible = true;
