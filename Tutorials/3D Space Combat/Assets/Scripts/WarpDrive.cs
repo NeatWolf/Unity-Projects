@@ -88,7 +88,7 @@ public class WarpDrive : MonoBehaviour {
                 miniGame.Close();
 
                 // Perform warp
-                StartCoroutine(PerformWarpMove(5f, 0.5f, 0.15f, 200f));
+                //StartCoroutine(PerformWarpMove(5f, 0.5f, 0.15f, 200f));
                 _countingDown = false;
                 _chargingSoundPlayed = false;
                 _boomSoundPlayed = false;

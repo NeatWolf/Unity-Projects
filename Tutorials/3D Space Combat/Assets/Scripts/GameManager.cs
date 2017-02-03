@@ -22,7 +22,6 @@ public class GameManager : MonoBehaviour
     public GameObject enemyShipPrefab;
     public GameObject friendlyShipPrefab;
     public AudioClip dialogue1;
-    public GameObject warpShipPrefab;
     public float testSpawnRadius;
     public int testCount;
 
@@ -234,7 +233,6 @@ public class GameManager : MonoBehaviour
     {
         Invoke("InitializeTargetPracticeQuest", 1f);
         Invoke("LevelUpTest", 10f);
-        //Invoke("WarpTest", 5f);
         //SpawnHazardsAroundSphere(deimosTransform, 9000, 5800, deimosAsteroidCount);
         SpawnPrefabs(enemyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
         SpawnPrefabs(friendlyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
@@ -243,10 +241,5 @@ public class GameManager : MonoBehaviour
     private void LevelUpTest()
     {
         player.GetComponent<LevelUpSystem>().GainExperience(50);
-    }
-
-    private void WarpTest()
-    {
-        //warpShipPrefab.GetComponent<AIWarpDrive>().EnterFromWarp(warpShipPrefab.transform.position, warpShipPrefab.transform.rotation);
     }
 }

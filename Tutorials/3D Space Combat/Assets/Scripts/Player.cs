@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
     public float rotationSpeed = 5f;
     public AudioMixerSnapshot thrusterOnAudio;
     public AudioMixerSnapshot thrusterOffAudio;
+    public WarpManager warpManager;
 
     private Rigidbody _rb;
     private WarpDrive _warpDrive;
@@ -66,60 +67,67 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if(_currentState == State.Docked)
+        if (_currentState == State.Docked)
         {
             if (_controlsLocked || Input.GetKeyDown(KeyCode.Space)) return;
 
             GameManager.instance.UndockPlayer();
         }
 
-        // Lock onto warp target
-        if (!_controlsLocked && Input.GetKeyDown(KeyCode.Tab))
+        if (!_controlsLocked && Input.GetKeyDown(KeyCode.Tab)) LockOntoWarpTarget();
+        if (_currentState == State.WarpStandby) EngageWarp();
+
+        GameManager.instance.isInCombat = IsInCombat();
+    }
+
+    private void LockOntoWarpTarget()
+    {
+        if (_currentState == State.WarpStandby) CancelWarpLock();
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
         {
-            // Cancel lock
-            if(_currentState == State.WarpStandby)
-            {
-                LockMovement(false);
-                _currentState = State.Default;
-            }
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
-            {
-                WarpTarget target = hit.collider.gameObject.GetComponent<WarpTarget>();
-                if(target != null)
-                {
-                    LockMovement(true);
-                    _warpDrive.SetTarget(target.targetTransform.position);
-                    StartCoroutine(RotateTowards(target.targetTransform.position));
-                    _currentState = State.WarpStandby;
-                }
-            }
-        }
+            WarpTarget target = hit.collider.gameObject.GetComponent<WarpTarget>();
+            if (target == null) return;
 
-        // Engage warp
-        if(_currentState == State.WarpStandby)
+            LockMovement(true);
+            _warpDrive.SetTarget(target.targetTransform.position);
+            warpManager.Destination = target.targetTransform.position;
+            StartCoroutine(RotateTowards(target.targetTransform.position));
+            _currentState = State.WarpStandby;
+        }
+    }
+
+    private void CancelWarpLock()
+    {
+        LockMovement(false);
+        _currentState = State.Default;
+    }
+
+    private void EngageWarp()
+    {
+        if (!_controlsLocked && Input.GetKeyDown(KeyCode.Space))
         {
-            if (!_controlsLocked && Input.GetKeyDown(KeyCode.Space))
-            {
-                _warpDrive.Engage();
-            }
-
-            if (_warpDrive.State == Enums.WarpDriveState.waitingForCommand)
-            {
-                _warpDrive.PowerDown();
-                LockMovement(false);
-                _currentState = State.Default;
-            }
+            warpManager.SetOnCompleteHandler(t => ExitWarp());
+            warpManager.Warp();
         }
+    }
 
-        // Check for enemies that are near
-        var objects = (GameObject.FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[]).Where(
-            t => t.allegiance == TargetableObject.Allegiance.Enemy &&
-            Vector3.Distance(t.transform.position, transform.position) < 500)
-            .ToList();
+    private void ExitWarp()
+    {
+        _warpDrive.PowerDown();
+        LockMovement(false);
+        _currentState = State.Default;
+    }
 
-        GameManager.instance.isInCombat = (objects != null && objects.Count >= 0);
+    private bool IsInCombat()
+    {
+        var targetableObjects = (GameObject.FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[]);
+        var enemies = targetableObjects.Where(t => t.allegiance == TargetableObject.Allegiance.Enemy);
+        var closeEnemies = enemies.Where(t => Vector3.Distance(t.transform.position, transform.position) < 500).Count();
+
+        return closeEnemies > 0;
     }
 
     void FixedUpdate()

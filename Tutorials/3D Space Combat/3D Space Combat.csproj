@@ -52,9 +52,6 @@
     <Reference Include="UnityEngine">
       <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Advertisements">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Advertisements.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
@@ -69,9 +66,6 @@
     </Reference>
     <Reference Include="UnityEngine.HoloLens">
       <HintPath>Library\UnityAssemblies\UnityEngine.HoloLens.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Purchasing">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Purchasing.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VR">
       <HintPath>Library\UnityAssemblies\UnityEngine.VR.dll</HintPath>
@@ -163,7 +157,6 @@
     <Compile Include="Assets\Scripts\Quests\QuestManager.cs" />
     <Compile Include="Assets\Scripts\Quests\QuestMenu.cs" />
     <Compile Include="Assets\Scripts\Quests\QuestWaypointDisplay.cs" />
-    <Compile Include="Assets\Scripts\RadialBlur.cs" />
     <Compile Include="Assets\Scripts\RandomRotator.cs" />
     <Compile Include="Assets\Scripts\ReticleController.cs" />
     <Compile Include="Assets\Scripts\RotateToCursor.cs" />
@@ -180,6 +173,13 @@
     <Compile Include="Assets\Scripts\UpdateListItem.cs" />
     <Compile Include="Assets\Scripts\UpdatesDisplay.cs" />
     <Compile Include="Assets\Scripts\UtilityHelper.cs" />
+    <Compile Include="Assets\Scripts\Warp\WarpEffects.cs" />
+    <Compile Include="Assets\Scripts\Warp\WarpFov.cs" />
+    <Compile Include="Assets\Scripts\Warp\WarpManager.cs" />
+    <Compile Include="Assets\Scripts\Warp\WarpPlayer.cs" />
+    <Compile Include="Assets\Scripts\Warp\WarpRadialBlur.cs" />
+    <Compile Include="Assets\Scripts\Warp\WarpStars.cs" />
+    <Compile Include="Assets\Scripts\Warp\WarpStarsGroup.cs" />
     <Compile Include="Assets\Scripts\WarpDrive.cs" />
     <Compile Include="Assets\Scripts\WarpTarget.cs" />
     <Compile Include="Assets\Scripts\Weapons\ShotgunWeapon.cs" />
@@ -210,7 +210,80 @@
     <Compile Include="Assets\_Third Party\EffectExamples\Shared\Scripts\GunShoot.cs" />
     <Compile Include="Assets\_Third Party\EffectExamples\Shared\Scripts\ParticleExamples.cs" />
     <Compile Include="Assets\_Third Party\EffectExamples\Shared\Scripts\ParticleMenu.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Demo\scripts\BaseDemoGUI.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Demo\scripts\FPSHUD.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Demo\scripts\PathTweenGUI.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Demo\scripts\ShakeVariantsGUI.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Demo\scripts\SimpleTween.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Demo\scripts\StressTestGUI.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Demo\scripts\TweenChainGUI.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Demo\scripts\TweenFlowGUI.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\Go.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\GoDummyPath.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\GoTween.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\GoTweenChain.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\GoTweenCollectionConfig.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\GoTweenConfig.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\GoTweenFlow.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\base\AbstractGoTween.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\base\AbstractGoTweenCollection.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\easing\GoEaseBack.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\easing\GoEaseBounce.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\easing\GoEaseCircular.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\easing\GoEaseCubic.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\easing\GoEaseElastic.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\easing\GoEaseExponential.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\easing\GoEaseLinear.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\easing\GoEaseQuadratic.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\easing\GoEaseQuartic.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\easing\GoEaseQuintic.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\easing\GoEaseSinusoidal.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\enums\GoDuplicatePropertyRuleType.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\enums\GoEaseType.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\enums\GoLogLevel.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\enums\GoLookAtType.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\enums\GoLoopType.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\enums\GoShakeType.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\enums\GoSplineType.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\enums\GoTweenState.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\enums\GoUpdateType.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\extensions\GoKitTweenExtensions.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\GoTweenUtils.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\abstracts\AbstractColorTweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\abstracts\AbstractQuaternionTweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\abstracts\AbstractTweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\abstracts\AbstractVector3TweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\genericTypes\ColorTweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\genericTypes\FloatTweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\genericTypes\IGenericProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\genericTypes\IntTweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\genericTypes\Vector2TweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\genericTypes\Vector3PathTweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\genericTypes\Vector3TweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\genericTypes\Vector3XTweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\genericTypes\Vector3YTweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\genericTypes\Vector3ZTweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\genericTypes\Vector4TweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\smoothing\GoSmoothedQuaternion.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\smoothing\GoSmoothedVector3.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\smoothing\GoSmoothingType.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\specificTypes\EulerAnglesTweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\specificTypes\MaterialColorTweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\specificTypes\PositionPathTweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\specificTypes\PositionTweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\specificTypes\RotationQuaternionTweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\specificTypes\RotationTweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\specificTypes\ScalePathTweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\specificTypes\ScaleTweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\specificTypes\ShakeTweenProperty.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\splines\AbstractGoSplineSolver.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\splines\GoSpline.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\splines\GoSplineCatmullRomSolver.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\splines\GoSplineCubicBezierSolver.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\splines\GoSplineQuadraticBezierSolver.cs" />
+    <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\splines\GoSplineStraightLineSolver.cs" />
     <Compile Include="Assets\_Third Party\GalaxyBox1\examplescene.cs" />
+    <Compile Include="Assets\_Third Party\More PostProcessing Effects\Scripts\RadialBlur.cs" />
     <Compile Include="Assets\_Third Party\Planet Earth Free\SpinFree.cs" />
     <Compile Include="Assets\_Third Party\Standard Assets\CrossPlatformInput\Scripts\AxisTouchButton.cs" />
     <Compile Include="Assets\_Third Party\Standard Assets\CrossPlatformInput\Scripts\ButtonHandler.cs" />
@@ -281,6 +354,7 @@
     <None Include="Assets\Shaders\RadialBlur.shader" />
     <None Include="Assets\Shaders\Shield.shader" />
     <None Include="Assets\Shaders\SkyboxHDR.shader" />
+    <None Include="Assets\Shaders\_old_RadialBlur.shader" />
     <None Include="Assets\Standard Assets\Effects\AmbientOcclusion\Resources\AmbientOcclusion.cginc" />
     <None Include="Assets\Standard Assets\Effects\AmbientOcclusion\Resources\AmbientOcclusion.shader" />
     <None Include="Assets\Standard Assets\Effects\AntiAliasing\FXAA\Resources\FXAA.shader" />
@@ -306,7 +380,9 @@
     <None Include="Assets\_Third Party\EarthRendering Free\Atmosphere.shader" />
     <None Include="Assets\_Third Party\EarthRendering Free\Earth.shader" />
     <None Include="Assets\_Third Party\EffectExamples\Shared\Shaders\SurfaceShader_VC.shader" />
+    <None Include="Assets\_Third Party\GOKit\Plugins\GoKit\easing\easeEquationsLicense.txt" />
     <None Include="Assets\_Third Party\GalaxyBox1\instructions.txt" />
+    <None Include="Assets\_Third Party\More PostProcessing Effects\Shaders\RadialBlur.shader" />
     <None Include="Assets\_Third Party\Standard Assets\Cameras\CameraGuidelines.txt" />
     <None Include="Assets\_Third Party\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
     <None Include="Assets\_Third Party\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />

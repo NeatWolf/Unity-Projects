@@ -1,2 +1,0 @@
-Assets/Art/Skies/NoEmotion/06-03_Sunset_A.hdr
-Assets/Art/Terrain/Landscape_01_Diff.tif
