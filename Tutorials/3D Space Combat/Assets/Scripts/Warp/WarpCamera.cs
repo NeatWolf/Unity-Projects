@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WarpPlayer : MonoBehaviour {
+public class WarpCamera : MonoBehaviour {
 
     public float speed;
     public GoEaseType easeType;
@@ -13,7 +13,7 @@ public class WarpPlayer : MonoBehaviour {
     public void Warp(Vector3 destination)
     {
         var duration = CalculateDuration(destination, speed);
-        Go.to(transform, duration, new GoTweenConfig().vector3Prop("position", destination).setEaseType(easeType).onComplete(_onComplete));
+        var tween = Go.to(transform, duration, new GoTweenConfig().vector3Prop("position", destination).setEaseType(easeType).onComplete(_onComplete));
     }
 
     public void SetOnCompleteHandler(Action<AbstractGoTween> handler)

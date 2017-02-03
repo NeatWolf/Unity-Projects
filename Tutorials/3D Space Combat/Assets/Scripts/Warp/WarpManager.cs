@@ -7,6 +7,7 @@ public class WarpManager : MonoBehaviour {
 
     public WarpEffects effects;
     public WarpPlayer player;
+    public WarpCamera warpCamera;
 
     private Action<AbstractGoTween> _onComplete;
 
@@ -26,6 +27,7 @@ public class WarpManager : MonoBehaviour {
             _onComplete.Invoke(t);
         });
         player.Warp(destination);
+        warpCamera.Warp(destination);
     }
 
     public void SetOnCompleteHandler(Action<AbstractGoTween> handler)

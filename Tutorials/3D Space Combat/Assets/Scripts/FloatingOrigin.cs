@@ -24,7 +24,7 @@ public class FloatingOrigin : MonoBehaviour
 
     void LateUpdate()
     {
-        if (!GameManager.instance.cameraController.IsWarping)
+        if (GameManager.instance.player.CurrentState != Player.State.Warping)
         {
             Vector3 cameraPosition = gameObject.transform.position;
             cameraPosition.y = 0f;

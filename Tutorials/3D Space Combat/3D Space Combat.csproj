@@ -173,6 +173,7 @@
     <Compile Include="Assets\Scripts\UpdateListItem.cs" />
     <Compile Include="Assets\Scripts\UpdatesDisplay.cs" />
     <Compile Include="Assets\Scripts\UtilityHelper.cs" />
+    <Compile Include="Assets\Scripts\Warp\WarpCamera.cs" />
     <Compile Include="Assets\Scripts\Warp\WarpEffects.cs" />
     <Compile Include="Assets\Scripts\Warp\WarpFov.cs" />
     <Compile Include="Assets\Scripts\Warp\WarpManager.cs" />

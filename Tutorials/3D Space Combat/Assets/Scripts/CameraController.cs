@@ -32,6 +32,12 @@ public class CameraController : MonoBehaviour
         }
     }
 
+    public float Damping
+    {
+        get { return damping; }
+        set { damping = value; }
+    }
+
     void Start()
     {
         _anim = GetComponent<Animator>();
@@ -44,6 +50,8 @@ public class CameraController : MonoBehaviour
 
     void LateUpdate()
     {
+        if (_isWarping) return;
+
         _wantedPosition = target.TransformPoint(0, height, -distance);
         transform.localPosition = Vector3.Lerp(transform.position, _wantedPosition, damping * Time.deltaTime);
         //wantedRotation = Quaternion.LookRotation(target.position - transform.position, target.up);
@@ -58,6 +66,11 @@ public class CameraController : MonoBehaviour
             _wantedRotation = Quaternion.LookRotation(target.position - transform.position, target.up);
         }
         transform.localRotation = Quaternion.Slerp(transform.rotation, _wantedRotation, rotationDamping * Time.deltaTime);
+    }
+
+    private void LockToPlayer()
+    {
+        transform.position = target.TransformPoint(0, height, -distance * 2f);
     }
 
     public void PerformDock()
@@ -89,73 +102,14 @@ public class CameraController : MonoBehaviour
     }
 
     #region Warp
-    public void EnterWarp(float effectsTime, float speedLinesSpeed)
+    public void EnterWarp()
     {
         _isWarping = true;
-        //ShakeCamera(2f, 40f, 200f);
-        StartCoroutine(PerformEnterWarp(effectsTime, speedLinesSpeed));
-        damping = 500f;
     }
 
-    public void ExitWarp(float time)
+    public void ExitWarp()
     {
         _isWarping = false;
-        damping = _startingDamping;
-        StartCoroutine(PerformExitWarp(time));
-    }
-
-    IEnumerator PerformEnterWarp(float time, float speedLinesSpeed)
-    {
-        // Field of view
-        Camera cameraGO = cam.GetComponent<Camera>();
-        float startFoV = cameraGO.fieldOfView;
-        float endFoV = cameraGO.fieldOfView + fieldOfViewChange;
-
-        // Speed lines
-        float startLinesSpeed = 0f;
-        float endLinesSpeed = speedLinesSpeed;
-        warpSpeedLines.Play();
-
-        float timeSinceStarted = 0f;
-        float percentageComplete = 0f;
-        float startTime = Time.time;
-
-        while (percentageComplete < 1f)
-        {
-            timeSinceStarted = Time.time - startTime;
-            percentageComplete = timeSinceStarted / time;
-            _tiltShift.maxBlurSize = Mathf.Lerp(0f, 5f, percentageComplete);
-            cameraGO.fieldOfView = Mathf.Lerp(startFoV, endFoV, percentageComplete);
-            warpSpeedLines.startSpeed = Mathf.Lerp(startLinesSpeed, endLinesSpeed, percentageComplete);
-            yield return null;
-        }
-    }
-
-    IEnumerator PerformExitWarp(float time)
-    {
-        // Field of view
-        Camera cameraGO = cam.GetComponent<Camera>();
-        float startFoV = cameraGO.fieldOfView;
-        float endFoV = cameraGO.fieldOfView - fieldOfViewChange;
-
-        // Speed lines
-        float startLinesSpeed = warpSpeedLines.startSpeed;
-        float endLinesSpeed = 0f;
-
-        float timeSinceStarted = 0f;
-        float percentageComplete = 0f;
-        float startTime = Time.time;
-
-        while (percentageComplete < 1f)
-        {
-            timeSinceStarted = Time.time - startTime;
-            percentageComplete = timeSinceStarted / time;
-            _tiltShift.maxBlurSize = Mathf.Lerp(5f, 0f, percentageComplete);
-            cameraGO.fieldOfView = Mathf.Lerp(startFoV, endFoV, percentageComplete);
-            warpSpeedLines.startSpeed = Mathf.Lerp(startLinesSpeed, endLinesSpeed, percentageComplete);
-            yield return null;
-        }
-        warpSpeedLines.Stop();
     }
     #endregion
 

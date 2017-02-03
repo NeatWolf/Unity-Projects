@@ -38,12 +38,13 @@ public class Player : MonoBehaviour
     private float startingBoostSpeed;
     private float startingCombatBoostSpeed;
 
-    private enum State
+    public enum State
     {
         Default,
         WarpStandby,
         Docked,
-        Boosting
+        Boosting,
+        Warping
     }
 
     public bool IsMovementLocked
@@ -53,6 +54,8 @@ public class Player : MonoBehaviour
             return _movementLocked;
         }
     }
+
+    public State CurrentState { get { return _currentState; } }
 
     void Start()
     {
@@ -109,6 +112,8 @@ public class Player : MonoBehaviour
     {
         if (!_controlsLocked && Input.GetKeyDown(KeyCode.Space))
         {
+            _currentState = State.Warping;
+            cameraController.EnterWarp();
             warpManager.SetOnCompleteHandler(t => ExitWarp());
             warpManager.Warp();
         }
@@ -119,6 +124,7 @@ public class Player : MonoBehaviour
         _warpDrive.PowerDown();
         LockMovement(false);
         _currentState = State.Default;
+        cameraController.ExitWarp();
     }
 
     private bool IsInCombat()
