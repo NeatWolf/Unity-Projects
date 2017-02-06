@@ -128,38 +128,6 @@ public class WarpDrive : MonoBehaviour {
         }
     }
 
-    IEnumerator PerformWarpMove(float time, float effectsStartTime, float effectsEndTime, float speedLinesSpeed)
-    {
-        cameraController.EnterWarp(effectsStartTime, speedLinesSpeed);
-        GameManager.instance.cameraController.ShakeCamera(2f, 40f, 0.4f);
-        _state = Enums.WarpDriveState.on;
-        GameObject startPosition = new GameObject();
-        startPosition.transform.position = transform.position;
-        GameObject endPosition = new GameObject();
-        endPosition.transform.position = _targetPosition;
-
-        if (endPosition.transform.position == Vector3.zero)
-        {
-            yield break;
-        }
-
-        float timeSinceStarted = 0f;
-        float percentageComplete = 0f;
-        float startTime = Time.time;
-
-        while (percentageComplete < 1f)
-        {
-            timeSinceStarted = Time.time - startTime;
-            percentageComplete = timeSinceStarted / time;
-            transform.position = Vector3.Lerp(startPosition.transform.position, endPosition.transform.position, percentageComplete);
-            yield return null;
-        }
-        Destroy(startPosition);
-        Destroy(endPosition);
-        cameraController.ExitWarp(effectsEndTime);
-        _state = Enums.WarpDriveState.waitingForCommand;
-    }
-
     private void Countdown(int startTime)
     {
         timer.startTime = startTime;

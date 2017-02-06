@@ -17,10 +17,8 @@ public class Player : MonoBehaviour
     public CameraController cameraController;
     public Camera cam;
     public Transform cameraTarget;
-    public ParticleSystem[] thrusters;
-    public float mouseDelta = 100;
+    public ThrusterGroup thrusters;
     public float lookDamping = 0.1f;
-    public float rotationDamping = 20f;
     public float rotationSpeed = 5f;
     public AudioMixerSnapshot thrusterOnAudio;
     public AudioMixerSnapshot thrusterOffAudio;
@@ -146,11 +144,9 @@ public class Player : MonoBehaviour
             _audioSource.volume = Mathf.Clamp(Vector3.SqrMagnitude(forwardForce) / 882000f, 0f, 0.15f);
         }
 
-        foreach (var thruster in thrusters)
-        {
-            // For moving speed we want lifetime at 0.5, for idle speed we want lifetime at 0.4
-            thruster.startLifetime = Mathf.Clamp(Mathf.Log10(forwardForce.sqrMagnitude / 83.965f) / Mathf.Log10(275855), 0.1f, 0.7f);
-        }
+        var power = Mathf.Log10(forwardForce.sqrMagnitude / 83.965f) / Mathf.Log10(275855);
+        Debug.Log(power);
+        thrusters.SetPower(power);
     }
 
     private Vector3 Move(Vector3 forwardForce)

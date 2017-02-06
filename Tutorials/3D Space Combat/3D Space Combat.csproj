@@ -167,6 +167,8 @@
     <Compile Include="Assets\Scripts\TargetIndicator.cs" />
     <Compile Include="Assets\Scripts\TargetableObject.cs" />
     <Compile Include="Assets\Scripts\TestGameManager.cs" />
+    <Compile Include="Assets\Scripts\Thruster.cs" />
+    <Compile Include="Assets\Scripts\ThrusterGroup.cs" />
     <Compile Include="Assets\Scripts\Timer.cs" />
     <Compile Include="Assets\Scripts\UI\CooldownBar.cs" />
     <Compile Include="Assets\Scripts\UIProgressBarController.cs" />
