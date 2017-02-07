@@ -198,7 +198,6 @@
     <None Include="Assets\_Third Party\EarthRendering Free\Earth.shader" />
     <None Include="Assets\_Third Party\EffectExamples\Shared\Shaders\SurfaceShader_VC.shader" />
     <None Include="Assets\_Third Party\GOKit\Plugins\GoKit\easing\easeEquationsLicense.txt" />
-    <None Include="Assets\_Third Party\GalaxyBox1\instructions.txt" />
     <None Include="Assets\_Third Party\More PostProcessing Effects\Shaders\RadialBlur.shader" />
     <None Include="Assets\_Third Party\Standard Assets\Cameras\CameraGuidelines.txt" />
     <None Include="Assets\_Third Party\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />

@@ -287,7 +287,6 @@
     <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\splines\GoSplineCubicBezierSolver.cs" />
     <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\splines\GoSplineQuadraticBezierSolver.cs" />
     <Compile Include="Assets\_Third Party\GOKit\Plugins\GoKit\properties\splines\GoSplineStraightLineSolver.cs" />
-    <Compile Include="Assets\_Third Party\GalaxyBox1\examplescene.cs" />
     <Compile Include="Assets\_Third Party\More PostProcessing Effects\Scripts\RadialBlur.cs" />
     <Compile Include="Assets\_Third Party\Planet Earth Free\SpinFree.cs" />
     <Compile Include="Assets\_Third Party\Standard Assets\CrossPlatformInput\Scripts\AxisTouchButton.cs" />
@@ -386,7 +385,6 @@
     <None Include="Assets\_Third Party\EarthRendering Free\Earth.shader" />
     <None Include="Assets\_Third Party\EffectExamples\Shared\Shaders\SurfaceShader_VC.shader" />
     <None Include="Assets\_Third Party\GOKit\Plugins\GoKit\easing\easeEquationsLicense.txt" />
-    <None Include="Assets\_Third Party\GalaxyBox1\instructions.txt" />
     <None Include="Assets\_Third Party\More PostProcessing Effects\Shaders\RadialBlur.shader" />
     <None Include="Assets\_Third Party\Standard Assets\Cameras\CameraGuidelines.txt" />
     <None Include="Assets\_Third Party\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
