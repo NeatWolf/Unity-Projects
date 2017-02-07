@@ -17,39 +17,45 @@ public class PauseMenu : MonoBehaviour {
     private GameObject controlsPanelGO;
     private GameObject menuButtonGO;
 
+    void Start()
+    {
+        Close();
+    }
+
     void Update ()
     {
-        if (GameManager.instance.isMenuOpen && GameManager.instance.pauseType == GameManager.PauseType.pauseMenu)
+        if (!Input.GetKeyDown(KeyCode.Escape)) return;
+
+        if (GameManager.instance.pauseType != GameManager.PauseType.none)
         {
-            container.SetActive(true);
-            cameraBlur.enabled = true;
-            Time.timeScale = 0f;
-        }
-        else if (!GameManager.instance.isMenuOpen)
-        {
-            container.SetActive(false);
-            cameraBlur.enabled = false;
-            Time.timeScale = 1f;
+            Close();
+            return;
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (GameManager.instance.isMenuOpen && GameManager.instance.pauseType == GameManager.PauseType.pauseMenu)
-            {
-                GameManager.instance.isMenuOpen = false;
-                GameManager.instance.pauseType = GameManager.PauseType.none;
-            }
-            else if (!GameManager.instance.isMenuOpen)
-            {
-                GameManager.instance.isMenuOpen = true;
-                GameManager.instance.pauseType = GameManager.PauseType.pauseMenu;
-            }
-        }
+        Open();
+    }
+
+    public void Open()
+    {
+        container.SetActive(true);
+        cameraBlur.enabled = true;
+        Time.timeScale = 0f;
+        GameManager.instance.isMenuOpen = true;
+        GameManager.instance.pauseType = GameManager.PauseType.pauseMenu;
+    }
+
+    public void Close()
+    {
+        container.SetActive(false);
+        cameraBlur.enabled = false;
+        Time.timeScale = 1f;
+        GameManager.instance.isMenuOpen = false;
+        GameManager.instance.pauseType = GameManager.PauseType.none;
     }
 
     public void Resume()
     {
-        GameManager.instance.isMenuOpen = false;
+        Close();
     }
 
     public void ShowControls()
