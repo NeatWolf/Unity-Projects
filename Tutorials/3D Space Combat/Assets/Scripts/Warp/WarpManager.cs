@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class WarpManager : MonoBehaviour {
 
+    public WarpUI warpUI;
     public WarpEffects effects;
     public WarpPlayer player;
     public WarpCamera warpCamera;
@@ -18,10 +19,11 @@ public class WarpManager : MonoBehaviour {
 
     public void Warp()
     {
-        Warp(Destination);
+        warpUI.ChargeComplete += Engage;
+        warpUI.Begin();
     }
 
-    public void Warp(Vector3 destination)
+    public void Engage()
     {
         effects.EnterWarp();
         thrusters.SetMaxPower();
@@ -30,10 +32,11 @@ public class WarpManager : MonoBehaviour {
             effects.ExitWarp();
             _onComplete.Invoke(t);
         });
-        player.Warp(destination);
+        player.Warp(Destination);
+        Debug.Log("Warp called");
 
         var camOffset = CalculatePositionOffset(cameraTarget.position, player.transform.position);
-        warpCamera.Warp(destination + camOffset);
+        warpCamera.Warp(Destination + camOffset);
     }
 
     public void SetOnCompleteHandler(Action<AbstractGoTween> handler)

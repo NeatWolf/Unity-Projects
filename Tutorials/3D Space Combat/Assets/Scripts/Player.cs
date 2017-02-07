@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
     public WarpManager warpManager;
 
     private Rigidbody _rb;
-    private WarpDrive _warpDrive;
+    private WarpAudio _warpDrive;
     private float _rotationZ;
     private Vector3 _screenPosition;
     private bool _movementLocked = false;
@@ -57,7 +57,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
-        _warpDrive = GetComponent<WarpDrive>();
+        _warpDrive = GetComponent<WarpAudio>();
         _audioSource = GetComponent<AudioSource>();
         startingBoostSpeed = boostSpeed;
         startingCombatBoostSpeed = combatBoostSpeed;
@@ -92,7 +92,6 @@ public class Player : MonoBehaviour
             if (target == null) return;
 
             LockMovement(true);
-            _warpDrive.SetTarget(target.targetTransform.position);
             warpManager.Destination = target.targetTransform.position;
             StartCoroutine(RotateTowards(target.targetTransform.position));
             _currentState = State.WarpStandby;
@@ -118,7 +117,6 @@ public class Player : MonoBehaviour
 
     private void ExitWarp()
     {
-        _warpDrive.PowerDown();
         LockMovement(false);
         _currentState = State.Default;
         cameraController.ExitWarp();

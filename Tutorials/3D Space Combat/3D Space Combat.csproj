@@ -171,10 +171,12 @@
     <Compile Include="Assets\Scripts\ThrusterGroup.cs" />
     <Compile Include="Assets\Scripts\Timer.cs" />
     <Compile Include="Assets\Scripts\UI\CooldownBar.cs" />
+    <Compile Include="Assets\Scripts\UICountdown.cs" />
     <Compile Include="Assets\Scripts\UIProgressBarController.cs" />
     <Compile Include="Assets\Scripts\UpdateListItem.cs" />
     <Compile Include="Assets\Scripts\UpdatesDisplay.cs" />
     <Compile Include="Assets\Scripts\UtilityHelper.cs" />
+    <Compile Include="Assets\Scripts\Warp\WarpAudio.cs" />
     <Compile Include="Assets\Scripts\Warp\WarpCamera.cs" />
     <Compile Include="Assets\Scripts\Warp\WarpEffects.cs" />
     <Compile Include="Assets\Scripts\Warp\WarpFov.cs" />
@@ -183,7 +185,7 @@
     <Compile Include="Assets\Scripts\Warp\WarpRadialBlur.cs" />
     <Compile Include="Assets\Scripts\Warp\WarpStars.cs" />
     <Compile Include="Assets\Scripts\Warp\WarpStarsGroup.cs" />
-    <Compile Include="Assets\Scripts\WarpDrive.cs" />
+    <Compile Include="Assets\Scripts\Warp\WarpUI.cs" />
     <Compile Include="Assets\Scripts\WarpTarget.cs" />
     <Compile Include="Assets\Scripts\Weapons\ShotgunWeapon.cs" />
     <Compile Include="Assets\Scripts\Weapons\TeleportWeapon.cs" />
