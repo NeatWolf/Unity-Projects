@@ -50,7 +50,6 @@ public class CameraController : MonoBehaviour
         if (_isWarping) return;
 
         transform.localPosition = Vector3.Lerp(transform.position, target.position, damping * Time.deltaTime);
-        //wantedRotation = Quaternion.LookRotation(target.position - transform.position, target.up);
         Quaternion desiredRotation;
         if (!_player.IsMovementLocked)
         {
@@ -81,15 +80,6 @@ public class CameraController : MonoBehaviour
         //Invoke("UnlockController", 6f);
     }
 
-    //private void UnlockController()
-    //{
-    //    transform.position = cam.transform.localPosition;
-    //    transform.rotation = cam.transform.localRotation;
-    //    cam.transform.localPosition = Vector3.zero;
-    //    cam.transform.localRotation = Quaternion.identity;
-    //    isLocked = false;
-    //}
-
     public void ShakeCamera(float duration, float speed, float magnitude)
     {
         _cameraShake.duration = duration;
@@ -116,18 +106,12 @@ public class CameraController : MonoBehaviour
         ShakeCamera(2f, 40f, 0.1f);
         if (GameManager.instance.isInCombat)
         {
-            //damping *= 1.85f;
             StartCoroutine(PerformFollowSpeedUp(1f, 1.85f));
             boostSpeedLines.startSpeed = 250f;
-            //var emission = boostSpeedLines.emission;
-            //var rate = new ParticleSystem.MinMaxCurve();
-            //rate.constantMax = 25f;
-            //emission.rate = rate;
             boostSpeedLines.Play();
         }
         else
         {
-            //damping *= 3f;
             StartCoroutine(PerformFollowSpeedUp(1f, 3f));
             boostSpeedLines.startSpeed = 400f;
             boostSpeedLines.Play();
