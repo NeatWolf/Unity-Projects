@@ -157,7 +157,6 @@
   <ItemGroup>
     <Compile Include="Assets\Editor\GoDummyPathEditor.cs" />
     <Compile Include="Assets\_Third Party\CloudsToy\Editor\CloudsToyEditor.cs" />
-    <Compile Include="Assets\_Third Party\Editor\CrossPlatformInput\CrossPlatformInputInitialize.cs" />
     <Compile Include="Assets\_Third Party\More PostProcessing Effects\Editor\MorePPEffects\RadialBlurEditor.cs" />
     <Compile Include="Assets\_Third Party\Standard Assets\Editor\ImageEffects\AntialiasingEditor.cs" />
     <Compile Include="Assets\_Third Party\Standard Assets\Editor\ImageEffects\BloomAndFlaresEditor.cs" />
