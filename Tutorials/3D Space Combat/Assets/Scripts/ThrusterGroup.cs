@@ -26,4 +26,9 @@ public class ThrusterGroup : MonoBehaviour {
             thruster.AdjustPower(power);
         }
     }
+
+    public void SetMaxPower()
+    {
+        SetPower(1f);
+    }
 }

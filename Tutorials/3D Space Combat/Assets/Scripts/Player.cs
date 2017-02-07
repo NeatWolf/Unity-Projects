@@ -14,14 +14,13 @@ public class Player : MonoBehaviour
     public float lookSpeed = 0.1f;
     public int verticalLookLimit = 60;
     public float tilt = 5.0f;
+    public float lookDamping = 0.05f;
+    public float rotationSpeed = 20f;
     public CameraController cameraController;
-    public Camera cam;
     public Transform cameraTarget;
-    public ThrusterGroup thrusters;
-    public float lookDamping = 0.1f;
-    public float rotationSpeed = 5f;
     public AudioMixerSnapshot thrusterOnAudio;
     public AudioMixerSnapshot thrusterOffAudio;
+    public ThrusterGroup thrusters;
     public WarpManager warpManager;
 
     private Rigidbody _rb;
@@ -145,8 +144,7 @@ public class Player : MonoBehaviour
         }
 
         var power = Mathf.Log10(forwardForce.sqrMagnitude / 83.965f) / Mathf.Log10(275855);
-        Debug.Log(power);
-        thrusters.SetPower(power);
+        if (_currentState != State.Warping) thrusters.SetPower(power);
     }
 
     private Vector3 Move(Vector3 forwardForce)
@@ -218,7 +216,7 @@ public class Player : MonoBehaviour
 
     private void Rotate(float inputHorizontal)
     {
-        _screenPosition = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 1900));
+        _screenPosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 1900));
         Vector3 direction = _screenPosition - transform.position;
         _rotationZ = Screen.width * 0.5f;
 

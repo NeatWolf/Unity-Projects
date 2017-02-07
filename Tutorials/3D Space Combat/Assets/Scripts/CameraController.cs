@@ -9,8 +9,6 @@ public class CameraController : MonoBehaviour
     public ParticleSystem boostSpeedLines;
     public float fieldOfViewChange;
     public Transform target;
-    public float distance = 50;
-    public float height = 5;
     public float damping = 5;
     public float rotationDamping = 20;
 
@@ -19,7 +17,6 @@ public class CameraController : MonoBehaviour
     private TiltShift _tiltShift;
     private float _startingDamping;
     private Vector3 _wantedPosition;
-    private Quaternion _wantedRotation;
     private CameraShake _cameraShake;
     private Player _player;
     private Camera _camera;
@@ -52,25 +49,25 @@ public class CameraController : MonoBehaviour
     {
         if (_isWarping) return;
 
-        _wantedPosition = target.TransformPoint(0, height, -distance);
-        transform.localPosition = Vector3.Lerp(transform.position, _wantedPosition, damping * Time.deltaTime);
+        transform.localPosition = Vector3.Lerp(transform.position, target.position, damping * Time.deltaTime);
         //wantedRotation = Quaternion.LookRotation(target.position - transform.position, target.up);
+        Quaternion desiredRotation;
         if (!_player.IsMovementLocked)
         {
             Vector3 screenPosition = _camera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 1900));
             Vector3 direction = screenPosition - transform.position;
-            _wantedRotation = Quaternion.LookRotation(direction, target.up);
+            desiredRotation = Quaternion.LookRotation(direction, target.up);
         }
         else
         {
-            _wantedRotation = Quaternion.LookRotation(target.position - transform.position, target.up);
+            desiredRotation = Quaternion.LookRotation(target.forward, target.up);
         }
-        transform.localRotation = Quaternion.Slerp(transform.rotation, _wantedRotation, rotationDamping * Time.deltaTime);
+        transform.localRotation = Quaternion.Slerp(transform.rotation, desiredRotation, rotationDamping * Time.deltaTime);
     }
 
     private void LockToPlayer()
     {
-        transform.position = target.TransformPoint(0, height, -distance * 2f);
+        transform.position = target.position;
     }
 
     public void PerformDock()
