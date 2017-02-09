@@ -14,8 +14,14 @@ public class PauseMenu : MonoBehaviour {
     public GameObject menuButtonPrefab;
     public BlurOptimized cameraBlur;
 
-    private GameObject controlsPanelGO;
-    private GameObject menuButtonGO;
+    private GameObject _controlsPanelGO;
+    private GameObject _menuButtonGO;
+    private UiElementHider _uiElementHider;
+
+    void Awake()
+    {
+        _uiElementHider = new UiElementHider("InGameUI");
+    }
 
     void Start()
     {
@@ -35,24 +41,6 @@ public class PauseMenu : MonoBehaviour {
         Open();
     }
 
-    public void Open()
-    {
-        container.SetActive(true);
-        cameraBlur.enabled = true;
-        Time.timeScale = 0f;
-        GameManager.instance.isMenuOpen = true;
-        GameManager.instance.pauseType = GameManager.PauseType.pauseMenu;
-    }
-
-    public void Close()
-    {
-        container.SetActive(false);
-        cameraBlur.enabled = false;
-        Time.timeScale = 1f;
-        GameManager.instance.isMenuOpen = false;
-        GameManager.instance.pauseType = GameManager.PauseType.none;
-    }
-
     public void Resume()
     {
         Close();
@@ -64,9 +52,9 @@ public class PauseMenu : MonoBehaviour {
         menuButtons.SetActive(false);
 
         // Controls Panel
-        controlsPanelGO = Instantiate(controlsPanelPrefab);
-        controlsPanelGO.transform.SetParent(menuActualSize);
-        RectTransform controlsPanelRect = controlsPanelGO.GetComponent<RectTransform>();
+        _controlsPanelGO = Instantiate(controlsPanelPrefab);
+        _controlsPanelGO.transform.SetParent(menuActualSize);
+        RectTransform controlsPanelRect = _controlsPanelGO.GetComponent<RectTransform>();
         controlsPanelRect.anchorMin = new Vector2(0, 0.5f);
         controlsPanelRect.anchorMax = new Vector2(1, 0.5f);
         controlsPanelRect.pivot = new Vector2(0.5f, 0.5f);
@@ -75,16 +63,16 @@ public class PauseMenu : MonoBehaviour {
         controlsPanelRect.offsetMax = new Vector2(-10f, controlsPanelRect.offsetMax.y);
 
         // Back Button
-        menuButtonGO = Instantiate(menuButtonPrefab);
-        menuButtonGO.transform.SetParent(transform);
-        RectTransform menuButtonRect = menuButtonGO.GetComponent<RectTransform>();
+        _menuButtonGO = Instantiate(menuButtonPrefab);
+        _menuButtonGO.transform.SetParent(transform);
+        RectTransform menuButtonRect = _menuButtonGO.GetComponent<RectTransform>();
         menuButtonRect.anchorMin = new Vector2(0.5f, 0.5f);
         menuButtonRect.anchorMax = new Vector2(0.5f, 0.5f);
         menuButtonRect.pivot = new Vector2(0.5f, 0.5f);
         menuButtonRect.anchoredPosition = new Vector2(0f, -menuActualSize.rect.height / 4f);
         menuButtonRect.sizeDelta = new Vector2(350f, menuButtonRect.sizeDelta.y);
         menuButtonRect.GetComponentInChildren<Text>().text = "BACK";
-        menuButtonGO.GetComponent<Button>().onClick.AddListener(() => Back());
+        _menuButtonGO.GetComponent<Button>().onClick.AddListener(() => Back());
     }
 
     public void ExitToMainMenu()
@@ -101,9 +89,29 @@ public class PauseMenu : MonoBehaviour {
     public void Back()
     {
         Debug.Log("Back button was pressed");
-        Destroy(controlsPanelGO);
-        Destroy(menuButtonGO);
+        Destroy(_controlsPanelGO);
+        Destroy(_menuButtonGO);
         headerText.SetActive(true);
         menuButtons.SetActive(true);
+    }
+
+    private void Open()
+    {
+        container.SetActive(true);
+        cameraBlur.enabled = true;
+        Time.timeScale = 0f;
+        GameManager.instance.isMenuOpen = true;
+        GameManager.instance.pauseType = GameManager.PauseType.pauseMenu;
+        _uiElementHider.Hide();
+    }
+
+    private void Close()
+    {
+        container.SetActive(false);
+        cameraBlur.enabled = false;
+        Time.timeScale = 1f;
+        GameManager.instance.isMenuOpen = false;
+        GameManager.instance.pauseType = GameManager.PauseType.none;
+        _uiElementHider.Show();
     }
 }
