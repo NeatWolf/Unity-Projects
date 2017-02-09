@@ -102,13 +102,12 @@
     <None Include="Assets\Shaders\CombineTex.shader" />
     <None Include="Assets\Shaders\CombineTexBump.shader" />
     <None Include="Assets\Shaders\CombineTexBumpShadows.shader" />
-    <None Include="Assets\Shaders\InverseVignetting.shader" />
+    <None Include="Assets\Shaders\InverseVignette.shader" />
     <None Include="Assets\Shaders\My Shadows.cginc" />
     <None Include="Assets\Shaders\PlanetGlow.shader" />
     <None Include="Assets\Shaders\RadialBlur.shader" />
     <None Include="Assets\Shaders\Shield.shader" />
     <None Include="Assets\Shaders\SkyboxHDR.shader" />
-    <None Include="Assets\Shaders\_old_RadialBlur.shader" />
     <None Include="Assets\Standard Assets\Effects\AmbientOcclusion\Resources\AmbientOcclusion.cginc" />
     <None Include="Assets\Standard Assets\Effects\AmbientOcclusion\Resources\AmbientOcclusion.shader" />
     <None Include="Assets\Standard Assets\Effects\AntiAliasing\FXAA\Resources\FXAA.shader" />

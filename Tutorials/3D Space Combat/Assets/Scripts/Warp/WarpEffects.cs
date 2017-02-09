@@ -6,12 +6,14 @@ using UnityEngine;
 public class WarpEffects : MonoBehaviour {
 
     public WarpRadialBlur radialBlur;
+    public WarpVignette vignette;
     public WarpStarsGroup warpStars;
     public WarpFov warpFov;
-    public float radialBlurStrength = 1;
-    public float duration = 1;
+    public float radialBlurStrength = 1f;
+    public float vignetteStrength = 1.4f;
+    public float duration = 1f;
     public GoEaseType easeType = GoEaseType.Linear;
-    public float fOVZoomInValue = 50;
+    public float fOVZoomInValue = 50f;
 
 	void Start ()
     {
@@ -20,7 +22,8 @@ public class WarpEffects : MonoBehaviour {
 
     public void EnterWarp()
     {
-        EnterRadialBlur();
+        BeginRadialBlur();
+        BeginVignette();
         ShrinkFieldOfView();
         BeginStars();
     }
@@ -29,6 +32,7 @@ public class WarpEffects : MonoBehaviour {
     {
         EndStars(duration * 0.1f);
         GrowFieldOfView();
+        EndVignette();
         EndRadialBlur();
     }
 
@@ -42,7 +46,7 @@ public class WarpEffects : MonoBehaviour {
         warpFov.End(duration, easeType);
     }
 
-    private void EnterRadialBlur()
+    private void BeginRadialBlur()
     {
         radialBlur.Begin(duration, radialBlurStrength, easeType);
     }
@@ -50,6 +54,16 @@ public class WarpEffects : MonoBehaviour {
     private void EndRadialBlur()
     {
         radialBlur.End(duration, easeType);
+    }
+
+    private void BeginVignette()
+    {
+        vignette.Begin(duration, vignetteStrength, easeType);
+    }
+
+    private void EndVignette()
+    {
+        vignette.End(duration, easeType);
     }
 
     private void BeginStars()

@@ -13,13 +13,11 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.5.0f3</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -120,7 +118,6 @@
     <Compile Include="Assets\Scripts\FloatingOrigin.cs" />
     <Compile Include="Assets\Scripts\Fog\FogUnit.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
-    <Compile Include="Assets\Scripts\UiElementHider.cs" />
     <Compile Include="Assets\Scripts\GameOverScreen.cs" />
     <Compile Include="Assets\Scripts\Gradient.cs" />
     <Compile Include="Assets\Scripts\HealthController.cs" />
@@ -176,6 +173,7 @@
     <Compile Include="Assets\Scripts\UI\CooldownBar.cs" />
     <Compile Include="Assets\Scripts\UICountdown.cs" />
     <Compile Include="Assets\Scripts\UIProgressBarController.cs" />
+    <Compile Include="Assets\Scripts\UiElementHider.cs" />
     <Compile Include="Assets\Scripts\UpdateListItem.cs" />
     <Compile Include="Assets\Scripts\UpdatesDisplay.cs" />
     <Compile Include="Assets\Scripts\UtilityHelper.cs" />
@@ -189,6 +187,7 @@
     <Compile Include="Assets\Scripts\Warp\WarpStars.cs" />
     <Compile Include="Assets\Scripts\Warp\WarpStarsGroup.cs" />
     <Compile Include="Assets\Scripts\Warp\WarpUI.cs" />
+    <Compile Include="Assets\Scripts\Warp\WarpVignette.cs" />
     <Compile Include="Assets\Scripts\WarpTarget.cs" />
     <Compile Include="Assets\Scripts\Weapons\ShotgunWeapon.cs" />
     <Compile Include="Assets\Scripts\Weapons\TeleportWeapon.cs" />
@@ -355,13 +354,12 @@
     <None Include="Assets\Shaders\CombineTex.shader" />
     <None Include="Assets\Shaders\CombineTexBump.shader" />
     <None Include="Assets\Shaders\CombineTexBumpShadows.shader" />
-    <None Include="Assets\Shaders\InverseVignetting.shader" />
+    <None Include="Assets\Shaders\InverseVignette.shader" />
     <None Include="Assets\Shaders\My Shadows.cginc" />
     <None Include="Assets\Shaders\PlanetGlow.shader" />
     <None Include="Assets\Shaders\RadialBlur.shader" />
     <None Include="Assets\Shaders\Shield.shader" />
     <None Include="Assets\Shaders\SkyboxHDR.shader" />
-    <None Include="Assets\Shaders\_old_RadialBlur.shader" />
     <None Include="Assets\Standard Assets\Effects\AmbientOcclusion\Resources\AmbientOcclusion.cginc" />
     <None Include="Assets\Standard Assets\Effects\AmbientOcclusion\Resources\AmbientOcclusion.shader" />
     <None Include="Assets\Standard Assets\Effects\AntiAliasing\FXAA\Resources\FXAA.shader" />
