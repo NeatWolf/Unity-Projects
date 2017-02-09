@@ -158,7 +158,7 @@ public class NpcSpawnManager : MonoBehaviour {
                 }
                 else
                 {
-                    Debug.LogError("Failed to spawn an NPC");
+                    Debug.LogWarning("Failed to spawn an NPC");
                 }
             }
             else
