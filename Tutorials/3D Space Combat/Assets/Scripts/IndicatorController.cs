@@ -6,23 +6,29 @@ using System.Linq;
 
 public class IndicatorController : MonoBehaviour
 {
-    public TargetIndicator boxIndicatorPrefab;
-    public Image arrowIndicatorPrefab;
-    public DestinationIndicator warpIndicatorPrefab;
-    public Image objectiveArrowPrefab;
-    public ObjectiveIndicator objectiveIconPrefab;
-    public float projectileSpeed;
+    [SerializeField]
+    private TargetIndicator boxIndicatorPrefab;
+    [SerializeField]
+    private Image arrowIndicatorPrefab;
+    [SerializeField]
+    private DestinationIndicator warpIndicatorPrefab;
+    [SerializeField]
+    private Image objectiveArrowPrefab;
+    [SerializeField]
+    private ObjectiveIndicator objectiveIconPrefab;
+    [SerializeField]
+    private float projectileSpeed;
 
-    private List<TargetIndicator> boxIndicatorPool = new List<TargetIndicator>();
-    private int boxPoolUsedCount = 0;
-    private List<Image> arrowIndicatorPool = new List<Image>();
-    private int arrowPoolUsedCount = 0;
-    private List<Image> objectiveArrowPool = new List<Image>();
-    private int objectiveArrowPoolUsedCount = 0;
-    private List<ObjectiveIndicator> objectiveIconPool = new List<ObjectiveIndicator>();
-    private int objectiveIconPoolUsedCount = 0;
-    private Vector3 screenCenter;
-    private DestinationIndicator warpIndicatorInstance;
+    private List<TargetIndicator> _boxIndicatorPool = new List<TargetIndicator>();
+    private int _boxPoolUsedCount = 0;
+    private List<Image> _arrowIndicatorPool = new List<Image>();
+    private int _arrowPoolUsedCount = 0;
+    private List<Image> _objectiveArrowPool = new List<Image>();
+    private int _objectiveArrowPoolUsedCount = 0;
+    private List<ObjectiveIndicator> _objectiveIconPool = new List<ObjectiveIndicator>();
+    private int _objectiveIconPoolUsedCount = 0;
+    private Vector3 _screenCenter;
+    private DestinationIndicator _warpIndicatorInstance;
 
     private readonly float minAlpha = 75f;
     private readonly float maxAlpha = 200f;
@@ -37,16 +43,16 @@ public class IndicatorController : MonoBehaviour
 
     void Start()
     {
-        screenCenter = new Vector3(Screen.width, Screen.height, 0) / 2;
-        warpIndicatorInstance = Instantiate(warpIndicatorPrefab);
-        warpIndicatorInstance.transform.SetParent(transform);
+        _screenCenter = new Vector3(Screen.width, Screen.height, 0) / 2;
+        _warpIndicatorInstance = Instantiate(warpIndicatorPrefab);
+        _warpIndicatorInstance.transform.SetParent(transform);
     }
 
     void LateUpdate()
     {
         resetPool();
 
-        if (!GameManager.instance.isMenuOpen)
+        if (!GameManager.instance.IsMenuOpen)
         {
             // POSITION OBJECTIVE ARROWS AND INDICATORS
             Vector3[] waypoints = GameManager.questManager.GetActiveQuestObjectiveTargets();
@@ -74,7 +80,7 @@ public class IndicatorController : MonoBehaviour
             }
 
             // POSITION ENEMY ARROWS AND BOXES
-            var objects = (GameObject.FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[]).Where(t => t.allegiance == TargetableObject.Allegiance.Enemy);
+            var objects = (GameObject.FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[]).Where(t => t.Allegiance == Enums.Allegiance.Enemy);
 
             foreach (TargetableObject obj in objects)
             {
@@ -89,7 +95,7 @@ public class IndicatorController : MonoBehaviour
                         {
                             TargetIndicator box = getBoxIndicator();
                             box.anchoredPosition = new Vector3(targetPosition.x, targetPosition.y, 0f);
-                            box.healthBarFillAmount = (float)obj.GetComponent<HealthController>().Health / (float)obj.GetComponent<HealthController>().maxHealth;
+                            box.healthBarFillAmount = (float)obj.GetComponent<HealthController>().Health / (float)obj.GetComponent<HealthController>().MaxHealth;
 
                             float multiplier = (maxAlpha - minAlpha) / alphaThreshold;
                             float currentAlpha = maxAlpha;
@@ -118,8 +124,8 @@ public class IndicatorController : MonoBehaviour
             
 
             // Warp target indicators
-            warpIndicatorInstance.gameObject.SetActive(false);
-            if (GameManager.instance.isCursorVisible)
+            _warpIndicatorInstance.gameObject.SetActive(false);
+            if (GameManager.instance.IsCursorVisible)
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
@@ -130,24 +136,24 @@ public class IndicatorController : MonoBehaviour
                     WarpTarget target = hit.collider.gameObject.GetComponent<WarpTarget>();
                     if (target != null)
                     {
-                        warpIndicatorInstance.gameObject.SetActive(true);
-                        warpIndicatorInstance.SetDestinationName(target.targetName);
+                        _warpIndicatorInstance.gameObject.SetActive(true);
+                        _warpIndicatorInstance.SetDestinationName(target.TargetName);
 
                         // Works with sphere colliders
-                        Vector3 centerPosition = Camera.main.WorldToScreenPoint(target.targetBoundary.bounds.center);
-                        float diffPosition = Camera.main.WorldToScreenPoint(target.targetBoundary.bounds.max).y - centerPosition.y;
+                        Vector3 centerPosition = Camera.main.WorldToScreenPoint(target.Bounds.center);
+                        float diffPosition = Camera.main.WorldToScreenPoint(target.Bounds.max).y - centerPosition.y;
                         Vector3 topPosition = centerPosition + new Vector3(0f, diffPosition * 0.8f, 0f);
 
-                        warpIndicatorInstance.SetNamePosition(topPosition);
+                        _warpIndicatorInstance.SetNamePosition(topPosition);
 
                         // Disable entry point indicator if it is currently overlapping an objective marker
-                        if (waypoints == null || !OverlapsWaypoint(waypoints, target.targetTransform.position))
+                        if (waypoints == null || !OverlapsWaypoint(waypoints, target.Position))
                         {
-                            warpIndicatorInstance.SetEntryPointPosition(target.targetTransform.position);
+                            _warpIndicatorInstance.SetEntryPointPosition(target.Position);
                         }
                         else
                         {
-                            warpIndicatorInstance.DisableEntryPoint();
+                            _warpIndicatorInstance.DisableEntryPoint();
                         }
                     }
                 }
@@ -158,113 +164,113 @@ public class IndicatorController : MonoBehaviour
 
     private void resetPool()
     {
-        boxPoolUsedCount = 0;
-        arrowPoolUsedCount = 0;
-        objectiveArrowPoolUsedCount = 0;
-        objectiveIconPoolUsedCount = 0;
+        _boxPoolUsedCount = 0;
+        _arrowPoolUsedCount = 0;
+        _objectiveArrowPoolUsedCount = 0;
+        _objectiveIconPoolUsedCount = 0;
     }
 
     private TargetIndicator getBoxIndicator()
     {
         TargetIndicator box;
-        if(boxPoolUsedCount < boxIndicatorPool.Count)
+        if(_boxPoolUsedCount < _boxIndicatorPool.Count)
         {
-            box = boxIndicatorPool[boxPoolUsedCount];
+            box = _boxIndicatorPool[_boxPoolUsedCount];
         }
         else
         {
             box = Instantiate(boxIndicatorPrefab);
             box.transform.SetParent(transform);
-            boxIndicatorPool.Add(box);
+            _boxIndicatorPool.Add(box);
         }
 
-        boxPoolUsedCount++;
+        _boxPoolUsedCount++;
         return box;
     }
 
     private Image getArrowIndicator()
     {
         Image arrow;
-        if (arrowPoolUsedCount < arrowIndicatorPool.Count)
+        if (_arrowPoolUsedCount < _arrowIndicatorPool.Count)
         {
-            arrow = arrowIndicatorPool[arrowPoolUsedCount];
+            arrow = _arrowIndicatorPool[_arrowPoolUsedCount];
         }
         else
         {
             arrow = Instantiate(arrowIndicatorPrefab);
             arrow.transform.SetParent(transform);
-            arrowIndicatorPool.Add(arrow);
+            _arrowIndicatorPool.Add(arrow);
         }
 
-        arrowPoolUsedCount++;
+        _arrowPoolUsedCount++;
         return arrow;
     }
 
     private Image getObjectiveArrow()
     {
         Image arrow;
-        if (objectiveArrowPoolUsedCount < objectiveArrowPool.Count)
+        if (_objectiveArrowPoolUsedCount < _objectiveArrowPool.Count)
         {
-            arrow = objectiveArrowPool[objectiveArrowPoolUsedCount];
+            arrow = _objectiveArrowPool[_objectiveArrowPoolUsedCount];
         }
         else
         {
             arrow = Instantiate(objectiveArrowPrefab);
             arrow.transform.SetParent(transform);
-            objectiveArrowPool.Add(arrow);
+            _objectiveArrowPool.Add(arrow);
         }
 
-        objectiveArrowPoolUsedCount++;
+        _objectiveArrowPoolUsedCount++;
         return arrow;
     }
 
     private ObjectiveIndicator getObjectiveIcon()
     {
         ObjectiveIndicator icon;
-        if (objectiveIconPoolUsedCount < objectiveIconPool.Count)
+        if (_objectiveIconPoolUsedCount < _objectiveIconPool.Count)
         {
-            icon = objectiveIconPool[objectiveIconPoolUsedCount];
+            icon = _objectiveIconPool[_objectiveIconPoolUsedCount];
         }
         else
         {
             icon = Instantiate(objectiveIconPrefab);
             icon.transform.SetParent(transform);
-            objectiveIconPool.Add(icon);
+            _objectiveIconPool.Add(icon);
         }
 
-        objectiveIconPoolUsedCount++;
+        _objectiveIconPoolUsedCount++;
         return icon;
     }
 
     private void cleanPool()
     {
-        while(arrowIndicatorPool.Count > arrowPoolUsedCount)
+        while(_arrowIndicatorPool.Count > _arrowPoolUsedCount)
         {
-            Image lastArrow = arrowIndicatorPool[arrowIndicatorPool.Count - 1];
-            arrowIndicatorPool.Remove(lastArrow);
+            Image lastArrow = _arrowIndicatorPool[_arrowIndicatorPool.Count - 1];
+            _arrowIndicatorPool.Remove(lastArrow);
             Destroy(lastArrow.gameObject);
         }
 
-        while (boxIndicatorPool.Count > boxPoolUsedCount)
+        while (_boxIndicatorPool.Count > _boxPoolUsedCount)
         {
-            TargetIndicator lastBox = boxIndicatorPool[boxIndicatorPool.Count - 1];
-            boxIndicatorPool.Remove(lastBox);
+            TargetIndicator lastBox = _boxIndicatorPool[_boxIndicatorPool.Count - 1];
+            _boxIndicatorPool.Remove(lastBox);
             Destroy(lastBox.gameObject);
         }
 
         // Objective waypoint offscreen arrows
-        while (objectiveArrowPool.Count > objectiveArrowPoolUsedCount)
+        while (_objectiveArrowPool.Count > _objectiveArrowPoolUsedCount)
         {
-            Image lastArrow = objectiveArrowPool[objectiveArrowPool.Count - 1];
-            objectiveArrowPool.Remove(lastArrow);
+            Image lastArrow = _objectiveArrowPool[_objectiveArrowPool.Count - 1];
+            _objectiveArrowPool.Remove(lastArrow);
             Destroy(lastArrow.gameObject);
         }
 
         // Objective waypoint onscreen indicator
-        while (objectiveIconPool.Count > objectiveIconPoolUsedCount)
+        while (_objectiveIconPool.Count > _objectiveIconPoolUsedCount)
         {
-            ObjectiveIndicator lastIcon = objectiveIconPool[objectiveIconPool.Count - 1];
-            objectiveIconPool.Remove(lastIcon);
+            ObjectiveIndicator lastIcon = _objectiveIconPool[_objectiveIconPool.Count - 1];
+            _objectiveIconPool.Remove(lastIcon);
             Destroy(lastIcon.gameObject);
         }
     }
@@ -300,7 +306,7 @@ public class IndicatorController : MonoBehaviour
         }
 
         // Make origin the center of the screen instead of bottom-left
-        targetPosition -= screenCenter;
+        targetPosition -= _screenCenter;
 
         // Calculate the angle from the center of the screen to the target off-screen
         float angle = Mathf.Atan2(targetPosition.y, targetPosition.x);
@@ -309,11 +315,11 @@ public class IndicatorController : MonoBehaviour
         float cos = Mathf.Cos(angle);
         float sin = -Mathf.Sin(angle);
 
-        targetPosition = screenCenter + new Vector3(sin * 150, cos * 150, 0);
+        targetPosition = _screenCenter + new Vector3(sin * 150, cos * 150, 0);
 
         float m = cos / sin;
 
-        Vector3 screenBounds = screenCenter * 0.97f;
+        Vector3 screenBounds = _screenCenter * 0.97f;
 
         // Top and bottom
         if (cos > 0)
@@ -336,7 +342,7 @@ public class IndicatorController : MonoBehaviour
         }
 
         // Move origin back to bottom-left
-        targetPosition += screenCenter;
+        targetPosition += _screenCenter;
 
         Image arrow;
         switch (arrowType)

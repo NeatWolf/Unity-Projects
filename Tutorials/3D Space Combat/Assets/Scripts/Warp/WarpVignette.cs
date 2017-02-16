@@ -5,7 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(InverseVignette))]
 public class WarpVignette : MonoBehaviour
 {
-
     private InverseVignette _vignette;
     private GoTween _beginTween;
 

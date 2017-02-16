@@ -6,28 +6,32 @@ using System.Linq;
 
 public class LevelUpSystem : MonoBehaviour {
 
-    public GameObject addXPTextPrefab;
-    public GameObject levelUpTextPrefab;
-    public RectTransform mainCanvas;
-    public UIProgressBarController experienceBar;
-    public int nextLevelUp;
+    [SerializeField]
+    private GameObject addXPTextPrefab;
+    [SerializeField]
+    private GameObject levelUpTextPrefab;
+    [SerializeField]
+    private RectTransform mainCanvas;
+    [SerializeField]
+    private UIProgressBarController experienceBar;
+    [SerializeField]
+    private int nextLevelUp;
 
-    private int currentXP = 0;
-    private int level = 1;
+    private int _currentXP = 0;
+    private int _level = 1;
 
     void Start()
     {
-        experienceBar.barEmptyImage.canvasRenderer.SetAlpha(0f);
-        experienceBar.barFullImage.canvasRenderer.SetAlpha(0f);
+        experienceBar.SetAlpha(0f);
     }
 
     public void GainExperience(int amount)
     {
-        currentXP += amount;
+        _currentXP += amount;
         ShowXPPopup(amount);
         StartCoroutine(ShowExperienceBarIncrease());
-        print(string.Format("Current XP: {0}", currentXP));
-        if (currentXP >= nextLevelUp)
+        print(string.Format("Current XP: {0}", _currentXP));
+        if (_currentXP >= nextLevelUp)
         {
             LevelUp();
         }
@@ -36,11 +40,11 @@ public class LevelUpSystem : MonoBehaviour {
     void LevelUp()
     {
         Debug.Log("Level Up!");
-        currentXP = 0;
+        _currentXP = 0;
         experienceBar.fillAmount = 0;
         nextLevelUp += nextLevelUp / 2;
-        level += 1;
-        ShowLevelUpPopup(level);
+        _level += 1;
+        ShowLevelUpPopup(_level);
     }
 
     private void ShowXPPopup(int amount)
@@ -60,19 +64,15 @@ public class LevelUpSystem : MonoBehaviour {
 
     private IEnumerator ShowExperienceBarIncrease()
     {
-        // Fade in
-        experienceBar.barEmptyImage.CrossFadeAlpha(1, 0.5f, false);
-        experienceBar.barFullImage.CrossFadeAlpha(1, 0.5f, false);
+        experienceBar.FadeIn(0.5f);
 
         // Increase bar fill smoothly
-        experienceBar.fillAmount = (float) currentXP / (float) nextLevelUp;
+        experienceBar.fillAmount = (float) _currentXP / (float) nextLevelUp;
 
         // Wait
         yield return new WaitForSeconds(3);
 
-        // Fade out
-        experienceBar.barEmptyImage.CrossFadeAlpha(0, 0.5f, false);
-        experienceBar.barFullImage.CrossFadeAlpha(0, 0.5f, false);
+        experienceBar.FadeOut(0.5f);
     }
 
     private void ShowLevelUpPopup(int level)

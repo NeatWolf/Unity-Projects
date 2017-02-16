@@ -4,8 +4,10 @@ using UnityEngine.UI;
 
 public class DestinationIndicator : MonoBehaviour {
 
-    public Image entryPoint;
-    public Text destinationName;
+    [SerializeField]
+    private Image entryPoint;
+    [SerializeField]
+    private Text destinationName;
 
     public void SetAll(string name, Vector3 namePosition, Vector3 entryPosition)
     {

@@ -4,13 +4,14 @@ using UnityEngine.UI;
 
 public class TargetIndicator : MonoBehaviour {
 
-    public Image box, healthBar, trajectory;
+    [SerializeField]
+    private Image box, healthBar, trajectory;
 
-    private RectTransform rt;
+    private RectTransform _rt;
 
     void Awake()
     {
-        rt = GetComponent<RectTransform>();
+        _rt = GetComponent<RectTransform>();
     }
 
     public bool healthBarVisible
@@ -55,11 +56,11 @@ public class TargetIndicator : MonoBehaviour {
     {
         get
         {
-            return rt.anchoredPosition;
+            return _rt.anchoredPosition;
         }
         set
         {
-            rt.anchoredPosition = value;
+            _rt.anchoredPosition = value;
         }
     }
 }

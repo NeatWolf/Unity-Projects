@@ -5,9 +5,12 @@ using UnityEngine;
 
 public class ThrusterGroup : MonoBehaviour {
 
-    public float maxSize = 1.0f;
-    public float minSize = 0.2f;
-    public List<Thruster> thrusters;
+    [SerializeField]
+    private float maxSize = 1.0f;
+    [SerializeField]
+    private float minSize = 0.2f;
+    [SerializeField]
+    private List<Thruster> thrusters;
 
     void Start()
     {

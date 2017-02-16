@@ -3,10 +3,14 @@ using System.Collections;
 
 public class TestGameManager : MonoBehaviour
 {
-    public GameObject enemyShipPrefab;
-    public GameObject friendlyShipPrefab;
-    public float spawnRadius = 500f;
-    public int spawnCount = 20;
+    [SerializeField]
+    private GameObject enemyShipPrefab;
+    [SerializeField]
+    private GameObject friendlyShipPrefab;
+    [SerializeField]
+    private float spawnRadius = 500f;
+    [SerializeField]
+    private int spawnCount = 20;
 
     [HideInInspector]
     public bool isInCombat = false;

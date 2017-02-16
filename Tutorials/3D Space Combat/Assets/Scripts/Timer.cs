@@ -3,27 +3,32 @@ using System.Collections;
 
 public class Timer : MonoBehaviour {
 
-    public float startTime;
+    [SerializeField]
+    private float startTime;
 
-    [HideInInspector]
-    public float currentTime;
+    public float CurrentTime { get; set; }
+    public float StartTime
+    {
+        get { return startTime; }
+        set { startTime = value; }
+    }
 
     private bool started = false;
 
     void Awake()
     {
-        currentTime = startTime;
+        CurrentTime = startTime;
     }
 	
 	void Update()
     {
         if (started)
         {
-            currentTime -= Time.deltaTime;
+            CurrentTime -= Time.deltaTime;
 
-            if (currentTime < 0)
+            if (CurrentTime < 0)
             {
-                currentTime = 0;
+                CurrentTime = 0;
                 started = false;
             }
         }
@@ -37,7 +42,7 @@ public class Timer : MonoBehaviour {
     public void StopTimer()
     {
         started = false;
-        currentTime = startTime;
+        CurrentTime = startTime;
     }
 
     public void PauseTimer()
@@ -47,6 +52,6 @@ public class Timer : MonoBehaviour {
 
     public void ResetTimer()
     {
-        currentTime = startTime;
+        CurrentTime = startTime;
     }
 }

@@ -21,7 +21,7 @@ public class ShotgunWeapon : MonoBehaviour {
 
     void Update()
     {
-        if (GameManager.instance.isShootingEnabled && CompareTag("PlayerWeapon") && !GameManager.instance.isMenuOpen)
+        if (GameManager.instance.IsShootingEnabled && CompareTag("PlayerWeapon") && !GameManager.instance.IsMenuOpen)
         {
             if (Input.GetMouseButtonDown(1) && !cooldownBar.CoolingDown)
             {

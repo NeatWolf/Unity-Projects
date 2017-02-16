@@ -4,16 +4,19 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour {
 
-    public Camera cam;
-    public GameObject controlsGameObject;
-    public GameObject menuGameObject;
+    [SerializeField]
+    private Camera cam;
+    [SerializeField]
+    private GameObject controlsGameObject;
+    [SerializeField]
+    private GameObject menuGameObject;
 
-    private Animator camAnim;
+    private Animator _camAnim;
 
     void Start()
     {
         controlsGameObject.SetActive(false);
-        camAnim = cam.GetComponent<Animator>();
+        _camAnim = cam.GetComponent<Animator>();
     }
 
     public void NewGame()
@@ -30,7 +33,7 @@ public class MainMenu : MonoBehaviour {
 
     public void Options()
     {
-        camAnim.SetTrigger("EnterControls");
+        _camAnim.SetTrigger("EnterControls");
         controlsGameObject.SetActive(true);
     }
 }

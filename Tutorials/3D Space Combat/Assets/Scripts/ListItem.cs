@@ -3,10 +3,13 @@ using System.Collections;
 
 public class ListItem : MonoBehaviour {
 
-    public string displayName;
+    [SerializeField]
+    private string displayName;
 
     [Multiline]
-    public string description;
+    [SerializeField]
+    private string description;
 
-    public Sprite sprite;
+    [SerializeField]
+    private Sprite sprite;
 }

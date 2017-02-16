@@ -3,49 +3,52 @@ using System.Collections;
 
 public class SpaceDust : MonoBehaviour {
 
-    public int particleCount;
-    public float particleSize;
-    public float clusterSize;
+    [SerializeField]
+    private int particleCount;
+    [SerializeField]
+    private float particleSize;
+    [SerializeField]
+    private float clusterSize;
 
-    private Transform location;
-    private ParticleSystem ps;
-    private ParticleSystem.Particle[] points;
-    private float clusterSizeSqr;
+    private Transform _location;
+    private ParticleSystem _ps;
+    private ParticleSystem.Particle[] _points;
+    private float _clusterSizeSqr;
 
 	void Start ()
     {
-        ps = GetComponent<ParticleSystem>();
-        location = transform;
-        clusterSizeSqr = clusterSize * clusterSize;
+        _ps = GetComponent<ParticleSystem>();
+        _location = transform;
+        _clusterSizeSqr = clusterSize * clusterSize;
 	}
 	
 	void Update ()
     {
-	    if(points == null)
+	    if(_points == null)
         {
             CreateParticles();
         }
 
         for(int i = 0; i < particleCount; i++)
         {
-            if ((points[i].position - location.position).sqrMagnitude > clusterSizeSqr)
+            if ((_points[i].position - _location.position).sqrMagnitude > _clusterSizeSqr)
             {
-                points[i].position = Random.insideUnitSphere * clusterSize + location.position;
+                _points[i].position = Random.insideUnitSphere * clusterSize + _location.position;
             }
         }
 
-        ps.SetParticles(points, points.Length);
+        _ps.SetParticles(_points, _points.Length);
 	}
 
     private void CreateParticles()
     {
-        points = new ParticleSystem.Particle[particleCount];
+        _points = new ParticleSystem.Particle[particleCount];
 
         for (int i = 0; i < particleCount; i++)
         {
-            points[i].position = Random.insideUnitSphere * clusterSize + location.position;
-            points[i].startColor = new Color(1, 1, 1, 1);
-            points[i].startSize = particleSize;
+            _points[i].position = Random.insideUnitSphere * clusterSize + _location.position;
+            _points[i].startColor = new Color(1, 1, 1, 1);
+            _points[i].startSize = particleSize;
         }
     }
 }

@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Thruster : MonoBehaviour {
 
-    public ParticleSystem thruster;
+    [SerializeField]
+    private ParticleSystem thruster;
 	
 	public void AdjustPower(float size)
     {

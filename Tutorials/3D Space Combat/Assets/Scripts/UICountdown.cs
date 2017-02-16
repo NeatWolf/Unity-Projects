@@ -6,8 +6,10 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Text))]
 public class UICountdown : MonoBehaviour {
 
-    public string formattedText;
-    public float startTimeLeft;
+    [SerializeField]
+    private string formattedText;
+    [SerializeField]
+    private float startTimeLeft;
 
     private bool _ticking;
     private Text _uiText;

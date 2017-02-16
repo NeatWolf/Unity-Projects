@@ -4,8 +4,10 @@ using UnityEngine.UI;
 
 public class ObjectiveIndicator : MonoBehaviour {
 
-    public Image iconImage;
-    public Text distanceText;
+    [SerializeField]
+    private Image iconImage;
+    [SerializeField]
+    private Text distanceText;
 
     public void SetDistance(float distance)
     {

@@ -27,7 +27,7 @@ public class AISimple : MonoBehaviour {
     private AIWeaponController weaponController;
     private Maneuver currentManeuver;
     private bool isStrafingRight;
-    private TargetableObject.Allegiance allegiance;
+    private Enums.Allegiance allegiance;
 
     private Quaternion rotationChange = Quaternion.identity;
     private bool attackInitialized;
@@ -42,7 +42,7 @@ public class AISimple : MonoBehaviour {
     {
         rb = GetComponent<Rigidbody>();
         weaponController = GetComponent<AIWeaponController>();
-        allegiance = GetComponent<TargetableObject>().allegiance;
+        allegiance = GetComponent<TargetableObject>().Allegiance;
     }
 
     void Start()
@@ -100,7 +100,7 @@ public class AISimple : MonoBehaviour {
         {
             chooseTargetTimer = Time.time + Random.Range(5, 30);
 
-            var objects = (FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[]).Where(t => t.allegiance == TargetableObject.Allegiance.Friendly).ToList();
+            var objects = (FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[]).Where(t => t.Allegiance == Enums.Allegiance.Friendly).ToList();
 
             // Check if there is an appropriate target
             if (objects != null && objects.Count > 0)

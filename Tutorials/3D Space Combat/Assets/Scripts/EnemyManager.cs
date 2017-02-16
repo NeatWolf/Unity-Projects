@@ -3,32 +3,38 @@ using System.Collections;
 
 public class EnemyManager : MonoBehaviour {
 
-    public GameObject enemy;
-    public float spawnTime = 10f;
-    public int spawnNumber = 5;
-    public Transform[] spawnPointTransforms;
-    public Transform player;
-    public SpawnPoint spawnPoint;
+    [SerializeField]
+    private GameObject enemy;
+    [SerializeField]
+    private float spawnTime = 10f;
+    [SerializeField]
+    private int spawnNumber = 5;
+    [SerializeField]
+    private Transform[] spawnPointTransforms;
+    [SerializeField]
+    private Transform player;
+    [SerializeField]
+    private SpawnPoint spawnPoint;
 
-    private SpawnPoint[] spawnPoints;
+    private SpawnPoint[] _spawnPoints;
 
     void Start()
     {
-        spawnPoints = new SpawnPoint[spawnPointTransforms.Length];
+        _spawnPoints = new SpawnPoint[spawnPointTransforms.Length];
         for(int i = 0; i < spawnPointTransforms.Length - 1; i++)
         {
-            spawnPoints[i] = Instantiate(spawnPoint, spawnPointTransforms[i].position, spawnPointTransforms[i].rotation) as SpawnPoint;
+            _spawnPoints[i] = Instantiate(spawnPoint, spawnPointTransforms[i].position, spawnPointTransforms[i].rotation) as SpawnPoint;
         }
     }
 
 	void Update ()
     {
-        foreach(SpawnPoint spawnPoint in spawnPoints)
+        foreach(SpawnPoint spawnPoint in _spawnPoints)
         {
-            if(spawnPoint != null && !spawnPoint.used && Vector3.Distance(player.position, spawnPoint.transform.position) < 1000)
+            if(spawnPoint != null && !spawnPoint.Used && Vector3.Distance(player.position, spawnPoint.transform.position) < 1000)
             {
                 StartCoroutine(SpawnWave(spawnPoint.transform, spawnNumber, spawnTime));
-                spawnPoint.used = true;
+                spawnPoint.Used = true;
             }
         }
 	}

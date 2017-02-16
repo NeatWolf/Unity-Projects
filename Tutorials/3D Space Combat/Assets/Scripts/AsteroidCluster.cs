@@ -4,17 +4,25 @@ using System.Collections.Generic;
 
 public class AsteroidCluster : MonoBehaviour {
 
-    public GameObject[] asteroidPrefabs;
-    public int asteroidCount;
-    public float minSize, maxSize;
-
-    public AsteroidFieldType type;
-    public float innerRadius, outerRadius;
-    public float heightY;
-    public float widthX, lengthZ;
-
-    public CloudsToy cloudsPrefab;
-    public int fogAmount;
+    [SerializeField]
+    private GameObject[] asteroidPrefabs;
+    [SerializeField]
+    private int asteroidCount;
+    [SerializeField]
+    private float minSize, maxSize;
+    [SerializeField]
+    private AsteroidFieldType type;
+    [SerializeField]
+    private float innerRadius, outerRadius;
+    [SerializeField]
+    private float heightY;
+    [SerializeField]
+    private float widthX, lengthZ;
+    [Header("Fog")]
+    [SerializeField]
+    private CloudsToy cloudsPrefab;
+    [SerializeField]
+    private int fogAmount;
 
     public enum AsteroidFieldType
     {

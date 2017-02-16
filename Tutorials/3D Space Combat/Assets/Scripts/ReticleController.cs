@@ -3,14 +3,20 @@ using System.Collections;
 
 public class ReticleController : MonoBehaviour {
 
-    public bool menuScene = false;
-    public Texture2D reticleTexture;
-    public Texture2D cursorTexture;
-    public CursorMode cursorMode = CursorMode.Auto;
-    public Vector2 reticleHotSpot = Vector2.zero;
-    public Vector2 cursorHotSpot = Vector2.zero;
+    [SerializeField]
+    private bool menuScene = false;
+    [SerializeField]
+    private Texture2D reticleTexture;
+    [SerializeField]
+    private Texture2D cursorTexture;
+    [SerializeField]
+    private CursorMode cursorMode = CursorMode.Auto;
+    [SerializeField]
+    private Vector2 reticleHotSpot = Vector2.zero;
+    [SerializeField]
+    private Vector2 cursorHotSpot = Vector2.zero;
 
-    private bool isPaused = false;
+    private bool _isPaused = false;
 
     void Start()
     {
@@ -30,10 +36,10 @@ public class ReticleController : MonoBehaviour {
     {
         if (GameManager.instance != null)
         {
-            bool gamePaused = GameManager.instance.isMenuOpen;
-            if (gamePaused != isPaused)
+            bool gamePaused = GameManager.instance.IsMenuOpen;
+            if (gamePaused != _isPaused)
             {
-                isPaused = gamePaused;
+                _isPaused = gamePaused;
                 if (gamePaused)
                 {
                     Cursor.SetCursor(cursorTexture, cursorHotSpot, cursorMode);
@@ -43,7 +49,7 @@ public class ReticleController : MonoBehaviour {
                     Cursor.SetCursor(reticleTexture, reticleHotSpot, cursorMode);
                 }
             }
-            if (!GameManager.instance.isCursorVisible && !gamePaused)
+            if (!GameManager.instance.IsCursorVisible && !gamePaused)
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;

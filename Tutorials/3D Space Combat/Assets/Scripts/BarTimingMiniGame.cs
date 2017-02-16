@@ -4,12 +4,18 @@ using UnityEngine.UI;
 
 public class BarTimingMiniGame : MonoBehaviour {
 
-    public float perfectPosition;
-    public float perfectRange;
-    public float acceptedRange;
-    public Image cursor;
-    public Image bar;
-    public int timeInSeconds = 5;
+    [SerializeField]
+    private float perfectPosition;
+    [SerializeField]
+    private float perfectRange;
+    [SerializeField]
+    private float acceptedRange;
+    [SerializeField]
+    private Image cursor;
+    [SerializeField]
+    private Image bar;
+    [SerializeField]
+    private int timeInSeconds = 5;
 
     public delegate void MiniGameResultDelegate(Enums.MiniGameResult result);
     public event MiniGameResultDelegate ResultReady;

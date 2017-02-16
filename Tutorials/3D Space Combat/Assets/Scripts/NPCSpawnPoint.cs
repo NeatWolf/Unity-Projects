@@ -3,20 +3,14 @@ using System.Collections;
 
 public class NPCSpawnPoint : MonoBehaviour {
 
-    public Animation enterAnim;
-    public Animation exitAnim;
-    public Vector2 waitBetweenSpawns;
-    public GameObject[] shipPrefabs;
-
-	void Start ()
-    {
-
-	}
-	
-	void Update ()
-    {
-	
-	}
+    [SerializeField]
+    private Animation enterAnim;
+    [SerializeField]
+    private Animation exitAnim;
+    [SerializeField]
+    private Vector2 waitBetweenSpawns;
+    [SerializeField]
+    private GameObject[] shipPrefabs;
 
     private void SpawnNPC(NPCSpawnPoint destination)
     {

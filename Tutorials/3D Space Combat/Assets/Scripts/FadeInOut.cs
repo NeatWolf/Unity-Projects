@@ -7,7 +7,7 @@ public class FadeInOut : MonoBehaviour {
 
     public static FadeInOut instance;
 
-    private Animator anim;
+    private Animator _anim;
 
     void Awake()
     {
@@ -24,7 +24,7 @@ public class FadeInOut : MonoBehaviour {
 
     void Start()
     {
-        anim = GetComponent<Animator>();
+        _anim = GetComponent<Animator>();
     }
 
     public void LoadLevel(string name)
@@ -40,14 +40,14 @@ public class FadeInOut : MonoBehaviour {
 
     IEnumerator LoadLevelCoroutine(string name)
     {
-        anim.Play("FadeOut");
+        _anim.Play("FadeOut");
         yield return new WaitForSeconds(1f);
         SceneManager.LoadScene(name);
     }
 
     IEnumerator LoadLevelCoroutine(int buildIndex)
     {
-        anim.Play("FadeOut");
+        _anim.Play("FadeOut");
         yield return new WaitForSeconds(1f);
         SceneManager.LoadScene(buildIndex);
     }

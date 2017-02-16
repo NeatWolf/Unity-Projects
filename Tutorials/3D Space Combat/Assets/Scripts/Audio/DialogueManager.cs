@@ -50,7 +50,7 @@ public class DialogueManager : MonoBehaviour {
 
 	void Update ()
     {
-        if (!GameManager.instance.isMenuOpen)
+        if (!GameManager.instance.IsMenuOpen)
         {
             if ((dialogueAudio != null) && (audioSource.clip != null) && audioSource.clip.name == dialogueAudio.name)
             {

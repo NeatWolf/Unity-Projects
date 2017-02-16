@@ -4,10 +4,14 @@ using Assets.Scripts;
 
 public class Shield : MonoBehaviour {
 
-    public float rechargeRate;
-    public float waitBeforeRecharge = 5f;
-    public float maxCharge;
-    public UIProgressBarController healthBar;
+    [SerializeField]
+    private float rechargeRate;
+    [SerializeField]
+    private float waitBeforeRecharge = 5f;
+    [SerializeField]
+    private float maxCharge;
+    [SerializeField]
+    private UIProgressBarController healthBar;
 
     private Renderer _renderer;
     private float _charge;

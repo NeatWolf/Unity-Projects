@@ -17,4 +17,11 @@ public class Enums : ScriptableObject {
         good,
         bad
     }
+
+    public enum Allegiance
+    {
+        Friendly,
+        Enemy,
+        Inanimate
+    }
 }

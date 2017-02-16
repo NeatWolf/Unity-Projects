@@ -4,13 +4,20 @@ using UnityStandardAssets.ImageEffects;
 
 public class CameraController : MonoBehaviour
 {
-    public Transform cam;
-    public ParticleSystem warpSpeedLines;
-    public ParticleSystem boostSpeedLines;
-    public float fieldOfViewChange;
-    public Transform target;
-    public float damping = 5;
-    public float rotationDamping = 20;
+    [SerializeField]
+    private Transform cam;
+    [SerializeField]
+    private ParticleSystem warpSpeedLines;
+    [SerializeField]
+    private ParticleSystem boostSpeedLines;
+    [SerializeField]
+    private float fieldOfViewChange;
+    [SerializeField]
+    private Transform target;
+    [SerializeField]
+    private float damping = 5;
+    [SerializeField]
+    private float rotationDamping = 20;
 
     private bool _isWarping = false;
     private Animator _anim;
@@ -23,10 +30,7 @@ public class CameraController : MonoBehaviour
 
     public bool IsWarping
     {
-        get
-        {
-            return _isWarping;
-        }
+        get { return _isWarping; }
     }
 
     public float Damping
@@ -82,9 +86,9 @@ public class CameraController : MonoBehaviour
 
     public void ShakeCamera(float duration, float speed, float magnitude)
     {
-        _cameraShake.duration = duration;
-        _cameraShake.speed = speed;
-        _cameraShake.magnitude = magnitude;
+        _cameraShake.Duration = duration;
+        _cameraShake.Speed = speed;
+        _cameraShake.Magnitude = magnitude;
         _cameraShake.PlayShake();
     }
 
@@ -104,7 +108,7 @@ public class CameraController : MonoBehaviour
     public void EnterBoost()
     {
         ShakeCamera(2f, 40f, 0.1f);
-        if (GameManager.instance.isInCombat)
+        if (GameManager.instance.IsInCombat)
         {
             StartCoroutine(PerformFollowSpeedUp(1f, 1.85f));
             boostSpeedLines.startSpeed = 250f;

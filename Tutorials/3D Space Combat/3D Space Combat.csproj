@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.5.0f3</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -126,7 +128,6 @@
     <Compile Include="Assets\Scripts\LevelUpSystem.cs" />
     <Compile Include="Assets\Scripts\ListItem.cs" />
     <Compile Include="Assets\Scripts\ListItemResponder.cs" />
-    <Compile Include="Assets\Scripts\Loader.cs" />
     <Compile Include="Assets\Scripts\MainMenu.cs" />
     <Compile Include="Assets\Scripts\MainMenuManager.cs" />
     <Compile Include="Assets\Scripts\MenuButtonAudio.cs" />
@@ -137,8 +138,6 @@
     <Compile Include="Assets\Scripts\NPC\NpcSpawnManager.cs" />
     <Compile Include="Assets\Scripts\NPC\NpcSpawner.cs" />
     <Compile Include="Assets\Scripts\NPC\NpcType.cs" />
-    <Compile Include="Assets\Scripts\NPCGroup.cs" />
-    <Compile Include="Assets\Scripts\NPCManager.cs" />
     <Compile Include="Assets\Scripts\NPCSpawnPoint.cs" />
     <Compile Include="Assets\Scripts\ObjectiveIndicator.cs" />
     <Compile Include="Assets\Scripts\PauseMenu.cs" />
@@ -176,7 +175,6 @@
     <Compile Include="Assets\Scripts\UiElementHider.cs" />
     <Compile Include="Assets\Scripts\UpdateListItem.cs" />
     <Compile Include="Assets\Scripts\UpdatesDisplay.cs" />
-    <Compile Include="Assets\Scripts\UtilityHelper.cs" />
     <Compile Include="Assets\Scripts\Warp\WarpAudio.cs" />
     <Compile Include="Assets\Scripts\Warp\WarpCamera.cs" />
     <Compile Include="Assets\Scripts\Warp\WarpEffects.cs" />

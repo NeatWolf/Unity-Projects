@@ -5,8 +5,10 @@ using System;
 
 public class MenuButtonAudio : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler {
 
-    public AudioClip highlightClip;
-    public AudioClip clickClip;
+    [SerializeField]
+    private AudioClip highlightClip;
+    [SerializeField]
+    private AudioClip clickClip;
 
     public void OnPointerEnter(PointerEventData eventData)
     {

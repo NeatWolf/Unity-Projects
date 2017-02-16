@@ -5,23 +5,40 @@ using System.Linq;
 
 public class Player : MonoBehaviour
 {
-    public float idleSpeed = 100.0f;
-    public float moveSpeed = 200.0f;
-    public float strafeSpeed = 100.0f;
-    public float strafeRotation = 5f;
-    public float combatBoostSpeed = 400.0f;
-    public float boostSpeed = 1000.0f;
-    public float lookSpeed = 0.1f;
-    public int verticalLookLimit = 60;
-    public float tilt = 5.0f;
-    public float lookDamping = 0.05f;
-    public float rotationSpeed = 20f;
-    public CameraController cameraController;
-    public Transform cameraTarget;
-    public AudioMixerSnapshot thrusterOnAudio;
-    public AudioMixerSnapshot thrusterOffAudio;
-    public ThrusterGroup thrusters;
-    public WarpManager warpManager;
+    [SerializeField]
+    private float idleSpeed = 100.0f;
+    [SerializeField]
+    private float moveSpeed = 200.0f;
+    [SerializeField]
+    private float strafeSpeed = 100.0f;
+    [SerializeField]
+    private float strafeRotation = 5f;
+    [SerializeField]
+    private float combatBoostSpeed = 400.0f;
+    [SerializeField]
+    private float boostSpeed = 1000.0f;
+    [SerializeField]
+    private float lookSpeed = 0.1f;
+    [SerializeField]
+    private int verticalLookLimit = 60;
+    [SerializeField]
+    private float tilt = 5.0f;
+    [SerializeField]
+    private float lookDamping = 0.05f;
+    [SerializeField]
+    private float rotationSpeed = 20f;
+    [SerializeField]
+    private CameraController cameraController;
+    [SerializeField]
+    private Transform cameraTarget;
+    [SerializeField]
+    private AudioMixerSnapshot thrusterOnAudio;
+    [SerializeField]
+    private AudioMixerSnapshot thrusterOffAudio;
+    [SerializeField]
+    private ThrusterGroup thrusters;
+    [SerializeField]
+    private WarpManager warpManager;
 
     private Rigidbody _rb;
     private WarpAudio _warpDrive;
@@ -31,9 +48,8 @@ public class Player : MonoBehaviour
     private bool _controlsLocked = false;
     private State _currentState = State.Default;
     private AudioSource _audioSource;
-
-    private float startingBoostSpeed;
-    private float startingCombatBoostSpeed;
+    private float _startingBoostSpeed;
+    private float _startingCombatBoostSpeed;
 
     public enum State
     {
@@ -59,8 +75,8 @@ public class Player : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         _warpDrive = GetComponent<WarpAudio>();
         _audioSource = GetComponent<AudioSource>();
-        startingBoostSpeed = boostSpeed;
-        startingCombatBoostSpeed = combatBoostSpeed;
+        _startingBoostSpeed = boostSpeed;
+        _startingCombatBoostSpeed = combatBoostSpeed;
         boostSpeed = 0f;
         combatBoostSpeed = 0f;
     }
@@ -77,7 +93,7 @@ public class Player : MonoBehaviour
         if (!_controlsLocked && Input.GetKeyDown(KeyCode.Tab)) LockOntoWarpTarget();
         if (_currentState == State.WarpStandby) EngageWarp();
 
-        GameManager.instance.isInCombat = IsInCombat();
+        GameManager.instance.IsInCombat = IsInCombat();
     }
 
     private void LockOntoWarpTarget()
@@ -92,8 +108,8 @@ public class Player : MonoBehaviour
             if (target == null) return;
 
             LockMovement(true);
-            warpManager.Destination = target.targetTransform.position;
-            StartCoroutine(RotateTowards(target.targetTransform.position));
+            warpManager.Destination = target.Position;
+            StartCoroutine(RotateTowards(target.Position));
             _currentState = State.WarpStandby;
         }
     }
@@ -125,7 +141,7 @@ public class Player : MonoBehaviour
     private bool IsInCombat()
     {
         var targetableObjects = (GameObject.FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[]);
-        var enemies = targetableObjects.Where(t => t.allegiance == TargetableObject.Allegiance.Enemy);
+        var enemies = targetableObjects.Where(t => t.Allegiance == Enums.Allegiance.Enemy);
         var closeEnemies = enemies.Where(t => Vector3.Distance(t.transform.position, transform.position) < 500).Count();
 
         return closeEnemies > 0;
@@ -156,7 +172,7 @@ public class Player : MonoBehaviour
 
         forwardForce = AddForwardForce(forwardForce, inputVertical);
 
-        forwardForce += transform.forward * (GameManager.instance.isInCombat ? combatBoostSpeed : boostSpeed);
+        forwardForce += transform.forward * (GameManager.instance.IsInCombat ? combatBoostSpeed : boostSpeed);
 
         Rotate(inputHorizontal);
         _rb.AddForce(forwardForce);
@@ -173,11 +189,11 @@ public class Player : MonoBehaviour
 
             if (_currentState == State.Boosting)
             {
-                StartCoroutine(LerpBoost(1f, GameManager.instance.isInCombat ? startingCombatBoostSpeed : startingBoostSpeed, 0f, GameManager.instance.isInCombat));
+                StartCoroutine(LerpBoost(1f, GameManager.instance.IsInCombat ? _startingCombatBoostSpeed : _startingBoostSpeed, 0f, GameManager.instance.IsInCombat));
                 cameraController.ExitBoost();
 
                 _currentState = State.Default;
-                GameManager.instance.isShootingEnabled = true;
+                GameManager.instance.IsShootingEnabled = true;
             }
             return forwardForce;
         }
@@ -196,19 +212,19 @@ public class Player : MonoBehaviour
         {
             if (_currentState != State.Boosting)
             {
-                StartCoroutine(LerpBoost(1f, 0f, GameManager.instance.isInCombat ? startingCombatBoostSpeed : startingBoostSpeed, GameManager.instance.isInCombat));
+                StartCoroutine(LerpBoost(1f, 0f, GameManager.instance.IsInCombat ? _startingCombatBoostSpeed : _startingBoostSpeed, GameManager.instance.IsInCombat));
                 cameraController.EnterBoost();
             }
             _currentState = State.Boosting;
-            GameManager.instance.isShootingEnabled = false;
+            GameManager.instance.IsShootingEnabled = false;
         }
         else if (_currentState == State.Boosting)
         {
-            StartCoroutine(LerpBoost(1f, GameManager.instance.isInCombat ? startingCombatBoostSpeed : startingBoostSpeed, 0f, GameManager.instance.isInCombat));
+            StartCoroutine(LerpBoost(1f, GameManager.instance.IsInCombat ? _startingCombatBoostSpeed : _startingBoostSpeed, 0f, GameManager.instance.IsInCombat));
             cameraController.ExitBoost();
 
             _currentState = State.Default;
-            GameManager.instance.isShootingEnabled = true;
+            GameManager.instance.IsShootingEnabled = true;
         }
     }
 
@@ -292,8 +308,8 @@ public class Player : MonoBehaviour
         Debug.Log("Player docking coroutine");
         _currentState = State.Docked;
         LockMovement(true);
-        GameManager.instance.isShootingEnabled = false;
-        GameManager.instance.isCursorVisible = false;
+        GameManager.instance.IsShootingEnabled = false;
+        GameManager.instance.IsCursorVisible = false;
         Vector3 startPosition = transform.position;
         Quaternion startRotation = transform.rotation;
         Vector3 midPosition = dockingTransform.position + new Vector3(0f, 10f, 0f);
@@ -362,8 +378,8 @@ public class Player : MonoBehaviour
         }
         _currentState = State.Default;
         LockMovement(false);
-        GameManager.instance.isShootingEnabled = true;
-        GameManager.instance.isCursorVisible = true;
+        GameManager.instance.IsShootingEnabled = true;
+        GameManager.instance.IsCursorVisible = true;
     }
     #endregion
 }

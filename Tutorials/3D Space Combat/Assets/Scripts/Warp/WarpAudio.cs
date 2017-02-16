@@ -29,7 +29,7 @@ public class WarpAudio : MonoBehaviour {
     {
         if (_countingDown)
         {
-            if (timer.currentTime > 0)
+            if (timer.CurrentTime > 0)
             {
                 if (!_startingSoundPlayed)
                 {
@@ -37,7 +37,7 @@ public class WarpAudio : MonoBehaviour {
                     _playAudioSource.Play();
                     _startingSoundPlayed = true;
                 }
-                if (!_chargingSoundPlayed && timer.currentTime < 6.4f && timer.currentTime > 6.2f)
+                if (!_chargingSoundPlayed && timer.CurrentTime < 6.4f && timer.CurrentTime > 6.2f)
                 {
                     if (_playAudioSource.isPlaying)
                     {
@@ -46,7 +46,7 @@ public class WarpAudio : MonoBehaviour {
                     audioSource.PlayOneShot(warpChargingSound, 1f);
                     _chargingSoundPlayed = true;
                 }
-                if (!_boomSoundPlayed && timer.currentTime < 2.5f && timer.currentTime > 2.3f)
+                if (!_boomSoundPlayed && timer.CurrentTime < 2.5f && timer.CurrentTime > 2.3f)
                 {
                     if (_playAudioSource.isPlaying)
                     {
@@ -94,7 +94,7 @@ public class WarpAudio : MonoBehaviour {
 
     private void Countdown(int startTime)
     {
-        timer.startTime = startTime;
+        timer.StartTime = startTime;
         timer.ResetTimer();
         timer.StartTimer();
     }
@@ -104,10 +104,10 @@ public class WarpAudio : MonoBehaviour {
         switch (result)
         {
             case Enums.MiniGameResult.perfect:
-                timer.currentTime = 0.01f;
+                timer.CurrentTime = 0.01f;
                 break;
             case Enums.MiniGameResult.good:
-                timer.currentTime = 3f;
+                timer.CurrentTime = 3f;
                 break;
             default:
                 break;

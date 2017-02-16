@@ -6,13 +6,20 @@ using UnityStandardAssets.ImageEffects;
 
 public class PauseMenu : MonoBehaviour {
 
-    public GameObject container;
-    public GameObject headerText;
-    public GameObject menuButtons;
-    public RectTransform menuActualSize;
-    public GameObject controlsPanelPrefab;
-    public GameObject menuButtonPrefab;
-    public BlurOptimized cameraBlur;
+    [SerializeField]
+    private GameObject container;
+    [SerializeField]
+    private GameObject headerText;
+    [SerializeField]
+    private GameObject menuButtons;
+    [SerializeField]
+    private RectTransform menuActualSize;
+    [SerializeField]
+    private GameObject controlsPanelPrefab;
+    [SerializeField]
+    private GameObject menuButtonPrefab;
+    [SerializeField]
+    private BlurOptimized cameraBlur;
 
     private GameObject _controlsPanelGO;
     private GameObject _menuButtonGO;
@@ -32,7 +39,7 @@ public class PauseMenu : MonoBehaviour {
     {
         if (!Input.GetKeyDown(KeyCode.Escape)) return;
 
-        if (GameManager.instance.pauseType != GameManager.PauseType.none)
+        if (GameManager.instance.PauseType != GameManager.PauseTypeEnum.none)
         {
             Close();
             return;
@@ -77,7 +84,7 @@ public class PauseMenu : MonoBehaviour {
 
     public void ExitToMainMenu()
     {
-        GameManager.instance.isMenuOpen = false;
+        GameManager.instance.IsMenuOpen = false;
         FadeInOut.instance.LoadLevel("Main Menu");
     }
 
@@ -100,8 +107,8 @@ public class PauseMenu : MonoBehaviour {
         container.SetActive(true);
         cameraBlur.enabled = true;
         Time.timeScale = 0f;
-        GameManager.instance.isMenuOpen = true;
-        GameManager.instance.pauseType = GameManager.PauseType.pauseMenu;
+        GameManager.instance.IsMenuOpen = true;
+        GameManager.instance.PauseType = GameManager.PauseTypeEnum.pauseMenu;
         _uiElementHider.Hide();
     }
 
@@ -110,8 +117,8 @@ public class PauseMenu : MonoBehaviour {
         container.SetActive(false);
         cameraBlur.enabled = false;
         Time.timeScale = 1f;
-        GameManager.instance.isMenuOpen = false;
-        GameManager.instance.pauseType = GameManager.PauseType.none;
+        GameManager.instance.IsMenuOpen = false;
+        GameManager.instance.PauseType = GameManager.PauseTypeEnum.none;
         _uiElementHider.Show();
     }
 }

@@ -4,23 +4,28 @@ using UnityEngine.UI;
 
 public class UpdateListItem : MonoBehaviour
 {
-    public Color textColor;
+    [SerializeField]
+    private Color textColor;
 
-    [HideInInspector]
-    public float animateTime = 0.5f;
+    private float _animateTime = 0.5f;
+    private RectTransform _rectTransform;
+    private Text _textComponent;
+    private float _height;
+    private Timer _timer;
 
-    private RectTransform rectTransform;
-    private Text textComponent;
-    private float height;
-    private Timer timer;
+    public float AnimateTime
+    {
+        get { return _animateTime; }
+        set { _animateTime = value; }
+    }
 
     public string Text
     {
         get
         {
-            if(textComponent != null)
+            if(_textComponent != null)
             {
-                return textComponent.text;
+                return _textComponent.text;
             }
             else
             {
@@ -29,9 +34,9 @@ public class UpdateListItem : MonoBehaviour
         }
         set
         {
-            if(textComponent != null)
+            if(_textComponent != null)
             {
-                textComponent.text = value;
+                _textComponent.text = value;
             }
             else
             {
@@ -46,85 +51,85 @@ public class UpdateListItem : MonoBehaviour
 
 	void Awake ()
     {
-        rectTransform = GetComponent<RectTransform>();
-        textComponent = GetComponent<Text>();
-        height = rectTransform.rect.height;
-        timer = GetComponent<Timer>();
+        _rectTransform = GetComponent<RectTransform>();
+        _textComponent = GetComponent<Text>();
+        _height = _rectTransform.rect.height;
+        _timer = GetComponent<Timer>();
 	}
 	
 	void Update ()
     {
-        if (timer != null && timer.currentTime <= 0)
+        if (_timer != null && _timer.CurrentTime <= 0)
         {
             RemoveFromBottom();
-            timer.ResetTimer();
+            _timer.ResetTimer();
         }
     }
 
     public void AddToTop()
     {
-        timer.ResetTimer();
-        timer.StartTimer();
-        StartCoroutine(FadeIn(animateTime));
-        StartCoroutine(MoveDownCoroutine(animateTime));
+        _timer.ResetTimer();
+        _timer.StartTimer();
+        StartCoroutine(FadeIn(_animateTime));
+        StartCoroutine(MoveDownCoroutine(_animateTime));
     }
 
     public void RemoveFromBottom()
     {
-        StartCoroutine(FadeOut(animateTime));
-        StartCoroutine(MoveDownCoroutine(animateTime));
+        StartCoroutine(FadeOut(_animateTime));
+        StartCoroutine(MoveDownCoroutine(_animateTime));
     }
 
     public void MoveDown()
     {
-        StartCoroutine(MoveDownCoroutine(animateTime));
+        StartCoroutine(MoveDownCoroutine(_animateTime));
     }
 
     IEnumerator FadeIn(float time)
     {
-        textComponent.color = Color.clear;
+        _textComponent.color = Color.clear;
         float timeSinceStarted = 0f;
         float percentageComplete = 0f;
         float startTime = Time.time;
 
-        while (textComponent.color != textColor)
+        while (_textComponent.color != textColor)
         {
             timeSinceStarted = Time.time - startTime;
             percentageComplete = timeSinceStarted / time;
-            textComponent.color = Color.Lerp(Color.clear, textColor, percentageComplete);
+            _textComponent.color = Color.Lerp(Color.clear, textColor, percentageComplete);
             yield return null;
         }
     }
 
     IEnumerator FadeOut(float time)
     {
-        Color startColor = textComponent.color;
+        Color startColor = _textComponent.color;
         float timeSinceStarted = 0f;
         float percentageComplete = 0f;
         float startTime = Time.time;
         
-        while (textComponent.color != Color.clear)
+        while (_textComponent.color != Color.clear)
         {
             timeSinceStarted = Time.time - startTime;
             percentageComplete = timeSinceStarted / time;
-            textComponent.color = Color.Lerp(startColor, Color.clear, percentageComplete);
+            _textComponent.color = Color.Lerp(startColor, Color.clear, percentageComplete);
             yield return null;
         }
     }
 
     IEnumerator MoveDownCoroutine(float time)
     {
-        Vector2 startPosition = rectTransform.anchoredPosition;
-        Vector2 endPosition = new Vector2(startPosition.x, startPosition.y - height);
+        Vector2 startPosition = _rectTransform.anchoredPosition;
+        Vector2 endPosition = new Vector2(startPosition.x, startPosition.y - _height);
         float timeSinceStarted = 0f;
         float percentageComplete = 0f;
         float startTime = Time.time;
 
-        while (rectTransform.anchoredPosition.y != (startPosition.y - height))
+        while (_rectTransform.anchoredPosition.y != (startPosition.y - _height))
         {
             timeSinceStarted = Time.time - startTime;
             percentageComplete = timeSinceStarted / time;
-            rectTransform.anchoredPosition = Vector2.Lerp(startPosition, endPosition, percentageComplete);
+            _rectTransform.anchoredPosition = Vector2.Lerp(startPosition, endPosition, percentageComplete);
             yield return null;
         }
     }

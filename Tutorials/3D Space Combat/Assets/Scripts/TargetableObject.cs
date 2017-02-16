@@ -3,12 +3,8 @@ using System.Collections;
 
 public class TargetableObject : MonoBehaviour {
 
-    public Allegiance allegiance;
+    [SerializeField]
+    private Enums.Allegiance allegiance;
 
-    public enum Allegiance
-    {
-        Friendly,
-        Enemy,
-        Inanimate
-    }
+    public Enums.Allegiance Allegiance { get { return allegiance; } }
 }

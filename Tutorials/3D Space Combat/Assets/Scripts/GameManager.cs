@@ -6,43 +6,95 @@ using Assets.Scripts;
 public class GameManager : MonoBehaviour
 {
     public bool isTesting = false;
-    public GameOverScreen gameOverScreen;
-    public GameOverScreen winScreen;
-    public CameraController cameraController;
-    public Player player;
-    public GameObject[] asteroidPrefabs;
-    public Vector2 asteroidSizeRange;
-    public Quest firstQuest;
-    public Transform deimosTransform;
-    public int deimosAsteroidCount;
-    public GameObject deimosTravelObjective;
-    public Transform deimosSpawnPoint;
-    public GameObject earthTravelObjective;
-    public Transform earthSpawnPoint;
-    public GameObject enemyShipPrefab;
-    public GameObject friendlyShipPrefab;
-    public AudioClip dialogue1;
-    public float testSpawnRadius;
-    public int testCount;
+    [SerializeField]
+    private GameOverScreen gameOverScreen;
+    [SerializeField]
+    private GameOverScreen winScreen;
+    [SerializeField]
+    private CameraController cameraController;
+    [SerializeField]
+    private Player player;
+    [SerializeField]
+    private GameObject[] asteroidPrefabs;
+    [SerializeField]
+    private Vector2 asteroidSizeRange;
+    [SerializeField]
+    private Quest firstQuest;
+    [SerializeField]
+    private Transform deimosTransform;
+    [SerializeField]
+    private int deimosAsteroidCount;
+    [SerializeField]
+    private GameObject deimosTravelObjective;
+    [SerializeField]
+    private Transform deimosSpawnPoint;
+    [SerializeField]
+    private GameObject earthTravelObjective;
+    [SerializeField]
+    private Transform earthSpawnPoint;
+    [SerializeField]
+    private GameObject enemyShipPrefab;
+    [SerializeField]
+    private GameObject friendlyShipPrefab;
+    [SerializeField]
+    private AudioClip dialogue1;
+    [SerializeField]
+    private float testSpawnRadius;
+    [SerializeField]
+    private int testCount;
 
-    [HideInInspector]
-    public bool isInCombat = false;
-    [HideInInspector]
-    public bool isShootingEnabled = true;
-    [HideInInspector]
-    public bool isCursorVisible = true;
-    [HideInInspector]
-    public bool isMenuOpen = false;
-    [HideInInspector]
-    public PauseType pauseType = PauseType.none;
+    public bool IsInCombat
+    {
+        get { return _isInCombat; }
+        set { _isInCombat = value; }
+    }
+    
+    public bool IsShootingEnabled
+    {
+        get { return _isShootingEnabled; }
+        set { _isShootingEnabled = value; }
+    }
+
+    public bool IsCursorVisible
+    {
+        get { return _isCursorVisible; }
+        set { _isCursorVisible = value; }
+    }
+
+    public bool IsMenuOpen
+    {
+        get { return _isMenuOpen; }
+        set { _isMenuOpen = value; }
+    }
+
+    public PauseTypeEnum PauseType
+    {
+        get { return _pauseType; }
+        set { _pauseType = value; }
+    }
+
+    public Player Player
+    {
+        get { return player; }
+    }
+
+    public CameraController CameraController
+    {
+        get { return cameraController; }
+    }
 
     public static GameManager instance;
     public static Transform playerTransform;
     public static QuestManager questManager;
 
-    private Transform playerStartingTransform;
+    private Transform _playerStartingTransform;
+    private bool _isInCombat = false;
+    private bool _isShootingEnabled = true;
+    private bool _isCursorVisible = true;
+    private bool _isMenuOpen = false;
+    private PauseTypeEnum _pauseType = PauseTypeEnum.none;
 
-    public enum PauseType
+    public enum PauseTypeEnum
     {
         none,
         pauseMenu,
@@ -73,9 +125,9 @@ public class GameManager : MonoBehaviour
             //SpawnHazardsAroundSphere(deimosTransform, 9000, 5800, deimosAsteroidCount);
 
             // Position player at start transform
-            playerStartingTransform = player.transform;
-            playerTransform.position = playerStartingTransform.position;
-            playerTransform.rotation = playerStartingTransform.rotation;
+            //playerStartingTransform = player.transform;
+            //playerTransform.position = playerStartingTransform.position;
+            //playerTransform.rotation = playerStartingTransform.rotation;
 
             // Lock player controls until after intro dialogue
             player = playerTransform.GetComponent<Player>();
@@ -129,7 +181,7 @@ public class GameManager : MonoBehaviour
     {
         if (player != null)
         {
-            player.Dock(playerStartingTransform);
+            player.Dock(_playerStartingTransform);
             cameraController.PerformDock();
         }
     }

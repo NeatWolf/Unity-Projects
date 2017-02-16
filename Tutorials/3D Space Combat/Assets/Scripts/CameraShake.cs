@@ -3,28 +3,34 @@ using System.Collections;
 
 public class CameraShake : MonoBehaviour
 {
-    public float duration = 0.5f;
-    public float speed = 1.0f;
-    public float magnitude = 0.1f;
+    [SerializeField]
+    private float duration = 0.5f;
+    [SerializeField]
+    private float speed = 1.0f;
+    [SerializeField]
+    private float magnitude = 0.1f;
 
     private bool _isShaking;
 
-    public bool IsShaking
+    public bool IsShaking { get { return _isShaking; } }
+
+    public float Duration
     {
-        get
-        {
-            return _isShaking;
-        }
+        get { return duration; }
+        set { duration = value; }
     }
 
-    //void Update()
-    //{
-    //    //Press F on the keyboard to simulate the effect
-    //    if (Input.GetKeyDown(KeyCode.F))
-    //    {
-    //        PlayShake();
-    //    }
-    //}
+    public float Speed
+    {
+        get { return speed; }
+        set { speed = value; }
+    }
+
+    public float Magnitude
+    {
+        get { return magnitude; }
+        set { magnitude = value; }
+    }
 
     //This function is used outside (or inside) the script
     public void PlayShake()

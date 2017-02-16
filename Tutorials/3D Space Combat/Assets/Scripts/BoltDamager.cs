@@ -4,19 +4,21 @@ using Assets.Scripts;
 
 public class BoltDamager : MonoBehaviour {
 
-    public int damage;
-    public TargetableObject.Allegiance Allegiance;
+    [SerializeField]
+    private int damage;
+    [SerializeField]
+    private Enums.Allegiance allegiance;
 
-    private Collider thisCollider;
-    private Rigidbody rb;
-    private TargetableObject otherTarget;
-    private float speed;
+    private Collider _thisCollider;
+    private Rigidbody _rb;
+    private TargetableObject _otherTarget;
+    private float _speed;
 
     void Start()
     {
-        thisCollider = GetComponent<Collider>();
-        rb = GetComponent<Rigidbody>();
-        speed = GetComponent<BoltMover>().speed;
+        _thisCollider = GetComponent<Collider>();
+        _rb = GetComponent<Rigidbody>();
+        _speed = GetComponent<BoltMover>().speed;
     }
 
     void Update()
@@ -25,7 +27,7 @@ public class BoltDamager : MonoBehaviour {
         if (Physics.Raycast(transform.position, transform.rotation.eulerAngles, out hit))
         {
             // distance = velocity * time
-            float distanceForHit = rb.velocity.magnitude * Time.deltaTime;
+            float distanceForHit = _rb.velocity.magnitude * Time.deltaTime;
             if (distanceForHit > 0f)
             {
                 if (hit.distance < distanceForHit)
@@ -38,10 +40,10 @@ public class BoltDamager : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        otherTarget = other.GetComponent<TargetableObject>();
-        if (thisCollider != null && otherTarget != null)
+        _otherTarget = other.GetComponent<TargetableObject>();
+        if (_thisCollider != null && _otherTarget != null)
         {
-            if (otherTarget.allegiance != Allegiance)
+            if (_otherTarget.Allegiance != allegiance)
             {
                 DamageInfo damageInfo = new DamageInfo(gameObject, damage);
                 HealthController health = other.GetComponent<HealthController>();

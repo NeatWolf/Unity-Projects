@@ -10,8 +10,10 @@ public class MusicManager : MonoBehaviour {
         Combat
     };
 
-    public AudioClip defaultMusic;
-    public AudioClip combatMusic;
+    [SerializeField]
+    private AudioClip defaultMusic;
+    [SerializeField]
+    private AudioClip combatMusic;
 
     private MusicState _state;
     private AudioSource _audioSource1;
@@ -34,7 +36,7 @@ public class MusicManager : MonoBehaviour {
 
         foreach (TargetableObject obj in objects)
         {
-            if (obj.allegiance == TargetableObject.Allegiance.Enemy)
+            if (obj.Allegiance == Enums.Allegiance.Enemy)
             {
                 if (Vector3.Distance(GameManager.playerTransform.position, obj.transform.position) < 500)
                 {

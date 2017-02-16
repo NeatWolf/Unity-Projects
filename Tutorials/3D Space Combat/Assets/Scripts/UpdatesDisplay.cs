@@ -67,7 +67,7 @@ public class UpdatesDisplay : MonoBehaviour {
         // Notification of new quest
         UpdateListItem updateLine = Instantiate(updateListItemPrefab) as UpdateListItem;
         updateLine.transform.SetParent(transform);
-        updateLine.animateTime = animationTime;
+        updateLine.AnimateTime = animationTime;
         updateLine.Text = "New Quest Added";
         itemsToBeAddedQueue.Enqueue(updateLine);
     }
@@ -76,7 +76,7 @@ public class UpdatesDisplay : MonoBehaviour {
     {
         UpdateListItem updateLine = Instantiate(updateListItemPrefab) as UpdateListItem;
         updateLine.transform.SetParent(transform);
-        updateLine.animateTime = animationTime;
+        updateLine.AnimateTime = animationTime;
         updateLine.Text = "Quest completed!";
         sender.OnCompleted -= Quest_OnCompleted;
         itemsToBeAddedQueue.Enqueue(updateLine);
@@ -86,7 +86,7 @@ public class UpdatesDisplay : MonoBehaviour {
     {
         UpdateListItem updateLine = Instantiate(updateListItemPrefab) as UpdateListItem;
         updateLine.transform.SetParent(transform);
-        updateLine.animateTime = animationTime;
+        updateLine.AnimateTime = animationTime;
         updateLine.Text = "Completed: " + sender.description;
         sender.OnCompleted -= Objective_OnCompleted;
         itemsToBeAddedQueue.Enqueue(updateLine);
@@ -96,7 +96,7 @@ public class UpdatesDisplay : MonoBehaviour {
     {
         UpdateListItem updateLine = Instantiate(updateListItemPrefab) as UpdateListItem;
         updateLine.transform.SetParent(transform);
-        updateLine.animateTime = animationTime;
+        updateLine.AnimateTime = animationTime;
         updateLine.Text = "Current Objective: " + sender.description;
         sender.OnStarted -= Objective_OnStarted;
         itemsToBeAddedQueue.Enqueue(updateLine);

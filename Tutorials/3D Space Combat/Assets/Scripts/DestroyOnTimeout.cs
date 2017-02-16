@@ -3,7 +3,8 @@ using System.Collections;
 
 public class DestroyOnTimeout : MonoBehaviour {
 
-    public float timeoutToDestroy;
+    [SerializeField]
+    private float timeoutToDestroy;
 
     void Start ()
     {

@@ -3,8 +3,10 @@ using System.Collections;
 
 public class BlurCamera : MonoBehaviour {
 
-    public Canvas parent;
-    public RectTransform referenceRect;
+    [SerializeField]
+    private Canvas parent;
+    [SerializeField]
+    private RectTransform referenceRect;
 
 	void Start ()
     {

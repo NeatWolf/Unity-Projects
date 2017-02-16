@@ -3,12 +3,8 @@ using System.Collections;
 
 public class BoltGrower : MonoBehaviour {
 
-    public float growRate = 2f;
-
-	void Start ()
-    {
-	
-	}
+    [SerializeField]
+    private float growRate = 2f;
 
 	void Update ()
     {

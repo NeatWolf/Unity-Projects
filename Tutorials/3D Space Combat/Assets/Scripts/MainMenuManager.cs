@@ -4,53 +4,59 @@ using System.Collections.Generic;
 
 public class MainMenuManager : MonoBehaviour {
 
-    public int count;
-    public GameObject enemyShipPrefab;
-    public GameObject friendlyShipPrefab;
-    public Vector3 spawnPosition;
-    public float spawnRadius;
-    public Vector3 newSpawnPosition;
+    [SerializeField]
+    private int count;
+    [SerializeField]
+    private GameObject enemyShipPrefab;
+    [SerializeField]
+    private GameObject friendlyShipPrefab;
+    [SerializeField]
+    private Vector3 spawnPosition;
+    [SerializeField]
+    private float spawnRadius;
+    [SerializeField]
+    private Vector3 newSpawnPosition;
 
-    private List<GameObject> enemies;
-    private List<GameObject> friendlies;
+    private List<GameObject> _enemies;
+    private List<GameObject> _friendlies;
 
     void Start ()
     {
-        enemies = SpawnPrefabs(enemyShipPrefab, count, spawnPosition, spawnRadius);
-        friendlies = SpawnPrefabs(friendlyShipPrefab, count, spawnPosition, spawnRadius);
+        _enemies = SpawnPrefabs(enemyShipPrefab, count, spawnPosition, spawnRadius);
+        _friendlies = SpawnPrefabs(friendlyShipPrefab, count, spawnPosition, spawnRadius);
     }
 	
 	void Update ()
     {
-	    foreach(var enemy in enemies)
+	    foreach(var enemy in _enemies)
         {
             if(enemy == null)
             {
-                enemies.Remove(enemy);
+                _enemies.Remove(enemy);
             }
         }
 
-        foreach (var friendly in friendlies)
+        foreach (var friendly in _friendlies)
         {
             if (friendly == null)
             {
-                friendlies.Remove(friendly);
+                _friendlies.Remove(friendly);
             }
         }
 
-        if(enemies.Count < count)
+        if(_enemies.Count < count)
         {
-            while(enemies.Count != count)
+            while(_enemies.Count != count)
             {
-                enemies.Add(Instantiate(enemyShipPrefab, newSpawnPosition, Quaternion.identity) as GameObject);
+                _enemies.Add(Instantiate(enemyShipPrefab, newSpawnPosition, Quaternion.identity) as GameObject);
             }
         }
 
-        if (friendlies.Count < count)
+        if (_friendlies.Count < count)
         {
-            while (friendlies.Count != count)
+            while (_friendlies.Count != count)
             {
-                friendlies.Add(Instantiate(friendlyShipPrefab, newSpawnPosition, Quaternion.identity) as GameObject);
+                _friendlies.Add(Instantiate(friendlyShipPrefab, newSpawnPosition, Quaternion.identity) as GameObject);
             }
         }
     }

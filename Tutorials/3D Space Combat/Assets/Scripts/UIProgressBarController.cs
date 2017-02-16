@@ -4,8 +4,10 @@ using UnityEngine.UI;
 
 public class UIProgressBarController : MonoBehaviour {
 
-    public Image barFullImage;
-    public Image barEmptyImage;
+    [SerializeField]
+    private Image barFullImage;
+    [SerializeField]
+    private Image barEmptyImage;
 
     public float fillAmount
     {
@@ -30,5 +32,23 @@ public class UIProgressBarController : MonoBehaviour {
             barEmptyImage.rectTransform.anchoredPosition = value;
             barFullImage.rectTransform.anchoredPosition = value;
         }
+    }
+
+    public void SetAlpha(float value)
+    {
+        barEmptyImage.canvasRenderer.SetAlpha(value);
+        barFullImage.canvasRenderer.SetAlpha(value);
+    }
+
+    public void FadeIn(float duration)
+    {
+        barEmptyImage.CrossFadeAlpha(1, duration, false);
+        barFullImage.CrossFadeAlpha(1, duration, false);
+    }
+
+    public void FadeOut(float duration)
+    {
+        barEmptyImage.CrossFadeAlpha(0, duration, false);
+        barFullImage.CrossFadeAlpha(0, duration, false);
     }
 }

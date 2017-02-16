@@ -3,11 +3,16 @@ using System.Collections;
 
 public class PrimaryWeapon : MonoBehaviour {
 
-    public float fireRate;
-    public GameObject shotPrefab;
-    public AudioClip shootingClip;
-    public float minShotVolume = 0.5f;
-    public float maxShotVolume = 1f;
+    [SerializeField]
+    private float fireRate;
+    [SerializeField]
+    private GameObject shotPrefab;
+    [SerializeField]
+    private AudioClip shootingClip;
+    [SerializeField]
+    private float minShotVolume = 0.5f;
+    [SerializeField]
+    private float maxShotVolume = 1f;
 
     private float _nextFire;
     private AudioSource _audioSource;
@@ -19,7 +24,7 @@ public class PrimaryWeapon : MonoBehaviour {
 	
 	void Update ()
     {
-        if (GameManager.instance.isShootingEnabled && CompareTag("PlayerWeapon") && !GameManager.instance.isMenuOpen)
+        if (GameManager.instance.IsShootingEnabled && CompareTag("PlayerWeapon") && !GameManager.instance.IsMenuOpen)
         {
             if (Input.GetKey(KeyCode.Mouse0) && Time.time > _nextFire)
             {

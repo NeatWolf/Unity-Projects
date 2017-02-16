@@ -3,7 +3,8 @@ using System.Collections;
 
 public class ListItemResponder : MonoBehaviour
 {
-    public QuestDetailsScreen questDetailsScreenPrefab;
+    [SerializeField]
+    private QuestDetailsScreen questDetailsScreenPrefab;
 
 	void Start ()
     {
@@ -16,11 +17,6 @@ public class ListItemResponder : MonoBehaviour
         Debug.Log("Unsubscribe from OnClick");
         QuestDisplay.OnClick -= ListItemDisplay_OnClick;
     }
-
-    void Update ()
-    {
-	
-	}
 
     private void ListItemDisplay_OnClick(Quest senderItem)
     {

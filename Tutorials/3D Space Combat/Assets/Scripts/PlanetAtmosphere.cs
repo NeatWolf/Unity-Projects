@@ -5,19 +5,23 @@ using Assets.Scripts;
 
 public class PlanetAtmosphere : MonoBehaviour
 {
-    public Text warningText;
-    public Text countdownText;
-    public GameObject timerPrefab;
-    public int destroyTime = 5;
+    [SerializeField]
+    private Text warningText;
+    [SerializeField]
+    private Text countdownText;
+    [SerializeField]
+    private GameObject timerPrefab;
+    [SerializeField]
+    private int destroyTime = 5;
 
-    private Timer timer;
+    private Timer _timer;
 
     private bool _countingDown = false;
     private bool _justFinished = false;
 
     void Start()
     {
-        timer = Instantiate(timerPrefab).GetComponent<Timer>();
+        _timer = Instantiate(timerPrefab).GetComponent<Timer>();
         warningText.text = "";
         countdownText.text = "";
     }
@@ -27,9 +31,9 @@ public class PlanetAtmosphere : MonoBehaviour
         if (_countingDown)
         {
             warningText.text = string.Format("Entering Atmosphere. Destruction Imminent.");
-            if (timer.currentTime > 0)
+            if (_timer.CurrentTime > 0)
             {
-                countdownText.text = string.Format("{0}", ((int)timer.currentTime + 1).ToString());
+                countdownText.text = string.Format("{0}", ((int)_timer.CurrentTime + 1).ToString());
             }
             else
             {
@@ -70,9 +74,9 @@ public class PlanetAtmosphere : MonoBehaviour
 
     private void Countdown(int startTime)
     {
-        timer.startTime = startTime;
-        timer.ResetTimer();
-        timer.StartTimer();
+        _timer.StartTime = startTime;
+        _timer.ResetTimer();
+        _timer.StartTimer();
         _countingDown = true;
     }
 

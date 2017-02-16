@@ -5,11 +5,11 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(Animator))]
 public class GameOverScreen : MonoBehaviour {
 
-    private Animator anim;
+    private Animator _anim;
 
 	void Start ()
     {
-        anim = GetComponent<Animator>();
+        _anim = GetComponent<Animator>();
         gameObject.SetActive(false);
 	}
 
@@ -17,8 +17,8 @@ public class GameOverScreen : MonoBehaviour {
     {
         //anim.SetTrigger("FadeOutTrigger");
         Time.timeScale = 1f;
-        GameManager.instance.isMenuOpen = false;
-        GameManager.instance.pauseType = GameManager.PauseType.none;
+        GameManager.instance.IsMenuOpen = false;
+        GameManager.instance.PauseType = GameManager.PauseTypeEnum.none;
         GameManager.instance.CloseWinScreen();
         gameObject.SetActive(false);
     }
@@ -27,8 +27,8 @@ public class GameOverScreen : MonoBehaviour {
     {
         Time.timeScale = 0.5f;
         gameObject.SetActive(true);
-        GameManager.instance.isMenuOpen = true;
-        GameManager.instance.pauseType = GameManager.PauseType.gameOver;
+        GameManager.instance.IsMenuOpen = true;
+        GameManager.instance.PauseType = GameManager.PauseTypeEnum.gameOver;
     }
 
     public void Retry()

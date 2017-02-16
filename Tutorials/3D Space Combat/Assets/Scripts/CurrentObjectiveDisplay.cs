@@ -5,23 +5,23 @@ using UnityEngine.UI;
 
 public class CurrentObjectiveDisplay : MonoBehaviour {
 
-    private Text objectiveText;
+    private Text _objectiveText;
 
     void Start()
     {
-        objectiveText = GetComponent<Text>();
-        objectiveText.text = GameManager.questManager.ActiveObjective;
+        _objectiveText = GetComponent<Text>();
+        _objectiveText.text = GameManager.questManager.ActiveObjective;
     }
 
     void Update ()
     {
         if(GameManager.questManager.ActiveObjective == null)
         {
-            objectiveText.text = "";
+            _objectiveText.text = "";
         }
-        else if (!objectiveText.text.Equals(GameManager.questManager.ActiveObjective))
+        else if (!_objectiveText.text.Equals(GameManager.questManager.ActiveObjective))
         {
-            objectiveText.text = GameManager.questManager.ActiveObjective;
+            _objectiveText.text = GameManager.questManager.ActiveObjective;
         }
 	}
 }
