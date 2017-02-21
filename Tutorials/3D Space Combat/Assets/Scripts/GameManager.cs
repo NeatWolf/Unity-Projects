@@ -135,8 +135,6 @@ public class GameManager : MonoBehaviour
             player.LockMovement(true);
             StartCoroutine(player.LockControlsDelayed(false, 26.5f));
 
-            //player.Dock(playerStartingTransform);
-
             // Add quest after intro dialogue
             Invoke("InitializeTargetPracticeQuest", 24f);
             DialogueManager.instance.BeginDialogue(dialogue1);
@@ -177,24 +175,6 @@ public class GameManager : MonoBehaviour
         player.LockMovement(false);
     }
 
-    public void DockPlayer()
-    {
-        if (player != null)
-        {
-            player.Dock(_playerStartingTransform);
-            cameraController.PerformDock();
-        }
-    }
-
-    public void UndockPlayer()
-    {
-        if (player != null)
-        {
-            player.Undock();
-            cameraController.PerformUndock();
-        }
-    }
-	
     private void SpawnHazards()
     {
         //for (int i = 0; i < hazardCount; i++)

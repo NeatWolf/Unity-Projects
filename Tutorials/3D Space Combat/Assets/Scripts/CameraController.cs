@@ -73,17 +73,6 @@ public class CameraController : MonoBehaviour
         transform.position = target.position;
     }
 
-    public void PerformDock()
-    {
-        //isLocked = true;
-    }
-
-    public void PerformUndock()
-    {
-        //anim.SetTrigger("Undock");
-        //Invoke("UnlockController", 6f);
-    }
-
     public void ShakeCamera(float duration, float speed, float magnitude)
     {
         _cameraShake.Duration = duration;

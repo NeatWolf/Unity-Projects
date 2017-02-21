@@ -55,7 +55,6 @@ public class Player : MonoBehaviour
     {
         Default,
         WarpStandby,
-        Docked,
         Boosting,
         Warping
     }
@@ -83,13 +82,6 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (_currentState == State.Docked)
-        {
-            if (_controlsLocked || Input.GetKeyDown(KeyCode.Space)) return;
-
-            GameManager.instance.UndockPlayer();
-        }
-
         if (!_controlsLocked && Input.GetKeyDown(KeyCode.Tab)) LockOntoWarpTarget();
         if (_currentState == State.WarpStandby) EngageWarp();
 
@@ -257,16 +249,6 @@ public class Player : MonoBehaviour
         LockControls(isLocked);
     }
 
-    public void Dock(Transform dockingTransform)
-    {
-        StartCoroutine(PerformDock(dockingTransform, 3f));
-    }
-
-    public void Undock()
-    {
-        StartCoroutine(PerformUndock(3f));
-    }
-
     IEnumerator RotateTowards(Vector3 lookAtPosition)
     {
         Quaternion direction = Quaternion.LookRotation(lookAtPosition);
@@ -301,85 +283,4 @@ public class Player : MonoBehaviour
             yield return null;
         }
     }
-
-    #region Docking coroutines
-    IEnumerator PerformDock(Transform dockingTransform, float time)
-    {
-        Debug.Log("Player docking coroutine");
-        _currentState = State.Docked;
-        LockMovement(true);
-        GameManager.instance.IsShootingEnabled = false;
-        GameManager.instance.IsCursorVisible = false;
-        Vector3 startPosition = transform.position;
-        Quaternion startRotation = transform.rotation;
-        Vector3 midPosition = dockingTransform.position + new Vector3(0f, 10f, 0f);
-        Vector3 endPosition = dockingTransform.position;
-        Quaternion endRotation = dockingTransform.rotation;
-
-        float timeSinceStarted = 0f;
-        float percentageComplete = 0f;
-        float startTime = Time.time;
-
-        if (Vector3.Distance(transform.position, dockingTransform.position) > 1f)
-        {
-            while (transform.position != midPosition && transform.rotation != endRotation)
-            {
-                timeSinceStarted = Time.time - startTime;
-                percentageComplete = timeSinceStarted / time;
-                transform.position = Vector3.Lerp(startPosition, midPosition, percentageComplete);
-                transform.rotation = Quaternion.Slerp(startRotation, endRotation, percentageComplete);
-                yield return null;
-            }
-        }
-
-        startPosition = transform.position;
-        timeSinceStarted = 0f;
-        percentageComplete = 0f;
-        startTime = Time.time;
-
-        while(percentageComplete < 1f)
-        {
-            timeSinceStarted = Time.time - startTime;
-            percentageComplete = timeSinceStarted / time;
-            transform.position = Vector3.Lerp(startPosition, endPosition, percentageComplete);
-            yield return null;
-        }
-    }
-
-    IEnumerator PerformUndock(float time)
-    {
-        Debug.Log("Player undocking coroutine");
-        Vector3 startPosition = transform.position;
-        Vector3 midPosition = startPosition + new Vector3(0f, 10f, 0f);
-        Vector3 endPosition = midPosition + (transform.forward * 100f) + (transform.up * 5f);
-        float timeSinceStarted = 0f;
-        float percentageComplete = 0f;
-        float startTime = Time.time;
-
-        while (transform.position != midPosition)
-        {
-            timeSinceStarted = Time.time - startTime;
-            percentageComplete = timeSinceStarted / time;
-            transform.position = Vector3.Lerp(startPosition, midPosition, percentageComplete);
-            yield return null;
-        }
-
-        startPosition = transform.position;
-        timeSinceStarted = 0f;
-        percentageComplete = 0f;
-        startTime = Time.time;
-
-        while (transform.position != endPosition)
-        {
-            timeSinceStarted = Time.time - startTime;
-            percentageComplete = timeSinceStarted / time;
-            transform.position = Vector3.Lerp(startPosition, endPosition, percentageComplete);
-            yield return null;
-        }
-        _currentState = State.Default;
-        LockMovement(false);
-        GameManager.instance.IsShootingEnabled = true;
-        GameManager.instance.IsCursorVisible = true;
-    }
-    #endregion
 }

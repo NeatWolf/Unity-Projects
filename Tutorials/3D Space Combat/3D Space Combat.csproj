@@ -112,7 +112,6 @@
     <Compile Include="Assets\Scripts\DamageInfo.cs" />
     <Compile Include="Assets\Scripts\DestinationIndicator.cs" />
     <Compile Include="Assets\Scripts\DestroyOnTimeout.cs" />
-    <Compile Include="Assets\Scripts\DockPoint.cs" />
     <Compile Include="Assets\Scripts\EnemyManager.cs" />
     <Compile Include="Assets\Scripts\Enums.cs" />
     <Compile Include="Assets\Scripts\FadeInOut.cs" />
