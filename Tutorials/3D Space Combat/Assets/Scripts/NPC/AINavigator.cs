@@ -20,6 +20,7 @@ public class AINavigator : MonoBehaviour {
     private GameObject _destinationGO;
     private Transform _destination;
     private Direction? _avoidanceDirection;
+    private NpcAccessPoint.AccessPointType _dockedAPType;
 
     //private static readonly float HARD_AVOIDANCE_SPREAD = 6f;
     //private static readonly float HARD_AVOIDANCE_RANGE = 8f;
@@ -47,18 +48,11 @@ public class AINavigator : MonoBehaviour {
 
     void FixedUpdate()
     {
-        if (_isActive)
-        {
-            if (_destination != null)
-            {
-                _rb.AddForce(transform.forward * _forwardSpeed);
-                PerformRotation();
-            }
-            else
-            {
-                ChooseNewDestination();
-            }
-        }
+        if (!_isActive) return;
+        if (_destination == null) ChooseNewDestination();
+
+        _rb.AddForce(transform.forward * _forwardSpeed);
+        PerformRotation();
     }
 
     public void Start(GameObject destination)
@@ -160,34 +154,22 @@ public class AINavigator : MonoBehaviour {
 
     public void Dock(NpcAccessPoint.AccessPointType type)
     {
+        _dockedAPType = type;
         _isActive = false;
-        StartCoroutine(PerformDock(2f / rotateSpeed, type));
+        var duration = 2f / rotateSpeed;
+        var positionTween = transform.positionTo(duration, _destination.position);
+        transform.rotationTo(duration, Quaternion.LookRotation(-_destination.forward).eulerAngles);
+        positionTween.setOnCompleteHandler(InPositionToDock);
     }
 
-    IEnumerator PerformDock(float time, NpcAccessPoint.AccessPointType type)
+    private void InPositionToDock(AbstractGoTween tween)
     {
-        Vector3 startPosition = transform.position;
-        Vector3 endPosition = _destination.position;
-        Quaternion startRotation = transform.rotation;
-        Quaternion endRotation = Quaternion.LookRotation(-_destination.forward);
-        float timeSinceStarted = 0f;
-        float percentageComplete = 0f;
-        float startTime = Time.time;
-
-        while (percentageComplete < 1f)
-        {
-            timeSinceStarted = Time.time - startTime;
-            percentageComplete = timeSinceStarted / time;
-            transform.position = Vector3.Lerp(startPosition, endPosition, percentageComplete);
-            transform.rotation = Quaternion.Slerp(startRotation, endRotation, percentageComplete);
-            yield return null;
-        }
         OnDestinationReached();
 
         NpcType npcType = GetComponent<NpcType>();
         if (npcType != null)
         {
-            npcType.Dock(type);
+            npcType.Dock(_dockedAPType);
         }
     }
 
