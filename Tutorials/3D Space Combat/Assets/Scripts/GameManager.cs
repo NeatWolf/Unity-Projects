@@ -14,12 +14,14 @@ public class GameManager : MonoBehaviour
     private CameraController cameraController;
     [SerializeField]
     private Player player;
+    [Header("Asteroids")]
     [SerializeField]
     private GameObject[] asteroidPrefabs;
     [SerializeField]
     private Vector2 asteroidSizeRange;
     [SerializeField]
     private Quest firstQuest;
+    [Header("Deimos")]
     [SerializeField]
     private Transform deimosTransform;
     [SerializeField]
@@ -28,16 +30,20 @@ public class GameManager : MonoBehaviour
     private GameObject deimosTravelObjective;
     [SerializeField]
     private Transform deimosSpawnPoint;
+    [Header("Earth")]
     [SerializeField]
     private GameObject earthTravelObjective;
     [SerializeField]
     private Transform earthSpawnPoint;
     [SerializeField]
+    [Header("Ship Prefabs")]
     private GameObject enemyShipPrefab;
     [SerializeField]
     private GameObject friendlyShipPrefab;
+    [Header("Dialogue")]
     [SerializeField]
-    private AudioClip dialogue1;
+    private AudioClip openingDialogue;
+    [Header("Testing")]
     [SerializeField]
     private float testSpawnRadius;
     [SerializeField]
@@ -129,15 +135,18 @@ public class GameManager : MonoBehaviour
             //playerTransform.position = playerStartingTransform.position;
             //playerTransform.rotation = playerStartingTransform.rotation;
 
+            IsCursorVisible = false;
+
             // Lock player controls until after intro dialogue
             player = playerTransform.GetComponent<Player>();
             player.LockControls(true);
             player.LockMovement(true);
             StartCoroutine(player.LockControlsDelayed(false, 26.5f));
+            Invoke("EnableReticle", 26.5f);
 
             // Add quest after intro dialogue
             Invoke("InitializeTargetPracticeQuest", 24f);
-            DialogueManager.instance.BeginDialogue(dialogue1);
+            DialogueManager.instance.BeginDialogue(openingDialogue);
 
             //Invoke("KillPlayer", 10);
             //Invoke("DisplayWinScreen", 10);
@@ -175,16 +184,9 @@ public class GameManager : MonoBehaviour
         player.LockMovement(false);
     }
 
-    private void SpawnHazards()
+    private void EnableReticle()
     {
-        //for (int i = 0; i < hazardCount; i++)
-        //{
-        //    GameObject hazard = hazards[Random.Range(0, hazards.Length)];
-        //    Vector3 spawnPosition = new Vector3(Random.Range(-hazardSpawnPosition.x, hazardSpawnPosition.x), Random.Range(-hazardSpawnPosition.y, hazardSpawnPosition.y), Random.Range(-hazardSpawnPosition.z, hazardSpawnPosition.z));
-        //    GameObject hazardGO = Instantiate(hazard, spawnPosition, Quaternion.identity) as GameObject;
-        //    float hazardScale = Random.Range(hazardSizeRange.x, hazardSizeRange.y);
-        //    hazardGO.transform.localScale = new Vector3(hazardScale, hazardScale, hazardScale);
-        //}
+        IsCursorVisible = true;
     }
 
     private void SpawnHazardsAroundSphere(Transform sphere, float outerRadius, float innerRadius, float number)

@@ -238,6 +238,7 @@ public class Player : MonoBehaviour
         _movementLocked = isLocked;
     }
 
+    // TODO create class for all controls to pass through and perform check on _controlsLocked
     public void LockControls(bool isLocked)
     {
         _controlsLocked = isLocked;
