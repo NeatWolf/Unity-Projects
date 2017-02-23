@@ -9,8 +9,6 @@ public class PauseMenu : MonoBehaviour {
     [SerializeField]
     private GameObject container;
     [SerializeField]
-    private GameObject headerText;
-    [SerializeField]
     private GameObject menuButtons;
     [SerializeField]
     private RectTransform menuActualSize;
@@ -20,6 +18,9 @@ public class PauseMenu : MonoBehaviour {
     private GameObject menuButtonPrefab;
     [SerializeField]
     private BlurOptimized cameraBlur;
+    [Header("Content Pane")]
+    [SerializeField]
+    private GameObject controls;
 
     private GameObject _controlsPanelGO;
     private GameObject _menuButtonGO;
@@ -55,31 +56,7 @@ public class PauseMenu : MonoBehaviour {
 
     public void ShowControls()
     {
-        headerText.SetActive(false);
-        menuButtons.SetActive(false);
-
-        // Controls Panel
-        _controlsPanelGO = Instantiate(controlsPanelPrefab);
-        _controlsPanelGO.transform.SetParent(menuActualSize);
-        RectTransform controlsPanelRect = _controlsPanelGO.GetComponent<RectTransform>();
-        controlsPanelRect.anchorMin = new Vector2(0, 0.5f);
-        controlsPanelRect.anchorMax = new Vector2(1, 0.5f);
-        controlsPanelRect.pivot = new Vector2(0.5f, 0.5f);
-        controlsPanelRect.anchoredPosition = new Vector2(0f, controlsPanelRect.rect.height / 2f);
-        controlsPanelRect.offsetMin = new Vector2(10f, controlsPanelRect.offsetMin.y);
-        controlsPanelRect.offsetMax = new Vector2(-10f, controlsPanelRect.offsetMax.y);
-
-        // Back Button
-        _menuButtonGO = Instantiate(menuButtonPrefab);
-        _menuButtonGO.transform.SetParent(transform);
-        RectTransform menuButtonRect = _menuButtonGO.GetComponent<RectTransform>();
-        menuButtonRect.anchorMin = new Vector2(0.5f, 0.5f);
-        menuButtonRect.anchorMax = new Vector2(0.5f, 0.5f);
-        menuButtonRect.pivot = new Vector2(0.5f, 0.5f);
-        menuButtonRect.anchoredPosition = new Vector2(0f, -menuActualSize.rect.height / 4f);
-        menuButtonRect.sizeDelta = new Vector2(350f, menuButtonRect.sizeDelta.y);
-        menuButtonRect.GetComponentInChildren<Text>().text = "BACK";
-        _menuButtonGO.GetComponent<Button>().onClick.AddListener(() => Back());
+        controls.SetActive(true);
     }
 
     public void ExitToMainMenu()
@@ -98,7 +75,6 @@ public class PauseMenu : MonoBehaviour {
         Debug.Log("Back button was pressed");
         Destroy(_controlsPanelGO);
         Destroy(_menuButtonGO);
-        headerText.SetActive(true);
         menuButtons.SetActive(true);
     }
 
@@ -116,6 +92,7 @@ public class PauseMenu : MonoBehaviour {
     {
         container.SetActive(false);
         cameraBlur.enabled = false;
+        controls.SetActive(false);
         Time.timeScale = 1f;
         GameManager.instance.IsMenuOpen = false;
         GameManager.instance.PauseType = GameManager.PauseTypeEnum.none;

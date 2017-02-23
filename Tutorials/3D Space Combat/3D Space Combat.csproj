@@ -13,13 +13,11 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.5.0f3</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -107,8 +105,12 @@
     <Compile Include="Assets\Scripts\BoltGrower.cs" />
     <Compile Include="Assets\Scripts\BoltMover.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
+    <Compile Include="Assets\Scripts\CameraMover.cs" />
     <Compile Include="Assets\Scripts\CameraShake.cs" />
+    <Compile Include="Assets\Scripts\CopyMove.cs" />
+    <Compile Include="Assets\Scripts\CopyRotation.cs" />
     <Compile Include="Assets\Scripts\CurrentObjectiveDisplay.cs" />
+    <Compile Include="Assets\Scripts\CustomEditors\ReorderableList.cs" />
     <Compile Include="Assets\Scripts\DamageInfo.cs" />
     <Compile Include="Assets\Scripts\DestinationIndicator.cs" />
     <Compile Include="Assets\Scripts\DestroyOnTimeout.cs" />
@@ -169,6 +171,8 @@
     <Compile Include="Assets\Scripts\ThrusterGroup.cs" />
     <Compile Include="Assets\Scripts\Timer.cs" />
     <Compile Include="Assets\Scripts\UI\CooldownBar.cs" />
+    <Compile Include="Assets\Scripts\UI\TextGroup.cs" />
+    <Compile Include="Assets\Scripts\UI\TextGroupList.cs" />
     <Compile Include="Assets\Scripts\UICountdown.cs" />
     <Compile Include="Assets\Scripts\UIProgressBarController.cs" />
     <Compile Include="Assets\Scripts\UiElementHider.cs" />
