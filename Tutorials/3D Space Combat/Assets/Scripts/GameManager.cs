@@ -142,7 +142,7 @@ public class GameManager : MonoBehaviour
             DialogueManager.instance.BeginDialogue(openingDialogue, "dialogue1");
 
             //Invoke("KillPlayer", 10);
-            Invoke("DisplayWinScreen", 10);
+            //Invoke("DisplayWinScreen", 10);
         }
         else
         {

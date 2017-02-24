@@ -27,7 +27,7 @@ public class AISimple : MonoBehaviour {
     private AIWeaponController weaponController;
     private Maneuver currentManeuver;
     private bool isStrafingRight;
-    private Enums.Allegiance allegiance;
+    private Enums.Allegiance _allegiance;
 
     private Quaternion rotationChange = Quaternion.identity;
     private bool attackInitialized;
@@ -42,7 +42,7 @@ public class AISimple : MonoBehaviour {
     {
         rb = GetComponent<Rigidbody>();
         weaponController = GetComponent<AIWeaponController>();
-        allegiance = GetComponent<TargetableObject>().Allegiance;
+        _allegiance = GetComponent<TargetableObject>().Allegiance;
     }
 
     void Start()
@@ -54,43 +54,39 @@ public class AISimple : MonoBehaviour {
 	
 	void FixedUpdate ()
     {
-        if(target != null)// && Vector3.Distance(GameManager.playerTransform.position, transform.position) < 2000f)
-        {
-            // Evading
-            if (attackRunTimer < attackRunWait)
-            {
-                attackRunTimer += Time.deltaTime;
+        if (!IsTargetInRange(GameManager.playerTransform.position)) return;
+        if (target == null) ChooseTarget();
 
-                EvadeManeuver();
+        // Evading
+        if (attackRunTimer < attackRunWait)
+        {
+            attackRunTimer += Time.deltaTime;
+
+            EvadeManeuver();
+        }
+        // Attack run
+        else
+        {
+            if (!attackInitialized)
+            {
+                ChooseTarget();
+                attackInitialized = true;
+                if (target == null)
+                {
+                    Debug.Log("Could not find a suitable target");
+                }
             }
-            // Attack run
             else
             {
-                if (!attackInitialized)
+                if (target != null)
                 {
-                    ChooseTarget();
-                    attackInitialized = true;
-                    if (target == null)
-                    {
-                        Debug.Log("Could not find a suitable target");
-                    }
+                    AttackManeuver();
                 }
                 else
                 {
-                    if (target != null)
-                    {
-                        AttackManeuver();
-                    }
-                    else
-                    {
-                        attackInitialized = false;
-                    }
+                    attackInitialized = false;
                 }
             }
-        }
-        else
-        {
-            ChooseTarget();
         }
 	}
 
@@ -100,45 +96,28 @@ public class AISimple : MonoBehaviour {
         {
             chooseTargetTimer = Time.time + Random.Range(5, 30);
 
-            var objects = (FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[]).Where(t => t.Allegiance == Enums.Allegiance.Friendly).ToList();
+            var targets = FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[];
+            var closeTargets = targets.Where(t => IsTargetInRange(t.transform.position));
+            var closeEnemyTargets = closeTargets.Where(t => IsEnemy(t.Allegiance)).ToList();
 
-            // Check if there is an appropriate target
-            if (objects != null && objects.Count > 0)
-            {
-                targetableObject = objects[Random.Range(0, objects.Count)];
-                target = targetableObject.transform;
-            }
-            else
+            if (closeEnemyTargets == null || closeEnemyTargets.Count == 0)
             {
                 target = null;
+                return;
             }
+            targetableObject = closeEnemyTargets[Random.Range(0, closeEnemyTargets.Count - 1)];
+            target = targetableObject.transform;
         }
     }
 
-    private void Shooting()
+    private bool IsTargetInRange(Vector3 target)
     {
-        if (Time.time >= maneuverTimer)
-        {
-            maneuverTimer = Time.time + Random.Range(5, 10);
-            currentManeuver = (Maneuver)Random.Range(0, 2);
-            print(string.Format("currentManeuver: {0}", currentManeuver));
-            if (currentManeuver == Maneuver.Sniping)
-            {
-                isStrafingRight = RandomBoolean();
-            }
-        }
-        else
-        {
-            switch (currentManeuver)
-            {
-                case Maneuver.Attack:
-                    PerformAttackManeuver();
-                    break;
-                case Maneuver.Sniping:
-                    PerformSnipingManeuver(isStrafingRight);
-                    break;
-            }
-        }
+        return Vector3.Distance(transform.position, target) < 2000f;
+    }
+
+    private bool IsEnemy(Enums.Allegiance allegiance)
+    {
+        return allegiance != Enums.Allegiance.Inanimate && allegiance != _allegiance;
     }
 
     private void EvadeManeuver()
@@ -178,55 +157,5 @@ public class AISimple : MonoBehaviour {
             attackRunTimer = 0;
             attackInitialized = false;
         }
-    }
-
-    private void PerformAttackManeuver()
-    {
-        transform.LookAt(target);
-        //Quaternion lookAtRotation = Quaternion.LookRotation(target.position);
-        //transform.rotation = Quaternion.Slerp(transform.rotation, lookAtRotation, lookSpeed);
-        weaponController.Fire();
-
-        if (distance > followRange)
-        {
-            rb.AddForce(transform.forward * moveSpeed);
-        }
-    }
-
-    private void PerformSnipingManeuver(bool strafeRight)
-    {
-        if (distance < snipeRange)
-        {
-            //Quaternion lookAtRotation = Quaternion.LookRotation(2.0f * transform.position - target.position);
-            //transform.rotation = Quaternion.Slerp(transform.rotation, lookAtRotation, lookSpeed);
-            transform.LookAt(2.0f * transform.position - target.position);
-            rb.AddForce(transform.forward * moveSpeed);
-        }
-        else
-        {
-            Quaternion lookAtRotation = Quaternion.LookRotation(target.position);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookAtRotation, lookSpeed);
-            if (strafeRight)
-            {
-                rb.AddForce(transform.right * strafeSpeed);
-            }
-            else
-            {
-                rb.AddForce(transform.right * -strafeSpeed);
-            }
-            //lookAtRotation = Quaternion.LookRotation(target.position);
-            //transform.rotation = Quaternion.Slerp(transform.rotation, lookAtRotation, lookSpeed);
-            transform.LookAt(target);
-            weaponController.Fire();
-        }
-    }
-
-    private bool RandomBoolean()
-    {
-        if(Random.value >= 0.5f)
-        {
-            return true;
-        }
-        return false;
     }
 }
