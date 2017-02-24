@@ -23,6 +23,6 @@ public class WarpCamera : MonoBehaviour {
 
     private float CalculateDuration(Vector3 destination, float speed)
     {
-        return Vector3.Distance(transform.position, destination) / (speed * 100f);
+        return Mathf.Clamp(Vector3.Distance(transform.position, destination) / (speed * 100f), 2f, 5f);
     }
 }
