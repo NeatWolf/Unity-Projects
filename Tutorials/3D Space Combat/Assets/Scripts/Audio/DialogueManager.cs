@@ -96,7 +96,7 @@ public class DialogueManager : MonoBehaviour {
         }
 	}
 
-    public void BeginDialogue(AudioClip passedClip)
+    public void BeginDialogue(AudioClip passedClip, string textFileName)
     {
         dialogueAudio = passedClip;
 
@@ -117,7 +117,7 @@ public class DialogueManager : MonoBehaviour {
         _nextTrigger = 0;
 
         // Get everything from text file
-        TextAsset temp = Resources.Load("Dialogues/" + "dialogue1") as TextAsset;
+        TextAsset temp = Resources.Load("Dialogues/" + textFileName) as TextAsset;
         fileLines = temp.text.Split('\n');
 
         // Split subtitles and triggers into different lists

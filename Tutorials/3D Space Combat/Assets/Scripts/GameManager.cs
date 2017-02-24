@@ -139,10 +139,10 @@ public class GameManager : MonoBehaviour
 
             // Add quest after intro dialogue
             Invoke("InitializeTargetPracticeQuest", 27f);
-            DialogueManager.instance.BeginDialogue(openingDialogue);
+            DialogueManager.instance.BeginDialogue(openingDialogue, "dialogue1");
 
             //Invoke("KillPlayer", 10);
-            //Invoke("DisplayWinScreen", 10);
+            Invoke("DisplayWinScreen", 10);
         }
         else
         {

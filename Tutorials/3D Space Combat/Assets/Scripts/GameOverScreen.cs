@@ -1,13 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityStandardAssets.ImageEffects;
 
 [RequireComponent(typeof(Animator))]
 public class GameOverScreen : MonoBehaviour {
 
-    private Animator _anim;
+    [SerializeField]
+    private BlurOptimized cameraBlur;
 
-	void Start ()
+    private Animator _anim;
+    private UiElementHider _uiElementHider;
+
+    void Awake()
+    {
+        _uiElementHider = new UiElementHider("InGameUI");
+    }
+
+    void Start ()
     {
         _anim = GetComponent<Animator>();
         gameObject.SetActive(false);
@@ -21,12 +31,16 @@ public class GameOverScreen : MonoBehaviour {
         GameManager.instance.PauseType = GameManager.PauseTypeEnum.none;
         GameManager.instance.CloseWinScreen();
         gameObject.SetActive(false);
+        cameraBlur.enabled = false;
+        _uiElementHider.Show();
     }
 
     public void Display()
     {
-        Time.timeScale = 0.5f;
+        Time.timeScale = 0.2f;
         gameObject.SetActive(true);
+        cameraBlur.enabled = true;
+        _uiElementHider.Hide();
         GameManager.instance.IsMenuOpen = true;
         GameManager.instance.PauseType = GameManager.PauseTypeEnum.gameOver;
     }
