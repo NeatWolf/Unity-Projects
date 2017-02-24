@@ -1,8 +1,13 @@
 <time/>000.000|<break/>
-<time/>005.000|Got something for me?
-<time/>007.500|I'll give you an easy one to let you test out the new ship.
-<time/>011.500|That won't be necess-
-<time/>013.000|We've located a small band of raiders near Deimos. They seem to have flown a little too far from home in an effort to find more resources to harvest.
-<time/>020.500|Hopefully this is straightforward enough for you.
-<time/>024.000|I think I can handle it.
-<time/>026.500|<break/>
+<time/>004.000|Welcome to the highly anticipated space adventure: Starship Siege!
+<time/>008.000|Well it's not highly anticipated.
+<time/>011.000|And it's barely a game.
+<time/>014.000|At this point it's some interesting concepts that COULD be in a full game at some point.
+<time/>020.000|Anyway, press Esc to go to the menu. From there you can see the controls.
+<time/>024.000|In a few seconds your first mission will magically appear...
+<time/>028.000|Ta Da!
+<time/>031.000|To see your missions press J
+<time/>034.000|When you have a mission selected you'll see a waypoint on your screen. Move towards it.
+<time/>037.000|And if it shoots you, destroy it.
+<time/>039.000|You can figure out the rest. Enjoy!
+<time/>044.000|<break/>

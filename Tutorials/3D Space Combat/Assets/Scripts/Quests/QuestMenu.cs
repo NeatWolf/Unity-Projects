@@ -5,6 +5,13 @@ public class QuestMenu : MonoBehaviour {
 
     public GameObject questMenuCanvas;
 
+    private UiElementHider _uiElementHider;
+
+    void Awake()
+    {
+        _uiElementHider = new UiElementHider("InGameUI");
+    }
+
     void Update()
     {
         if (GameManager.instance.IsMenuOpen && GameManager.instance.PauseType == GameManager.PauseTypeEnum.questMenu)
@@ -28,10 +35,12 @@ public class QuestMenu : MonoBehaviour {
             if (GameManager.instance.IsMenuOpen)
             {
                 GameManager.instance.PauseType = GameManager.PauseTypeEnum.none;
+                _uiElementHider.Show();
             }
             else
             {
                 GameManager.instance.PauseType = GameManager.PauseTypeEnum.questMenu;
+                _uiElementHider.Hide();
             }
             GameManager.instance.IsMenuOpen = !GameManager.instance.IsMenuOpen;
         }

@@ -127,25 +127,18 @@ public class GameManager : MonoBehaviour
     {
         if (!isTesting)
         {
-            // Spawn asteroids around Deimos
-            //SpawnHazardsAroundSphere(deimosTransform, 9000, 5800, deimosAsteroidCount);
-
-            // Position player at start transform
-            //playerStartingTransform = player.transform;
-            //playerTransform.position = playerStartingTransform.position;
-            //playerTransform.rotation = playerStartingTransform.rotation;
-
             IsCursorVisible = false;
 
             // Lock player controls until after intro dialogue
             player = playerTransform.GetComponent<Player>();
             player.LockControls(true);
             player.LockMovement(true);
-            StartCoroutine(player.LockControlsDelayed(false, 26.5f));
-            Invoke("EnableReticle", 26.5f);
+            StartCoroutine(player.LockControlsDelayed(false, 41f));
+            StartCoroutine(player.LockMovementDelayed(false, 41f));
+            Invoke("EnableReticle", 41f);
 
             // Add quest after intro dialogue
-            Invoke("InitializeTargetPracticeQuest", 24f);
+            Invoke("InitializeTargetPracticeQuest", 27f);
             DialogueManager.instance.BeginDialogue(openingDialogue);
 
             //Invoke("KillPlayer", 10);

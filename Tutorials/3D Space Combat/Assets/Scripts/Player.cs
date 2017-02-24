@@ -238,6 +238,12 @@ public class Player : MonoBehaviour
         _movementLocked = isLocked;
     }
 
+    public IEnumerator LockMovementDelayed(bool isLocked, float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        LockMovement(isLocked);
+    }
+
     // TODO create class for all controls to pass through and perform check on _controlsLocked
     public void LockControls(bool isLocked)
     {

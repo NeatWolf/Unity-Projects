@@ -19,21 +19,21 @@ public class DialogueManager : MonoBehaviour {
 
     private string[] fileLines;
 
-    private List<string> subtitleLines = new List<string>();
-    private List<string> subtitleTimingStrings = new List<string>();
-    private int nextSubtitle = 0;
-    private string displaySubtitle;
+    private List<string> _subtitleLines = new List<string>();
+    private List<string> _subtitleTimingStrings = new List<string>();
+    private int _nextSubtitle = 0;
+    private string _displaySubtitle;
 
-    private List<string> triggerLines = new List<string>();
-    private List<string> triggerTimingStrings = new List<string>();
-    private List<string> triggers = new List<string>();
-    private int nextTrigger = 0;
+    private List<string> _triggerLines = new List<string>();
+    private List<string> _triggerTimingStrings = new List<string>();
+    private List<string> _triggers = new List<string>();
+    private int _nextTrigger = 0;
 
     private const float RATE = 44100.0f;
 
     public static DialogueManager instance;
 
-    private AudioSource audioSource;
+    private AudioSource _audioSource;
 
     void Awake()
     {
@@ -45,41 +45,41 @@ public class DialogueManager : MonoBehaviour {
         {
             Destroy(gameObject);
         }
-        audioSource = gameObject.AddComponent<AudioSource>();
+        _audioSource = gameObject.AddComponent<AudioSource>();
     }
 
 	void Update ()
     {
         if (!GameManager.instance.IsMenuOpen)
         {
-            if ((dialogueAudio != null) && (audioSource.clip != null) && audioSource.clip.name == dialogueAudio.name)
+            if ((dialogueAudio != null) && (_audioSource.clip != null) && _audioSource.clip.name == dialogueAudio.name)
             {
-                audioSource.UnPause();
+                _audioSource.UnPause();
 
                 // Check for <break/> or negative nextSubtitle
-                if (nextSubtitle > 0 && !subtitleText[nextSubtitle - 1].Contains("<break/>"))
+                if (_nextSubtitle > 0 && !subtitleText[_nextSubtitle - 1].Contains("<break/>"))
                 {
                     backgroundImg.enabled = true;
-                    subtitleUIText.text = displaySubtitle;
+                    if (subtitleUIText.text != _displaySubtitle) subtitleUIText.text = _displaySubtitle;
                 }
                 else
                 {
                     backgroundImg.enabled = false;
-                    subtitleUIText.text = "";
+                    if (!string.IsNullOrEmpty(subtitleUIText.text)) subtitleUIText.text = "";
                 }
 
-                if (nextSubtitle < subtitleText.Count)
+                if (_nextSubtitle < subtitleText.Count)
                 {
-                    if (audioSource.timeSamples / RATE > subtitleTimings[nextSubtitle])
+                    if (_audioSource.timeSamples / RATE > subtitleTimings[_nextSubtitle])
                     {
-                        displaySubtitle = subtitleText[nextSubtitle];
-                        nextSubtitle++;
+                        _displaySubtitle = subtitleText[_nextSubtitle];
+                        _nextSubtitle++;
                     }
                 }
 
-                if (nextTrigger < triggers.Count)
+                if (_nextTrigger < _triggers.Count)
                 {
-                    if (audioSource.timeSamples / RATE > triggerTimings[nextTrigger])
+                    if (_audioSource.timeSamples / RATE > triggerTimings[_nextTrigger])
                     {
                         // Perform trigger actions
                     }
@@ -88,11 +88,11 @@ public class DialogueManager : MonoBehaviour {
         }
         else
         {
-            if ((dialogueAudio != null) && (audioSource.clip != null) && audioSource.clip.name == dialogueAudio.name)
+            if ((dialogueAudio != null) && (_audioSource.clip != null) && _audioSource.clip.name == dialogueAudio.name)
             {
-                audioSource.Pause();
+                _audioSource.Pause();
             }
-            subtitleUIText.text = "";
+            if (!string.IsNullOrEmpty(subtitleUIText.text)) subtitleUIText.text = "";
         }
 	}
 
@@ -101,20 +101,20 @@ public class DialogueManager : MonoBehaviour {
         dialogueAudio = passedClip;
 
         // Reset everything
-        subtitleLines = new List<string>();
-        subtitleTimingStrings = new List<string>();
+        _subtitleLines = new List<string>();
+        _subtitleTimingStrings = new List<string>();
         subtitleTimings = new List<float>();
         subtitleText = new List<string>();
 
-        triggerLines = new List<string>();
-        triggerTimingStrings = new List<string>();
+        _triggerLines = new List<string>();
+        _triggerTimingStrings = new List<string>();
         triggerTimings = new List<float>();
-        triggers = new List<string>();
+        _triggers = new List<string>();
         triggerObjectNames = new List<string>();
         triggerMethodNames = new List<string>();
 
-        nextSubtitle = 0;
-        nextTrigger = 0;
+        _nextSubtitle = 0;
+        _nextTrigger = 0;
 
         // Get everything from text file
         TextAsset temp = Resources.Load("Dialogues/" + "dialogue1") as TextAsset;
@@ -125,35 +125,35 @@ public class DialogueManager : MonoBehaviour {
         {
             if (line.Contains("<trigger/>"))
             {
-                triggerLines.Add(line);
+                _triggerLines.Add(line);
             }
             else
             {
-                subtitleLines.Add(line);
+                _subtitleLines.Add(line);
             }
         }
 
         // Split out time
-        for(int i = 0; i < subtitleLines.Count; i++)
+        for(int i = 0; i < _subtitleLines.Count; i++)
         {
-            string[] splitTemp = subtitleLines[i].Split('|');
+            string[] splitTemp = _subtitleLines[i].Split('|');
 
-            subtitleTimingStrings.Add(splitTemp[0]);
-            subtitleTimings.Add(float.Parse(CleanTimeString(subtitleTimingStrings[i])));
+            _subtitleTimingStrings.Add(splitTemp[0]);
+            subtitleTimings.Add(float.Parse(CleanTimeString(_subtitleTimingStrings[i])));
 
             subtitleText.Add(splitTemp[1]);
         }
 
         // Split out trigger
-        for (int i = 0; i < triggerLines.Count; i++)
+        for (int i = 0; i < _triggerLines.Count; i++)
         {
-            string[] splitTemp = triggerLines[i].Split('|');
+            string[] splitTemp = _triggerLines[i].Split('|');
 
-            triggerTimingStrings.Add(splitTemp[0]);
-            triggerTimings.Add(float.Parse(CleanTimeString(triggerTimingStrings[i])));
+            _triggerTimingStrings.Add(splitTemp[0]);
+            triggerTimings.Add(float.Parse(CleanTimeString(_triggerTimingStrings[i])));
 
-            triggers.Add(splitTemp[1]);
-            string[] splitTriggerTemp = triggers[i].Split('-');
+            _triggers.Add(splitTemp[1]);
+            string[] splitTriggerTemp = _triggers[i].Split('-');
             splitTriggerTemp[0] = splitTriggerTemp[0].Replace("<trigger/>", "");
             triggerObjectNames.Add(splitTriggerTemp[0]);
             triggerMethodNames.Add(splitTriggerTemp[1]);
@@ -162,14 +162,14 @@ public class DialogueManager : MonoBehaviour {
         // Set initial subtitle text
         if(subtitleText[0] != null)
         {
-            displaySubtitle = subtitleText[0];
+            _displaySubtitle = subtitleText[0];
         }
 
         // Set and play audio clip
         if(dialogueAudio != null)
         {
-            audioSource.clip = dialogueAudio;
-            audioSource.Play();
+            _audioSource.clip = dialogueAudio;
+            _audioSource.Play();
         }
     }
 
