@@ -14,11 +14,10 @@ public class AISimple : MonoBehaviour {
     public float lookSpeed;
     public float rotationDamping;
 
-    private TargetableObject targetableObject;
-    private Transform target;
+    private Transform _target;
     private float distance;
     private float maneuverTimer;
-    private float chooseTargetTimer;
+    private float _chooseTargetTimer;
     private float evadeDirectionTimer;
     private float evadeDirectionWait;
     private float attackRunTimer;
@@ -28,9 +27,8 @@ public class AISimple : MonoBehaviour {
     private Maneuver currentManeuver;
     private bool isStrafingRight;
     private Enums.Allegiance _allegiance;
-
     private Quaternion rotationChange = Quaternion.identity;
-    private bool attackInitialized;
+    private bool _attackInitialized;
 
     private enum Maneuver
     {
@@ -54,11 +52,15 @@ public class AISimple : MonoBehaviour {
 	
 	void FixedUpdate ()
     {
-        if (!IsTargetInRange(GameManager.playerTransform.position)) return;
-        if (target == null) ChooseTarget();
+        if (GameManager.instance != null && GameManager.instance.Player != null && !IsTargetInRange(GameManager.playerTransform.position)) return;
+        if (_target == null && Time.time >= _chooseTargetTimer)
+        {
+            _chooseTargetTimer = Time.time + Random.Range(5, 30);
+            ChooseTarget();
+        }
 
-        // Evading
-        if (attackRunTimer < attackRunWait)
+        // Evade for duration of timer or if there are no more targets available
+        if (attackRunTimer < attackRunWait || _target == null)
         {
             attackRunTimer += Time.deltaTime;
 
@@ -67,47 +69,21 @@ public class AISimple : MonoBehaviour {
         // Attack run
         else
         {
-            if (!attackInitialized)
-            {
-                ChooseTarget();
-                attackInitialized = true;
-                if (target == null)
-                {
-                    Debug.Log("Could not find a suitable target");
-                }
-            }
-            else
-            {
-                if (target != null)
-                {
-                    AttackManeuver();
-                }
-                else
-                {
-                    attackInitialized = false;
-                }
-            }
+            AttackManeuver();
         }
 	}
 
     private void ChooseTarget()
     {
-        if (Time.time >= chooseTargetTimer || target == null)
-        {
-            chooseTargetTimer = Time.time + Random.Range(5, 30);
+        var targets = FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[];
+        if (targets == null || targets.Length == 0) return;
+        var enemyTargets = targets.Where(t => IsEnemy(t.Allegiance));
+        if (enemyTargets == null || enemyTargets.Count() == 0) return;
+        var closeEnemyTargets = enemyTargets.Where(t => IsTargetInRange(t.transform.position));
+        if (closeEnemyTargets == null || closeEnemyTargets.Count() == 0) return;
 
-            var targets = FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[];
-            var closeTargets = targets.Where(t => IsTargetInRange(t.transform.position));
-            var closeEnemyTargets = closeTargets.Where(t => IsEnemy(t.Allegiance)).ToList();
-
-            if (closeEnemyTargets == null || closeEnemyTargets.Count == 0)
-            {
-                target = null;
-                return;
-            }
-            targetableObject = closeEnemyTargets[Random.Range(0, closeEnemyTargets.Count - 1)];
-            target = targetableObject.transform;
-        }
+        var targetableObject = closeEnemyTargets.ToList()[Random.Range(0, closeEnemyTargets.Count() - 1)];
+        _target = targetableObject.transform;
     }
 
     private bool IsTargetInRange(Vector3 target)
@@ -144,9 +120,9 @@ public class AISimple : MonoBehaviour {
     private void AttackManeuver()
     {
         // Charge towards target until you're close
-        if(Vector3.Distance(transform.position, target.position) > 30)
+        if(Vector3.Distance(transform.position, _target.position) > 30)
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(target.position - transform.position), rotationDamping * 2f);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(_target.position - transform.position), rotationDamping * 2f);
             weaponController.Fire();
             rb.AddForce(transform.forward * moveSpeed);
         }
@@ -155,7 +131,7 @@ public class AISimple : MonoBehaviour {
         {
             attackRunWait = Random.Range(5f, 15f);
             attackRunTimer = 0;
-            attackInitialized = false;
+            _attackInitialized = false;
         }
     }
 }
