@@ -110,6 +110,7 @@
     <Compile Include="Assets\Scripts\BoltDamager.cs" />
     <Compile Include="Assets\Scripts\BoltGrower.cs" />
     <Compile Include="Assets\Scripts\BoltMover.cs" />
+    <Compile Include="Assets\Scripts\Boosters.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\CameraMover.cs" />
     <Compile Include="Assets\Scripts\CameraShake.cs" />

@@ -14,10 +14,6 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float strafeRotation = 5f;
     [SerializeField]
-    private float combatBoostSpeed = 400.0f;
-    [SerializeField]
-    private float boostSpeed = 1000.0f;
-    [SerializeField]
     private float lookSpeed = 0.1f;
     [SerializeField]
     private int verticalLookLimit = 60;
@@ -42,14 +38,13 @@ public class Player : MonoBehaviour
 
     private Rigidbody _rb;
     private WarpAudio _warpDrive;
+    private Boosters _boosters;
     private float _rotationZ;
     private Vector3 _screenPosition;
     private bool _movementLocked = false;
     private bool _controlsLocked = false;
     private State _currentState = State.Default;
     private AudioSource _audioSource;
-    private float _startingBoostSpeed;
-    private float _startingCombatBoostSpeed;
 
     public enum State
     {
@@ -74,10 +69,7 @@ public class Player : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         _warpDrive = GetComponent<WarpAudio>();
         _audioSource = GetComponent<AudioSource>();
-        _startingBoostSpeed = boostSpeed;
-        _startingCombatBoostSpeed = combatBoostSpeed;
-        boostSpeed = 0f;
-        combatBoostSpeed = 0f;
+        _boosters = GetComponent<Boosters>();
     }
 
     void Update()
@@ -85,7 +77,8 @@ public class Player : MonoBehaviour
         if (!_controlsLocked && Input.GetKeyDown(KeyCode.Tab)) LockOntoWarpTarget();
         if (_currentState == State.WarpStandby) EngageWarp();
 
-        GameManager.instance.IsInCombat = IsInCombat();
+        var isInCombat = IsInCombat();
+        if (GameManager.instance.IsInCombat != isInCombat) GameManager.instance.IsInCombat = isInCombat;
     }
 
     private void LockOntoWarpTarget()
@@ -163,8 +156,8 @@ public class Player : MonoBehaviour
         forwardForce += transform.forward * idleSpeed;
 
         forwardForce = AddForwardForce(forwardForce, inputVertical);
-
-        forwardForce += transform.forward * (GameManager.instance.IsInCombat ? combatBoostSpeed : boostSpeed);
+        _boosters.RecalculateBoost();
+        forwardForce += transform.forward * _boosters.BoostSpeed;
 
         Rotate(inputHorizontal);
         _rb.AddForce(forwardForce);
@@ -178,46 +171,13 @@ public class Player : MonoBehaviour
         {
             //thrusterOffAudio.TransitionTo(1f);
             forwardForce += transform.forward * idleSpeed * inputVertical;
-
-            if (_currentState == State.Boosting)
-            {
-                StartCoroutine(LerpBoost(1f, GameManager.instance.IsInCombat ? _startingCombatBoostSpeed : _startingBoostSpeed, 0f, GameManager.instance.IsInCombat));
-                cameraController.ExitBoost();
-
-                _currentState = State.Default;
-                GameManager.instance.IsShootingEnabled = true;
-            }
-            return forwardForce;
         }
-
-        //thrusterOnAudio.TransitionTo(0.5f);
-        forwardForce += transform.forward * moveSpeed * inputVertical;
-
-        Boost();
-
+        else
+        {
+            //thrusterOnAudio.TransitionTo(0.5f);
+            forwardForce += transform.forward * moveSpeed * inputVertical;
+        }
         return forwardForce;
-    }
-
-    private void Boost()
-    {
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            if (_currentState != State.Boosting)
-            {
-                StartCoroutine(LerpBoost(1f, 0f, GameManager.instance.IsInCombat ? _startingCombatBoostSpeed : _startingBoostSpeed, GameManager.instance.IsInCombat));
-                cameraController.EnterBoost();
-            }
-            _currentState = State.Boosting;
-            GameManager.instance.IsShootingEnabled = false;
-        }
-        else if (_currentState == State.Boosting)
-        {
-            StartCoroutine(LerpBoost(1f, GameManager.instance.IsInCombat ? _startingCombatBoostSpeed : _startingBoostSpeed, 0f, GameManager.instance.IsInCombat));
-            cameraController.ExitBoost();
-
-            _currentState = State.Default;
-            GameManager.instance.IsShootingEnabled = true;
-        }
     }
 
     private void Rotate(float inputHorizontal)
@@ -262,31 +222,6 @@ public class Player : MonoBehaviour
         while (Quaternion.Angle(_rb.rotation, direction) > 0.1)
         {
             _rb.rotation = Quaternion.Slerp(_rb.rotation, direction, lookSpeed);
-        }
-        yield return null;
-    }
-
-    IEnumerator LerpBoost(float time, float startValue, float endValue, bool isInCombat)
-    {
-        float startSpeed = startValue;
-        float endSpeed = endValue;
-
-        float timeSinceStarted = 0f;
-        float percentageComplete = 0f;
-        float startTime = Time.time;
-
-        while (percentageComplete < 1f)
-        {
-            timeSinceStarted = Time.time - startTime;
-            percentageComplete = timeSinceStarted / time;
-            if (isInCombat)
-            {
-                combatBoostSpeed = Mathf.Lerp(startSpeed, endSpeed, percentageComplete);
-            }
-            else
-            {
-                boostSpeed = Mathf.Lerp(startSpeed, endSpeed, percentageComplete);
-            }
             yield return null;
         }
     }

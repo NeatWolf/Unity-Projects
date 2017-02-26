@@ -49,10 +49,16 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private int testCount;
 
+    public event System.EventHandler IsInCombatChanged;
+
     public bool IsInCombat
     {
         get { return _isInCombat; }
-        set { _isInCombat = value; }
+        set
+        {
+            _isInCombat = value;
+            if (IsInCombatChanged != null) IsInCombatChanged(this, null);
+        }
     }
     
     public bool IsShootingEnabled
