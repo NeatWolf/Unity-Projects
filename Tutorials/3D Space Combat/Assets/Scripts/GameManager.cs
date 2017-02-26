@@ -21,15 +21,10 @@ public class GameManager : MonoBehaviour
     private Vector2 asteroidSizeRange;
     [SerializeField]
     private Quest firstQuest;
-    [Header("Deimos")]
     [SerializeField]
-    private Transform deimosTransform;
+    private GameObject moonTravelObjective;
     [SerializeField]
-    private int deimosAsteroidCount;
-    [SerializeField]
-    private GameObject deimosTravelObjective;
-    [SerializeField]
-    private Transform deimosSpawnPoint;
+    private Transform moonSpawnPoint;
     [Header("Earth")]
     [SerializeField]
     private GameObject earthTravelObjective;
@@ -206,13 +201,13 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void InitializeTargetPracticeQuest()
     {
-        // OBJECTIVE 1 - TRAVEL TO DEIMOS
-        ObjectiveTarget deimos = deimosTravelObjective.AddComponent<ObjectiveTarget>();
+        // OBJECTIVE 1 - TRAVEL TO MOON
+        ObjectiveTarget moon = moonTravelObjective.AddComponent<ObjectiveTarget>();
         Objective firstObjective = firstQuest.GetObjectiveAtIndex(0);
-        firstObjective.AssignTarget(deimos);
+        firstObjective.AssignTarget(moon);
 
         // OBJECTIVE 2 - DEFEAT RAIDERS
-        SpawnPrefabsForObjective(firstQuest, 1, enemyShipPrefab, 5, deimosSpawnPoint.position, 50);
+        SpawnPrefabsForObjective(firstQuest, 1, enemyShipPrefab, 5, moonSpawnPoint.position, 50);
 
         // OBJECTIVE 3 - TRAVEL TO EARTH
         ObjectiveTarget earth = earthTravelObjective.AddComponent<ObjectiveTarget>();
@@ -266,7 +261,6 @@ public class GameManager : MonoBehaviour
     {
         Invoke("InitializeTargetPracticeQuest", 1f);
         Invoke("LevelUpTest", 10f);
-        //SpawnHazardsAroundSphere(deimosTransform, 9000, 5800, deimosAsteroidCount);
         SpawnPrefabs(enemyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
         SpawnPrefabs(friendlyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
     }
