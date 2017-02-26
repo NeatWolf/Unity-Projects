@@ -261,7 +261,7 @@ public class GameManager : MonoBehaviour
     {
         Invoke("InitializeTargetPracticeQuest", 1f);
         Invoke("LevelUpTest", 10f);
-        SpawnPrefabs(enemyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
+        SpawnPrefabs(enemyShipPrefab, 5, Vector3.zero, testSpawnRadius);
         SpawnPrefabs(friendlyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
     }
 

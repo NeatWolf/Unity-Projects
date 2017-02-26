@@ -7,21 +7,19 @@ public class MainMenu : MonoBehaviour {
     [SerializeField]
     private Camera cam;
     [SerializeField]
-    private GameObject controlsGameObject;
+    private GameObject controls;
     [SerializeField]
     private GameObject menuGameObject;
 
-    private Animator _camAnim;
-
     void Start()
     {
-        controlsGameObject.SetActive(false);
-        _camAnim = cam.GetComponent<Animator>();
+        controls.SetActive(false);
     }
 
     public void NewGame()
     {
         Debug.Log("Load Main scene");
+        controls.SetActive(false);
         FadeInOut.instance.LoadLevel("Main");
     }
 
@@ -33,7 +31,6 @@ public class MainMenu : MonoBehaviour {
 
     public void Options()
     {
-        _camAnim.SetTrigger("EnterControls");
-        controlsGameObject.SetActive(true);
+        controls.SetActive(!controls.activeSelf);
     }
 }

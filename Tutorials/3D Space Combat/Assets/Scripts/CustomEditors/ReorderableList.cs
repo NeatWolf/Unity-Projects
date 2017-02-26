@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEditorInternal;
 
@@ -32,3 +33,4 @@ public class LevelDataEditor : Editor
         serializedObject.ApplyModifiedProperties();
     }
 }
+#endif
