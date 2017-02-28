@@ -141,9 +141,6 @@ public class GameManager : MonoBehaviour
             // Add quest after intro dialogue
             Invoke("InitializeTargetPracticeQuest", 27f);
             DialogueManager.instance.BeginDialogue(openingDialogue, "dialogue1");
-
-            //Invoke("KillPlayer", 10);
-            //Invoke("DisplayWinScreen", 10);
         }
         else
         {
@@ -260,7 +257,9 @@ public class GameManager : MonoBehaviour
     private void StartTest()
     {
         Invoke("InitializeTargetPracticeQuest", 1f);
-        Invoke("LevelUpTest", 10f);
+        //Invoke("LevelUpTest", 10f);
+        //Invoke("KillPlayer", 10);
+        //Invoke("DisplayWinScreen", 10);
         SpawnPrefabs(enemyShipPrefab, 5, Vector3.zero, testSpawnRadius);
         SpawnPrefabs(friendlyShipPrefab, testCount, Vector3.zero, testSpawnRadius);
     }
