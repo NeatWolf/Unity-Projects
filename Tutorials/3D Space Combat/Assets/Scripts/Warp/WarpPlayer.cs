@@ -9,16 +9,23 @@ public class WarpPlayer : MonoBehaviour {
     public GoEaseType easeType;
 
     private Action<AbstractGoTween> _onComplete;
+    private Action<AbstractGoTween> _onUpdate;
 
     public void Warp(Vector3 destination)
     {
         var duration = CalculateDuration(destination, speed);
-        Go.to(transform, duration, new GoTweenConfig().vector3Prop("position", destination).setEaseType(easeType).onComplete(_onComplete));
+        var tween = Go.to(transform, duration, new GoTweenConfig().vector3Prop("position", destination).setEaseType(easeType).onComplete(_onComplete));
+        tween.setOnUpdateHandler(_onUpdate);
     }
 
     public void SetOnCompleteHandler(Action<AbstractGoTween> handler)
     {
         _onComplete = handler;
+    }
+
+    public void SetOnUpdateHandler(Action<AbstractGoTween> handler)
+    {
+        _onUpdate = handler;
     }
 
     private float CalculateDuration(Vector3 destination, float speed)

@@ -27,10 +27,14 @@ public class WarpManager : MonoBehaviour {
     {
         effects.EnterWarp();
         thrusters.SetMaxPower();
-        player.SetOnCompleteHandler(delegate(AbstractGoTween t)
+        player.SetOnCompleteHandler(delegate (AbstractGoTween t)
         {
             effects.ExitWarp();
             _onComplete.Invoke(t);
+        });
+        player.SetOnUpdateHandler(delegate (AbstractGoTween t)
+        {
+            if (t.totalDuration - t.totalElapsedTime < 0.5f) effects.EndStars();
         });
         player.Warp(Destination);
         Debug.Log("Warp called");

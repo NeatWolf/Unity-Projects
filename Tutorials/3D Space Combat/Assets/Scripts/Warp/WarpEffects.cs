@@ -30,10 +30,16 @@ public class WarpEffects : MonoBehaviour {
 
     public void ExitWarp()
     {
-        EndStars(duration * 0.1f);
+        //EndStars(duration * 0.1f);
         GrowFieldOfView();
         EndVignette();
         EndRadialBlur();
+    }
+
+    public void EndStars()
+    {
+        warpStars.End(duration * 0.1f, easeType);
+        //warpStars.Stop();
     }
 
     private void ShrinkFieldOfView()
@@ -69,10 +75,5 @@ public class WarpEffects : MonoBehaviour {
     private void BeginStars()
     {
         warpStars.Begin(duration, easeType);
-    }
-
-    private void EndStars(float duration)
-    {
-        warpStars.End(duration, easeType);
     }
 }

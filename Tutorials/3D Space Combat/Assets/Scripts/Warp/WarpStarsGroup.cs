@@ -21,4 +21,12 @@ public class WarpStarsGroup : MonoBehaviour {
             system.End(duration, easeType);
         }
     }
+
+    public void Stop()
+    {
+        foreach(var system in warpStarSystems)
+        {
+            system.Stop();
+        }
+    }
 }

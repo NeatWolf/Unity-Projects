@@ -61,6 +61,7 @@ public class CameraController : MonoBehaviour
     private void LockToPlayer()
     {
         transform.position = target.position;
+        transform.rotation = target.rotation;
     }
 
     public void ShakeCamera(float duration, float speed, float magnitude)

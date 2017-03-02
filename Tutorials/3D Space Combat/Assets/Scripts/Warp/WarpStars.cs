@@ -19,6 +19,8 @@ public class WarpStars : MonoBehaviour {
 
     public void Begin(float duration, GoEaseType easeType = GoEaseType.Linear)
     {
+        var starsMain = _stars.main;
+        starsMain.startSpeed = new ParticleSystem.MinMaxCurve(0f);
         _stars.Play();
         _beginTween = Go.to(_stars, duration, new GoTweenConfig().floatProp("startSpeed", _maxSpeed).setEaseType(easeType));
     }
@@ -31,6 +33,11 @@ public class WarpStars : MonoBehaviour {
             _beginTween.destroy();
         }
 
-        Go.to(_stars, duration, new GoTweenConfig().floatProp("startSpeed", 0f).setEaseType(easeType));
+        Go.to(_stars, duration, new GoTweenConfig().floatProp("startSpeed", 100f).setEaseType(easeType).onComplete(t => Stop()));
+    }
+
+    public void Stop()
+    {
+        _stars.Stop();
     }
 }
