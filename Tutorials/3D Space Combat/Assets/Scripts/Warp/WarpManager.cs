@@ -29,12 +29,14 @@ public class WarpManager : MonoBehaviour {
         thrusters.SetMaxPower();
         player.SetOnCompleteHandler(delegate (AbstractGoTween t)
         {
+            //Go.to(warpCamera.transform, 0.5f, new GoTweenConfig().shake(new Vector3(1, 1, 1), GoShakeType.Position, 2));
+            GameManager.instance.CameraController.ShakeCamera(0.4f, 10, 0.3f);
             effects.ExitWarp();
             _onComplete.Invoke(t);
         });
         player.SetOnUpdateHandler(delegate (AbstractGoTween t)
         {
-            if (t.totalDuration - t.totalElapsedTime < 0.5f) effects.EndStars();
+            if (t.totalDuration - t.totalElapsedTime < 0.8f) effects.EndStars();
         });
         player.Warp(Destination);
         Debug.Log("Warp called");
