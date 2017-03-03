@@ -13,6 +13,7 @@ public class WarpPlayer : MonoBehaviour {
 
     public void Warp(Vector3 destination)
     {
+        GameManager.instance.CameraController.ShakeCamera(0.8f, 10, 0.15f);
         var duration = CalculateDuration(destination, speed);
         var tween = Go.to(transform, duration, new GoTweenConfig().vector3Prop("position", destination).setEaseType(easeType).onComplete(_onComplete));
         tween.setOnUpdateHandler(_onUpdate);
