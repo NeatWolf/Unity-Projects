@@ -60,11 +60,6 @@ public class SoundManager : MonoBehaviour {
         source.Play();
     }
 	
-	void Update ()
-    {
-
-	}
-
     private void createAudioSources(int count)
     {
         while (count > 0)

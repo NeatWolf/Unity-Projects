@@ -7,4 +7,14 @@ public class TargetableObject : MonoBehaviour {
     private Enums.Allegiance allegiance;
 
     public Enums.Allegiance Allegiance { get { return allegiance; } }
+
+    void Start()
+    {
+        GameManager.instance.AddTargetableObject(this);
+    }
+
+    void OnDestroy()
+    {
+        GameManager.instance.RemoveTargetableObject(this);
+    }
 }

@@ -90,6 +90,11 @@ public class GameManager : MonoBehaviour
         get { return cameraController; }
     }
 
+    public List<TargetableObject> TargetableObjects
+    {
+        get { return _targetableObjects; }
+    }
+
     public static GameManager instance;
     public static Transform playerTransform;
     public static QuestManager questManager;
@@ -100,6 +105,7 @@ public class GameManager : MonoBehaviour
     private bool _isCursorVisible = true;
     private bool _isMenuOpen = false;
     private PauseTypeEnum _pauseType = PauseTypeEnum.none;
+    private List<TargetableObject> _targetableObjects;
 
     public enum PauseTypeEnum
     {
@@ -122,6 +128,7 @@ public class GameManager : MonoBehaviour
         //DontDestroyOnLoad(gameObject);
         playerTransform = GameObject.FindWithTag("Player").GetComponent<Transform>();
         questManager = gameObject.GetComponent<QuestManager>();
+        _targetableObjects = new List<TargetableObject>();
     }
 
 	void Start ()
@@ -173,6 +180,16 @@ public class GameManager : MonoBehaviour
     {
         player.LockControls(false);
         player.LockMovement(false);
+    }
+
+    public void AddTargetableObject(TargetableObject to)
+    {
+        _targetableObjects.Add(to);
+    }
+
+    public void RemoveTargetableObject(TargetableObject to)
+    {
+        _targetableObjects.Remove(to);
     }
 
     private void EnableReticle()

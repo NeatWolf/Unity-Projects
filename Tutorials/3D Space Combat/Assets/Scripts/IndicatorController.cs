@@ -80,9 +80,9 @@ public class IndicatorController : MonoBehaviour
             }
 
             // POSITION ENEMY ARROWS AND BOXES
-            var objects = (GameObject.FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[]).Where(t => t.Allegiance == Enums.Allegiance.Enemy);
+            var enemies = GameManager.instance.TargetableObjects.Where(t => t.Allegiance == Enums.Allegiance.Enemy);
 
-            foreach (TargetableObject obj in objects)
+            foreach (TargetableObject obj in enemies)
             {
                 if (GameManager.playerTransform != null)
                 {

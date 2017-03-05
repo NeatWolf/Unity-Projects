@@ -125,7 +125,7 @@ public class Player : MonoBehaviour
 
     private bool IsInCombat()
     {
-        var targetableObjects = (GameObject.FindObjectsOfType(typeof(TargetableObject)) as TargetableObject[]);
+        var targetableObjects = GameManager.instance.TargetableObjects;
         var enemies = targetableObjects.Where(t => t.Allegiance == Enums.Allegiance.Enemy);
         var closeEnemies = enemies.Where(t => Vector3.Distance(t.transform.position, transform.position) < 500).Count();
 
