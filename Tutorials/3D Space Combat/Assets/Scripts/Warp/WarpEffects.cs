@@ -11,7 +11,8 @@ public class WarpEffects : MonoBehaviour {
     public WarpFov warpFov;
     public float radialBlurStrength = 1f;
     public float vignetteStrength = 1.4f;
-    public float duration = 1f;
+    public float startDuration = 1f;
+    public float endDuration = 1f;
     public GoEaseType easeType = GoEaseType.Linear;
     public float fOVZoomInValue = 50f;
 
@@ -36,44 +37,44 @@ public class WarpEffects : MonoBehaviour {
         EndRadialBlur();
     }
 
-    public void EndStars()
-    {
-        warpStars.End(duration * 0.1f, easeType);
-        //warpStars.Stop();
-    }
-
     private void ShrinkFieldOfView()
     {
-        warpFov.Begin(duration, fOVZoomInValue, easeType);
+        warpFov.Begin(startDuration, fOVZoomInValue, easeType);
     }
 
     private void GrowFieldOfView()
     {
-        warpFov.End(duration, easeType);
+        warpFov.End(endDuration, easeType);
     }
 
     private void BeginRadialBlur()
     {
-        radialBlur.Begin(duration, radialBlurStrength, easeType);
+        radialBlur.Begin(startDuration, radialBlurStrength, easeType);
     }
 
     private void EndRadialBlur()
     {
-        radialBlur.End(duration, easeType);
+        radialBlur.End(endDuration, easeType);
     }
 
     private void BeginVignette()
     {
-        vignette.Begin(duration, vignetteStrength, easeType);
+        vignette.Begin(startDuration, vignetteStrength, easeType);
     }
 
     private void EndVignette()
     {
-        vignette.End(duration, easeType);
+        vignette.End(endDuration, easeType);
     }
 
     private void BeginStars()
     {
-        warpStars.Begin(duration, easeType);
+        warpStars.Begin(startDuration, easeType);
+    }
+
+    public void EndStars()
+    {
+        warpStars.End(endDuration * 0.1f, easeType);
+        //warpStars.Stop();
     }
 }
